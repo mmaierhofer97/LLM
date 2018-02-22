@@ -54,13 +54,13 @@ tensor_classes_helpers:
 ops = {
             'epochs': 500,
             'frame_size': 3,
-            'n_hidden': 200,
-            'n_classes': 100, # aka n_input
-            'learning_rate': 0.00005,
+            'n_hidden': 50,
+            'n_classes': 50, # aka n_input
+            'learning_rate': 0.0005,
             'batch_size': 64,
             'max_length': 100,
             'encoder': 'LLM',
-            'dataset': 'data/phone_overfit/phone',
+            'dataset': 'data/synthetic_disperse/disperse_small',
             'overwrite': False,
             "write_history": False, #whether to write the history of training
             'model_save_name': None,
@@ -260,8 +260,9 @@ while epoch < ops['epochs']:
                                                             P_mask: mask,
                                                             P_batch_size: batch_size})
 
-        print(y_answer[0,])
-        print(yo[0,])
+        print(batch_y[:,len(batch_y[0,])-1])
+        print(y_answer.shape,y_answer[0,len(y_answer[0,:,0])-1,:])
+        #print(yo[:,0,len(y_answer[0,])-1])
         names = ["h","o", "h_prev","o_prev","q","s","sigma","r","rho",'mul','decay']
         np.set_printoptions(precision=5)
         #print(deb_var)
@@ -273,7 +274,7 @@ while epoch < ops['epochs']:
             #         print names[i], var[var < -1.0]
             #     elif (var > 1.0).any():
             #         print names[i], var[var > 1.0]
-            # if names[i] in ['sigma', 'rho']:
+            # if names[i] in ['sigma':,len(y_answer[1,])-1, 'rho']:
             #     print '\n'
             #     not_sum_to_one = lambda x: np.abs(np.sum(x, axis=3) - 1.0) > 0.00000001
             #     if (not_sum_to_one(var)).any():
