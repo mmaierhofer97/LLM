@@ -62,7 +62,7 @@ def output_placeholder(max_length_seq=100,
                         number_of_classes], name=name)
     return y
 
-def weights_init(n_input, n_output, name=None, small_dev=False, idendity=False, forced_zero=False, llm_identity=0):
+def weights_init(n_input, n_output, name=None, small_dev=False, idendity=False, forced_zero=False):
     init_matrix = None
     if small_dev:
         init_matrix = tf.random_normal([n_input, n_output], stddev=small_dev)
@@ -73,9 +73,7 @@ def weights_init(n_input, n_output, name=None, small_dev=False, idendity=False, 
         init_matrix = tf.diag(tf.ones([n_input]))
     elif forced_zero:
         init_matrix = tf.diag(tf.zeros([n_input]))
-    if llm_identity!=0:
-        numpy_matrix = np.repeat(np.eye(int(n_input/llm_identity)),llm_identity,axis=0)
-        init_matrix = tf.convert_to_tensor(numpy_matrix, dtype=tf.float32)
+
     trainable = True
     if idendity or forced_zero:
         trainable = False
@@ -912,27 +910,15 @@ def LLM_params_init(ops):
             forced_zero_flag = True
         timescales = 2.0 ** np.arange(-7,7)
         n_timescales = len(timescales)
-        W = {'in_feat': weights_init(n_input=ops['n_classes'],
-                                n_output=ops['n_hidden'],
+        W = {'in': weights_init(n_input=ops['n_classes'],
+                                n_output=ops['n_hidden']*n_timescales,
                                 name='W_in',
                                 idendity=identity_flag),
-             'recurrent_feat': weights_init(n_input=ops['n_hidden']*n_timescales,
-                                       n_output=ops['n_hidden'],
+             'recurrent': weights_init(n_input=ops['n_hidden']*n_timescales,
+                                       n_output=ops['n_hidden']*n_timescales,
                                        name='W_recurrent',
-                                       small_dev=0.001,
-                                       forced_zero=forced_zero_flag,
-                                       llm_identity=n_timescales),
-             'in_gate': weights_init(n_input=ops['n_classes'],
-                                n_output=ops['n_hidden'],
-                                name='W_in',
-                                idendity=identity_flag),
-             'recurrent_gate': weights_init(n_input=ops['n_hidden']*n_timescales,
-                                       n_output=ops['n_hidden'],
-                                       name='W_recurrent',
-                                       small_dev=0.001,
-                                       forced_zero=forced_zero_flag,
-                                       llm_identity=n_timescales),
-
+                                       small_dev=0.01,
+                                       forced_zero=forced_zero_flag),
              'out': weights_init(n_input=ops['n_hidden']*n_timescales,
                                  n_output=ops['n_classes'],
                                  name='W_out',
@@ -940,11 +926,7 @@ def LLM_params_init(ops):
              }
 
         b = {
-            'feat': bias_init(n_output=ops['n_hidden'],
-                                   name='b_recurrent',
-                                   small=True,
-                                   forced_zero=forced_zero_flag),
-            'gate': bias_init(n_output=ops['n_hidden'],
+            'recurrent': bias_init(n_output=ops['n_hidden']*n_timescales,
                                    name='b_recurrent',
                                    small=True,
                                    forced_zero=forced_zero_flag),
@@ -1018,9 +1000,36 @@ def LLM(x_set, P_len, P_batch_size, ops, params, batch_size):
     c_init = params['c']
 
 
+    def _C(likelyhood, prior_of_event):
+        # timescale posterior
+        # formula 3 - reweight the ensemble
+        # likelihood, prior, posterior have dimensions:
+        #       [batch_size, n_hid, n_timescales]
+        minimum = 1e-30
+        # likelyhood = c_
+        timescale_posterior = prior_of_event * likelyhood + minimum
+        timescale_posterior = timescale_posterior / tf.reduce_sum(timescale_posterior,
+                                                                  reduction_indices=[2],
+                                                                  keep_dims=True)
 
+        return timescale_posterior
 
+    def _Z(h_prev, delta_t):
+        # Probability of no event occuring at h_prev intensity till delta_t (integral over intensity)
+        # delta_t: batch_size x n_timescales
+        # h_prev: batch_size x n_hid x n_timescales
+        # time passes
+        # formula 1
 
+        h_prev -= mu
+        delta_t = tf.expand_dims(delta_t, 2)  # [batch_size, 1] -> [batch_size, 1, 1]
+        _gamma = gamma #local copy since we can't modify global copy
+        if ops['unique_mus_alphas']:
+            _gamma = tf.zeros([ops['n_hidden'], n_timescales], tf.float32) + gamma #[n_timescale]->[n_hid, n_timescale}
+
+        h_times_gamma_factor = h_prev * (1.0 - tf.exp(-_gamma * delta_t)) / gamma
+        result = tf.exp(-(h_times_gamma_factor + mu*delta_t), name='Z')
+        return result
 
     def _H(h_prev, delta_t):
         # decay current intensity
@@ -1031,17 +1040,18 @@ def LLM(x_set, P_len, P_batch_size, ops, params, batch_size):
         result = tf.exp(-gamma * delta_t) * h_prev_tr
         return tf.transpose(result, [1,0,2], name='H') + mu
 
-    def _had(f, g):
+    def _y_hat(z, c):
         # Marginalize timescale
         # (batch_size, n_hidden, n_timescales)
         # output: (batch_size, n_hidden, n_timescales)
         # c - timescale probability
         # z - quantity
-        return tf.multiply(f, g, name='yhat')
+        return tf.multiply(z, c, name='yhat')
 
     def _step(accumulated_vars, input_vars):
-        h_, _, _, _, _ = accumulated_vars
-        x, xt, yt = input_vars
+        h_, c_, _, _, _ = accumulated_vars
+        x_vec, xt, yt = input_vars
+        print('\n\n\n\n',x_vec,'\n\n\n\n\n')
         # : mask: (batch_size, n_classes
         # : x_vec - vectorized x: (batch_size, n_classes)
         # : xt, yt: (batch_size, 1)
@@ -1050,37 +1060,50 @@ def LLM(x_set, P_len, P_batch_size, ops, params, batch_size):
         # 1) event
         # current z, h
         h = _H(h_, xt)
+        z = _Z(h_, xt) #(batch_size, n_hidden, n_timescales)
+        # input part:
 
-        x_f = tf.matmul(x, W['in_feat'])
-        x_g = tf.matmul(x, W['in_gate'])
-        #print('\n\n\n\n\n debug \n\n\n\n\n')
-        #print(tf.matmul(tf.reshape(h,[batch_size,ops['n_hidden']*n_timescales]),W['recurrent_feat']))
-        f_tmp = tf.matmul(tf.reshape(h,[batch_size,ops['n_hidden']*n_timescales]),W['recurrent_feat'])
-        g_tmp = tf.matmul(tf.reshape(h,[batch_size,ops['n_hidden']*n_timescales]),W['recurrent_gate'])
-        f = tf.tanh(x_f+f_tmp+b['feat'])
-        g = tf.sigmoid(x_g+g_tmp+b['gate'])
 
         # recurrent part: since y_hat is for t+1, we wait until here to calculate it rather
         #                   rather than in previous iteration
-        had = tf.reshape(_had(f, g),[batch_size,ops['n_hidden'],1]) # :(batch_size, n_hidden, n_timescales
 
-        h = h + had
+        y_hat = _y_hat(z, c_) # :(batch_size, n_hidden, n_timescales
         # ALTERNATE
-        o_tmp  = tf.matmul(tf.reshape(_H(h,yt),[batch_size,ops['n_hidden']*n_timescales]),W['out'])
+        event = tf.sigmoid(
+                        x_vec +  #:[batch_size, n_classes]*[n_classes, n_hid]
+                        tf.matmul(tf.reshape(y_hat,[batch_size,ops['n_hidden']*n_timescales]), W['recurrent']) + b['recurrent'])  #:(batch_size, n_hid)*(n_hid, n_hid)
 
+        # 2) update c
+        event = tf.reshape(event, [batch_size,ops['n_hidden'],n_timescales]) # [batch_size, n_hid] -> [batch_size, n_hid, 1]
+        # to support multiplication by [batch_size, n_hid, n_timescales]
+        # TODO: check Mike's code on c's update. Supposedely, just a tad bit more efficient
 
-        return [h, f, o_tmp, W['recurrent_feat'], had]
+        c = event * _C(z*h, c_) + (1.0 - event) * _C(z, c_) # h^0 = 1
+        # c = _C(z, c_)
+        # c = event * _C(h, c) + (1.0 - event) * c
+
+        # 3) update intensity
+        # - here alpha can either be a vector [n_timescales] or a matrix [n_hid, n_timescales]
+        h += alpha * event
+
+        # 4) apply mask & predict next event
+        z_hat = _Z(h, yt)
+
+        y_predict = _y_hat(1 - z_hat, c)
+
+        return [h, c, y_predict, event, z_hat]
 
 
     x, xt, yt, _ = cut_up_x(x_set, ops) #TODO: arbitrary lengths
 
-
-
+    print(x, W['in'])
+    activate = lambda x: tf.matmul(x, W['in'])
+    x_vec = tf.map_fn(activate, x)
 
 
     print( x, xt, yt)
     # collect all the variables of interest
-    T_summary_weights = W['recurrent_feat']
+    T_summary_weights = tf.zeros([1],name='None_tensor')
     if ops['collect_histograms']:
         tf.summary.histogram('W_in', W['in'], ['W'])
         tf.summary.histogram('W_rec', W['recurrent'], ['W'])
@@ -1097,23 +1120,23 @@ def LLM(x_set, P_len, P_batch_size, ops, params, batch_size):
                                 ], name='T_summary_weights')
 
     rval = tf.scan(_step,
-                    elems=[x, xt, yt],
+                    elems=[x_vec, xt, yt],
                     initializer=[
                         tf.zeros([batch_size, ops['n_hidden'], n_timescales], tf.float32) + mu, #h
-                        tf.zeros([batch_size, ops['n_hidden']], tf.float32) , #c
-                        tf.zeros([batch_size, ops['n_classes']], tf.float32), # yhat
-                        tf.zeros([ops['n_hidden']*n_timescales,ops['n_hidden']]), #debugging placeholder
-                        tf.zeros([batch_size, ops['n_hidden'],1])
+                        tf.zeros([batch_size, ops['n_hidden'], n_timescales], tf.float32) + c_init, #c
+                        tf.zeros([batch_size, ops['n_hidden'], n_timescales], tf.float32), # yhat
+                        tf.zeros([batch_size, ops['n_hidden'], n_timescales]), #debugging placeholder
+                        tf.zeros([batch_size, ops['n_hidden'], n_timescales])
 
                     ]
                    , name='llm/scan')
 
 
-    hidden_prediction =tf.transpose(rval[2], [1, 0, 2])  # -> [batch_size, n_steps, n_hidden]
-    output_projection = lambda x: tf.clip_by_value(tf.nn.softmax(x + b['out']), 1e-8, 1.0)
+    hidden_prediction =tf.reshape(tf.transpose(rval[2], [1, 0, 2, 3]),[batch_size,ops["max_length"],ops['n_hidden']*n_timescales])  # -> [batch_size, n_steps, n_hidden,n_timescales]
+    output_projection = lambda x: tf.clip_by_value(tf.nn.softmax(tf.matmul(x, W['out']) + b['out']), 1e-8, 1.0)
 
     prediction_outputed = tf.map_fn(output_projection, hidden_prediction)
-    print('test;',prediction_outputed)
+
     # TODO: remove later by editing the part about the mask's dimension. For now, just fitting the old code
     #x_leftover = tf.transpose(x_leftover, [1,0,2]) + 1e-8# -> [batch_size, n_steps, n_classes]
     #prediction_outputed = tf.concat([prediction_outputed, x_leftover], 1)
