@@ -60,7 +60,7 @@ ops = {
             'batch_size': 64,
             'max_length': 100,
             'encoder': 'LSTM',
-            'dataset': 'data/phone/phone',
+            'dataset': 'data/reddit/reddit',
             'overwrite': False,
             "write_history": True, #whether to write the history of training
             'model_save_name': None,
@@ -308,5 +308,5 @@ with tf.device(ops['device']):
 
         if ops['write_history'] and epoch==ops['epochs']:
 
-            DH.write_history(accuracy_entry, 'records/accLSTM.txt', epoch, ops['overwrite'])
+            DH.write_history(accuracy_entry, 'records/accLSTMReddit.txt', epoch, ops['overwrite'])
             DH.write_history(losses_entry, 'records/loss.txt', epoch, ops['overwrite'])

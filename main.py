@@ -54,13 +54,13 @@ tensor_classes_helpers:
 ops = {
             'epochs': 500,
             'frame_size': 3,
-            'n_hidden': 25,
+            'n_hidden': 50,
             'n_classes': 50, # aka n_input
             'learning_rate': 0.0005,
             'batch_size': 64,
             'max_length': 100,
-            'encoder': 'LLM',
-            'dataset': 'data/reddit/reddit',
+            'encoder': 'HPM',
+            'dataset': 'data/synthetic_disperse/disperse_small',
             'overwrite': False,
             "write_history": True, #whether to write the history of training
             'model_save_name': None,
@@ -96,7 +96,7 @@ print ("Loaded the set: train({}), valid({}), test({})".format(len(train_set),
 
 # Restart the graph
 tf.reset_default_graph()
-with tf.device("/device:GPU:0"):
+with tf.device("/device:CPU:0"):
     config = tf.ConfigProto(allow_soft_placement = True)
     T_sess=tf.Session(config = config)
 
