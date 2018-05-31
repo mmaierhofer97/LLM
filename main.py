@@ -56,11 +56,11 @@ ops = {
             'frame_size': 3,
             'n_hidden': 50,
             'n_classes': 50, # aka n_input
-            'learning_rate': 0.0005,
+            'learning_rate': 0.002,
             'batch_size': 64,
             'max_length': 100,
-            'encoder': 'HPM',
-            'dataset': 'data/synthetic_disperse/disperse_small',
+            'encoder': 'LLM',
+            'dataset': 'data/reddit/reddit',
             'overwrite': False,
             "write_history": True, #whether to write the history of training
             'model_save_name': None,
@@ -72,7 +72,8 @@ ops = {
             'embedding': False, #only for CTGRU so far TODO: extract to be generic
             'embedding_size': 30,
             'vocab_size': 10000,
-            'task': "PRED" #CLASS vs PRED
+            'task': "PRED", #CLASS vs PRED
+            'device':"/device:GPU:0"
           }
 
 # load the dataset
@@ -96,7 +97,7 @@ print ("Loaded the set: train({}), valid({}), test({})".format(len(train_set),
 
 # Restart the graph
 tf.reset_default_graph()
-with tf.device("/device:CPU:0"):
+with tf.device(ops['device']):
     config = tf.ConfigProto(allow_soft_placement = True)
     T_sess=tf.Session(config = config)
 
@@ -193,7 +194,7 @@ with tf.device("/device:CPU:0"):
             # Evaluate the model
             T_correct_pred = tf.cast(tf.equal(tf.argmax(T_pred, 2), tf.argmax(y_answer, 2)), tf.float32)
             T_accuracy = tf.reduce_sum(tf.cast(T_correct_pred[:,-1], tf.float32)) / tf.reduce_sum(
-                tf.reduce_sum(y_answer))
+                tf.reduce_sum(y_answer[:,-1,:]))
 
     T_optimizer = tf.train.AdamOptimizer(learning_rate=ops['learning_rate']).minimize(T_cost)
 
@@ -252,7 +253,7 @@ with tf.device("/device:CPU:0"):
                 # (batch_size, steps, n_classes)
                 y_answer = DH.embed_one_hot(batch_y, 0.0, ops['n_classes'], ops['max_length'])
             _, deb_var, summary_weights,yo= T_sess.run(
-                                                    [T_optimizer, debugging_stuff, T_summary_weights,T_pred],
+                                                    [T_optimizer, debugging_stuff, T_summary_weights,T_correct_pred],
                                                     feed_dict={
                                                                 P_x: x_set,
                                                                 P_y: y_answer,
@@ -260,8 +261,7 @@ with tf.device("/device:CPU:0"):
                                                                 P_mask: mask,
                                                                 P_batch_size: batch_size})
 
-            #print(y_answer[0,])
-            #print(yo[0,])
+            #print(np.array(deb_var[0]).shape,deb_var[0][0,0,0,:] )
             names = ["h","o", "h_prev","o_prev","q","s","sigma","r","rho",'mul','decay']
             np.set_printoptions(precision=5)
             #print(deb_var)
@@ -306,6 +306,6 @@ with tf.device("/device:CPU:0"):
             print( "Model Saved as ", ops['model_save_name'])
             saver.save(T_sess, 'saved_models/' + ops['model_save_name'])
 
-        if ops['write_history']:
+        if ops['write_history'] and epoch==ops['epochs']:
             DH.write_history(accuracy_entry, 'records/acc.txt', epoch, ops['overwrite'])
             DH.write_history(losses_entry, 'records/loss.txt', epoch, ops['overwrite'])
