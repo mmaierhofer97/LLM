@@ -60,7 +60,7 @@ ops = {
             'batch_size': 64,
             'max_length': 100,
             'encoder': 'LLM',
-            'dataset': 'data/reddit/reddit',
+            'dataset': 'data/reddit_test/reddit',
             'overwrite': False,
             "write_history": True, #whether to write the history of training
             'model_save_name': None,
