@@ -60,7 +60,7 @@ ops = {
             'batch_size': 64,
             'max_length': 100,
             'encoder': 'LLM',
-            'dataset': 'data/synthetic_disperse/disperse',
+            'dataset': 'data/synthetic_disperse/disperse2',
             'overwrite': False,
             "write_history": True, #whether to write the history of training
             'model_save_name': None,
