@@ -907,9 +907,6 @@ def LLM_params_init(ops):
 
         identity_flag = False
         forced_zero_flag = False
-        if ops['1-to-1']:
-            identity_flag = True
-            forced_zero_flag = True
         timescales = 2.0 ** np.arange(-7,7)
         n_timescales = len(timescales)
         W = {'in_feat': weights_init(n_input=ops['n_classes'],
@@ -955,25 +952,8 @@ def LLM_params_init(ops):
 
 
         gamma = 1.0 / timescales
-        c = tf.fill([n_timescales], 1.0 / n_timescales)
 
-        if ops['unique_mus_alphas']:
-            print( "Alphas and Mus will be across all hidden unts")
-            mu = tf.Variable(-tf.log(
-                                tf.fill([ops['n_hidden'], n_timescales], 1e-3)),
-                             name='mu', trainable=True, dtype=tf.float32)
-            alpha = tf.Variable(
-                        tf.random_uniform([ops['n_hidden'], n_timescales], minval=0.5, maxval=0.5001, dtype=tf.float32),
-                        name='alpha')
-        else:
-            # TODO: Understand why and how it works. so by putting  a log there, we are skewing the gradient?
-            mu = tf.Variable(-tf.log(
-                                tf.fill([n_timescales], 1e-3)),
-                             name='mu', trainable=True, dtype=tf.float32)
-            # alpha is just initialized to a const value
-            alpha = tf.Variable(
-                        tf.random_uniform([n_timescales], minval=0.5, maxval=0.5001, dtype=tf.float32),
-                        name='alpha')
+
 
 
     params = {
@@ -981,91 +961,50 @@ def LLM_params_init(ops):
         'b': b,
         'timescales': timescales,
         'n_timescales': n_timescales,
-        'mu': mu,
         'gamma': gamma,
-        'alpha': alpha,
-        'c': c
     }
     return params
 
 
 
-# HPM logic:
-# Learn weights of the hawkes' processes.
-# Have multiple timescales for each process that are ready to "kick-in".
-# For a certain event type in whichever time-scale works best => reinitialize c_
-# every new sequence.
+
 def LLM(x_set, P_len, P_batch_size, ops, params, batch_size):
-    # init h, alphas, timescales, mu etc
-    # convert x from [batch_size, max_length, frame_size] to
-    #               [max_length, batch_size, frame_size]
-    # and step over each time_step with _step function
-    batch_size = tf.cast(batch_size, tf.int32)  # cast placeholder into integer
+    batch_size = tf.cast(batch_size, tf.int32)
 
     W = params['W']
     b = params['b']
     n_timescales = params['n_timescales']
 
     gamma = params['gamma']
-    # Scale important params by gamma
-    alpha_init = params['alpha']
-    mu_init = params['mu']
-    # exp(--log(x) = x
-    mu = tf.exp(-mu_init)
-
-    alpha = tf.nn.softplus(alpha_init) * gamma
-
-    c_init = params['c']
-
-
-
-
-
 
     def _H(h_prev, delta_t):
-        # decay current intensity
-        # TODO: adopt into _Z, to avoid recomputing
-        h_prev -= mu
-        h_prev_tr = tf.transpose(h_prev, [1,0,2]) #[bath_size, n_hid, n_timescales] -> [n_hid, batch_size, n_timescales}
-        # gamma * delta_t: [batch_size, n_timescales]
+
+        h_prev_tr = tf.transpose(h_prev, [1,0,2]) #[batch_size, n_hid, n_timescales] -> [n_hid, batch_size, n_timescales}
+
         result = tf.exp(-gamma * delta_t) * h_prev_tr
-        return tf.transpose(result, [1,0,2], name='H') + mu
+        return tf.transpose(result, [1,0,2], name='H')
 
     def _had(f, g):
-        # Marginalize timescale
-        # (batch_size, n_hidden, n_timescales)
-        # output: (batch_size, n_hidden, n_timescales)
-        # c - timescale probability
-        # z - quantity
+        # Hadamard Product, Doesn't really need a function
         return tf.multiply(f, g, name='yhat')
 
     def _step(accumulated_vars, input_vars):
         h_, _, _, _, _ = accumulated_vars
         x, xt, yt = input_vars
-        # : mask: (batch_size, n_classes
-        # : x_vec - vectorized x: (batch_size, n_classes)
-        # : xt, yt: (batch_size, 1)
-        # : h_, c_ - from previous iteration: (batch_size, n_hidden, n_timescales)
 
-        # 1) event
-        # current z, h
         h = _H(h_, xt)
 
         x_f = tf.matmul(x, W['in_feat'])
         x_g = tf.matmul(x, W['in_gate'])
-        #print('\n\n\n\n\n debug \n\n\n\n\n')
-        #print(tf.matmul(tf.reshape(h,[batch_size,ops['n_hidden']*n_timescales]),W['recurrent_feat']))
+
+
         f_tmp = tf.matmul(tf.reshape(h,[batch_size,ops['n_hidden']*n_timescales]),W['recurrent_feat'])
         g_tmp = tf.matmul(tf.reshape(h,[batch_size,ops['n_hidden']*n_timescales]),W['recurrent_gate'])
         f = tf.tanh(x_f+f_tmp+b['feat'])
         g = tf.sigmoid(x_g+g_tmp+b['gate'])
-
-        # recurrent part: since y_hat is for t+1, we wait until here to calculate it rather
-        #                   rather than in previous iteration
         had = tf.reshape(_had(f, g),[batch_size,ops['n_hidden'],1]) # :(batch_size, n_hidden, n_timescales
 
         h = h + had
-        # ALTERNATE
         o_tmp  = tf.matmul(tf.reshape(_H(h,yt),[batch_size,ops['n_hidden']*n_timescales]),W['out'])
 
 
@@ -1099,7 +1038,7 @@ def LLM(x_set, P_len, P_batch_size, ops, params, batch_size):
     rval = tf.scan(_step,
                     elems=[x, xt, yt],
                     initializer=[
-                        tf.zeros([batch_size, ops['n_hidden'], n_timescales], tf.float32) + mu, #h
+                        tf.zeros([batch_size, ops['n_hidden'], n_timescales], tf.float32), #h
                         tf.zeros([batch_size, ops['n_hidden']], tf.float32) , #c
                         tf.zeros([batch_size, ops['n_classes']], tf.float32), # yhat
                         tf.zeros([ops['n_hidden']*n_timescales,ops['n_hidden']]), #debugging placeholder
@@ -1114,8 +1053,6 @@ def LLM(x_set, P_len, P_batch_size, ops, params, batch_size):
 
     prediction_outputed = tf.map_fn(output_projection, hidden_prediction)
     print('test;',prediction_outputed)
-    # TODO: remove later by editing the part about the mask's dimension. For now, just fitting the old code
-    #x_leftover = tf.transpose(x_leftover, [1,0,2]) + 1e-8# -> [batch_size, n_steps, n_classes]
-    #prediction_outputed = tf.concat([prediction_outputed, x_leftover], 1)
+
 
     return prediction_outputed, T_summary_weights, [rval[0], rval[1], rval[2], rval[3], rval[4], prediction_outputed]
