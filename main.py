@@ -55,12 +55,12 @@ ops = {
             'epochs': 500,
             'frame_size': 3,
             'n_hidden': 50,
-            'n_classes': 50, # aka n_input
+            'n_classes': 2, # aka n_input
             'learning_rate': 0.002,
             'batch_size': 64,
             'max_length': 100,
             'encoder': 'LLM',
-            'dataset': 'data/synthetic_disperse/disperse_small',
+            'dataset': 'data/synthetic_disperse/disperse2',
             'overwrite': False,
             "write_history": True, #whether to write the history of training
             'model_save_name': None,
@@ -267,6 +267,7 @@ with tf.device(ops['device']):
             #print(deb_var)
             for i,var in enumerate(deb_var):
                 var = np.array(var)
+                print(var)
                 # if names[i] in ['o_prev','h_prev','q','h_hat']:
                 #     print '\n'
                 #     if (var < -1.0).any():
