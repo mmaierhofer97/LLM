@@ -60,7 +60,7 @@ ops = {
             'batch_size': 64,
             'max_length': 100,
             'encoder': 'LLM',
-            'dataset': 'data/reddit/reddit',
+            'dataset': 'data/synthetic_disperse/disperse',
             'overwrite': False,
             "write_history": True, #whether to write the history of training
             'model_save_name': None,
@@ -72,7 +72,7 @@ ops = {
             'embedding': False, #only for CTGRU so far TODO: extract to be generic
             'embedding_size': 30,
             'vocab_size': 10000,
-            'task': "PRED", #CLASS vs PRED
+            'task': "CLASS", #CLASS vs PRED
             'device':"/device:GPU:0"
           }
 
