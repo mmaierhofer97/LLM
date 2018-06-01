@@ -267,7 +267,6 @@ with tf.device(ops['device']):
             #print(deb_var)
             for i,var in enumerate(deb_var):
                 var = np.array(var)
-                print(var)
                 # if names[i] in ['o_prev','h_prev','q','h_hat']:
                 #     print '\n'
                 #     if (var < -1.0).any():
