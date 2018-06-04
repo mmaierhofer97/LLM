@@ -1,13 +1,15 @@
 import random
 import numpy as np
-filenames = ['data/synth_accum/accum.train','data/synth_accum/accum.test
-lams = [.25,.5,1,2,4]
-for filename in filenames:
-    for lam in lams:
-        myfile = open(filename+str(lam),'w')
+filepath = 'data/synth_accum/accum'
+lams = [1/4,1/2,1,2,4]
+ends = ['.train','.test']
+for lam in lams:
+    for end in ends:
+        filename = filepath+str(lam)+end
+        myfile = open(filename,'w')
         myfile.write('')
         myfile.close()
-        myfile = open(filename+str(lam),'a')
+        myfile = open(filename,'a')
         for count in range(1000):
             id=str(count+1).zfill(5)
             A_timescale = random.expovariate(1)
