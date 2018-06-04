@@ -1,7 +1,7 @@
 import random
 import numpy as np
 filenames = ['data/synth_accum/accum.train','data/synth_accum/accum.test
-lams = [.01,.1,1,10]
+lams = [.25,.5,1,2,4]
 for filename in filenames:
     for lam in lams:
         myfile = open(filename+str(lam),'w')
