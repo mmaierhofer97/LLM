@@ -6,7 +6,7 @@ for filename in filenames:
     myfile.write('')
     myfile.close()
     myfile = open(filename,'a')
-    for count in range(2):
+    for count in range(10000):
         id=str(count+1).zfill(5)
         A_timescale = .1
         B_timescale = .5
@@ -26,6 +26,7 @@ for filename in filenames:
         time1 = [str(0.0)]
         time2 = []
         ordinal = []
+        ordinal2 = []
         for i in range(1,len(events)):
             ordinal.append(str(events[i-1][0]))
             delta_t = events[i][1]-events[i-1][1]
@@ -33,6 +34,7 @@ for filename in filenames:
             accum += np.sign(events[i][0]-1.5)
             time1.append(str(delta_t))
             time2.append(str(delta_t))
+            ordinal2.append(str(events[i][0]))
         time1 = time1[:-1]
         class_id = np.zeros(len(ordinal))
         class_id[-1] = int(np.sign(accum))
@@ -45,7 +47,7 @@ for filename in filenames:
 
         myfile.write(id + ' '+' '.join(ordinal)+'\n')
         myfile.write(id + ' '+' '.join(time1)+'\n')
-        myfile.write(id + ' '+' '.join(class_id)+'\n')
+        myfile.write(id + ' '+' '.join(ordinal2)+'\n')
         myfile.write(id + ' '+' '.join(time2)+'\n')
         #myfile.write('foo2')
     myfile.close()
