@@ -13,20 +13,21 @@ for filename in filenames:
         lam = 1
         events = []
         t = 0
-        while t<100:
+        while len(events)<100:
            t += random.expovariate(A_timescale)
            events.append([1,t])
         t = 0
-        while t<100:
+        while len(events)<200:
            t += random.expovariate(B_timescale)
            events.append([2,t])
         events.sort(key=lambda x: x[1])
-        #print(events)
+        events = events[:101]
         accum = events[0][0]
         time1 = [str(0.0)]
         time2 = []
         ordinal = []
         ordinal2 = []
+        class_id = []
         for i in range(1,len(events)):
             ordinal.append(str(events[i-1][0]))
             delta_t = events[i][1]-events[i-1][1]
@@ -34,13 +35,11 @@ for filename in filenames:
             accum += np.sign(events[i][0]-1.5)
             time1.append(str(delta_t))
             time2.append(str(delta_t))
+            class_id.append(str(0))
             ordinal2.append(str(events[i][0]))
         time1 = time1[:-1]
-        class_id = np.zeros(len(ordinal))
-        class_id[-1] = int(np.sign(accum))
-        class_id = list(class_id)
-        for j in range(len(class_id)):
-            class_id[j] = str(int(class_id[j]))
+        print(len(time1))
+        class_id[-1] = str(int(np.sign(accum)))
             #print(class_id[j])
         #print(len(time1),len(time2),len(ordinal))
         #print(accum, int(np.sign(accum)),len(events))
