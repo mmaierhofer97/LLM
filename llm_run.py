@@ -52,7 +52,7 @@ tensor_classes_helpers:
 
 
 ops = {
-            'epochs': 200,
+            'epochs': 500,
             'frame_size': 3,
             'n_hidden': 50,
             'n_classes': 50, # aka n_input
@@ -60,7 +60,7 @@ ops = {
             'batch_size': 64,
             'max_length': 100,
             'encoder': 'LLM',
-            'dataset': 'data/reddit_test/reddit',
+            'dataset': 'data/synth_accum/accum.01',
             'overwrite': False,
             "write_history": True, #whether to write the history of training
             'model_save_name': None,
@@ -72,7 +72,7 @@ ops = {
             'embedding': False, #only for CTGRU so far TODO: extract to be generic
             'embedding_size': 30,
             'vocab_size': 10000,
-            'task': "PRED", #CLASS vs PRED
+            'task': "CLASS", #CLASS vs PRED
             'device':"/device:GPU:0"
           }
 
@@ -253,7 +253,7 @@ with tf.device(ops['device']):
                 # (batch_size, steps, n_classes)
                 y_answer = DH.embed_one_hot(batch_y, 0.0, ops['n_classes'], ops['max_length'])
             _, deb_var, summary_weights,yo= T_sess.run(
-                                                    [T_optimizer, debugging_stuff, T_summary_weights,T_correct_pred],
+                                                    [T_optimizer, debugging_stuff, T_summary_weights,T_cost],
                                                     feed_dict={
                                                                 P_x: x_set,
                                                                 P_y: y_answer,
@@ -264,7 +264,7 @@ with tf.device(ops['device']):
             #print(np.array(deb_var[0]).shape,deb_var[0][0,0,0,:] )
             names = ["h","o", "h_prev","o_prev","q","s","sigma","r","rho",'mul','decay']
             np.set_printoptions(precision=5)
-            #print(deb_var)
+            #print(yo)
             for i,var in enumerate(deb_var):
                 var = np.array(var)
                 # if names[i] in ['o_prev','h_prev','q','h_hat']:
@@ -307,5 +307,5 @@ with tf.device(ops['device']):
             saver.save(T_sess, 'saved_models/' + ops['model_save_name'])
 
         if ops['write_history'] and epoch==ops['epochs']:
-            DH.write_history(accuracy_entry, 'records/accLLMReddit.txt', epoch, ops['overwrite'])
+            DH.write_history(accuracy_entry, 'records/accLLMaccum.01.txt', epoch, ops['overwrite'])
             DH.write_history(losses_entry, 'records/loss.txt', epoch, ops['overwrite'])
