@@ -8,8 +8,8 @@ for filename in filenames:
     myfile = open(filename,'a')
     for count in range(10000):
         id=str(count+1).zfill(5)
-        A_timescale = .1
-        B_timescale = .5
+        A_timescale = random.expovariate(1)
+        B_timescale = random.expovariate(1)
         lam = 1
         events = []
         t = 0
@@ -47,7 +47,7 @@ for filename in filenames:
 
         myfile.write(id + ' '+' '.join(ordinal)+'\n')
         myfile.write(id + ' '+' '.join(time1)+'\n')
-        myfile.write(id + ' '+' '.join(ordinal2)+'\n')
+        myfile.write(id + ' '+' '.join(class_id)+'\n')
         myfile.write(id + ' '+' '.join(time2)+'\n')
         #myfile.write('foo2')
     myfile.close()
