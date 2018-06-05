@@ -59,7 +59,7 @@ ops = {
             'learning_rate': 0.002,
             'batch_size': 64,
             'max_length': 100, # Integer vs "ALL"
-            'encoder': 'LLM',
+            'encoder': 'LSTM',
             'dataset': 'data/synth_accum/accum_nonunif',
             'overwrite': False,
             "write_history": True, #whether to write the history of training

@@ -52,15 +52,15 @@ tensor_classes_helpers:
 
 
 ops = {
-            'epochs': 100,
+            'epochs': 500,
             'frame_size': 3,
             'n_hidden': 50,
             'n_classes': 50, # aka n_input
             'learning_rate': 0.002,
             'batch_size': 64,
-            'max_length': 100,
+            'max_length': 100, # Integer vs "ALL"
             'encoder': 'LSTM',
-            'dataset': 'data/synth_accum/accumSimp1',
+            'dataset': 'data/synth_accum/accum_nonunif',
             'overwrite': False,
             "write_history": True, #whether to write the history of training
             'model_save_name': None,
@@ -78,6 +78,9 @@ ops = {
 
 # load the dataset
 train_set, valid_set, test_set = DH.load_data(ops['dataset'], sort_by_len=True)
+longest_seq = np.max([len(train_set[-1][0]),len(valid_set[-1][0]),len(test_set[-1][0])])
+if ops['max_length'] == "ALL" or ops['task'] == 'CLASS':
+    ops['max_length'] = longest_seq #Can't concatenate classification data
 if ops['embedding']:
     extract_ids = lambda set: np.concatenate(np.array([set[i][0] for i in range(len(set))]))
     all_ids = np.concatenate([np.array(extract_ids(train_set)),
@@ -243,7 +246,8 @@ with tf.device(ops['device']):
             x_set, batch_y, batch_maxlen, batch_size, mask = DH.pick_batch(
                                                 dataset = train_set,
                                                 batch_indeces = batch_indeces,
-                                                max_length = ops['max_length'])
+                                                max_length = ops['max_length'],
+                                                task = ops['task'])
             # x_set: [batch_size, max_length, frame_size]
 
             if ops['embedding']:
@@ -307,5 +311,5 @@ with tf.device(ops['device']):
             saver.save(T_sess, 'saved_models/' + ops['model_save_name'])
 
         if ops['write_history'] and epoch==ops['epochs']:
-            DH.write_history(accuracy_entry, 'records/accLSTMaccumSimp1.txt', epoch, ops['overwrite'])
+            DH.write_history(accuracy_entry, 'records/accLSTMaccum1_nonunif.txt', epoch, ops['overwrite'])
             DH.write_history(losses_entry, 'records/loss.txt', epoch, ops['overwrite'])
