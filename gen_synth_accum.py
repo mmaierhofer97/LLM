@@ -1,7 +1,7 @@
 import random
 import numpy as np
 filepath = 'data/synth_accum/accum'
-lams = [1/4,1/2,1,2,4]
+lams = [1/16,16]
 ends = ['.train','.test']
 for lam in lams:
     for end in ends:
