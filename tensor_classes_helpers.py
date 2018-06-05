@@ -161,7 +161,8 @@ def errors_and_losses(sess, P_x, P_y, P_len, P_mask, P_batch_size, T_accuracy,  
             x_set, batch_y, batch_maxlen, batch_size, mask = DH.pick_batch(
                                             dataset = dataset,
                                             batch_indeces = batch_ids,
-                                            max_length = ops['max_length'])
+                                            max_length = ops['max_length'],
+                                            task = ops['task'])
 
             if ops['embedding']:
                 # batch_y = (batch, n_steps_padded)

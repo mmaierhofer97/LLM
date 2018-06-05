@@ -58,9 +58,9 @@ ops = {
             'n_classes': 50, # aka n_input
             'learning_rate': 0.002,
             'batch_size': 64,
-            'max_length': 100,
+            'max_length': 100, # Integer vs "ALL"
             'encoder': 'LLM',
-            'dataset': 'data/synth_accum/accum',
+            'dataset': 'data/synth_accum/accum_nonunif',
             'overwrite': False,
             "write_history": True, #whether to write the history of training
             'model_save_name': None,
@@ -78,6 +78,9 @@ ops = {
 
 # load the dataset
 train_set, valid_set, test_set = DH.load_data(ops['dataset'], sort_by_len=True)
+longest_seq = np.max([len(train_set[-1][0]),len(valid_set[-1][0]),len(test_set[-1][0])])
+if ops['max_length'] == "ALL" or ops['task'] == 'CLASS':
+    ops['max_length'] = longest_seq #Can't concatenate classification data
 if ops['embedding']:
     extract_ids = lambda set: np.concatenate(np.array([set[i][0] for i in range(len(set))]))
     all_ids = np.concatenate([np.array(extract_ids(train_set)),
@@ -243,7 +246,8 @@ with tf.device(ops['device']):
             x_set, batch_y, batch_maxlen, batch_size, mask = DH.pick_batch(
                                                 dataset = train_set,
                                                 batch_indeces = batch_indeces,
-                                                max_length = ops['max_length'])
+                                                max_length = ops['max_length'],
+                                                task = ops['task'])
             # x_set: [batch_size, max_length, frame_size]
 
             if ops['embedding']:

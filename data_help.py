@@ -103,7 +103,7 @@ def get_minibatches_ids(n, minibatch_size, shuffle=True):
     return minibatches
 
 
-def prepare_data(ox, oxt, oy, oyt, maxlen=None, extended_len=0):
+def prepare_data(ox, oxt, oy, oyt, maxlen=None, extended_len=0, task = 'PRED'):
     """
     Pads each sequences with zeroes until maxlen to make a
     minibatch matrix that's of dimension (maxlen, batch_size)
@@ -135,7 +135,6 @@ def prepare_data(ox, oxt, oy, oyt, maxlen=None, extended_len=0):
                 new_oxt.append(loxt[0:maxlen])
                 new_oy.append(loy[0:maxlen])
                 new_oyt.append(loyt[0:maxlen])
-
         lengths = new_lengths
         ox = new_ox
         oxt = new_oxt
@@ -157,17 +156,25 @@ def prepare_data(ox, oxt, oy, oyt, maxlen=None, extended_len=0):
     y = np.zeros((batch_size, maxlen)).astype('int64')
     yt = np.zeros((batch_size, maxlen)).astype(np.float32)
     x_mask = np.zeros((batch_size, maxlen)).astype(np.float32)
-
-    for i in range(len(ox)):
-        x[i, :lengths[i]] = ox[i]
-        xt[i, :lengths[i]] = oxt[i]
-        y[i, :lengths[i]] = oy[i]
-        yt[i, :lengths[i]] = oyt[i]
-        x_mask[i, :lengths[i]] = 1.0
+    if task == 'CLASS':
+        for i in range(len(ox)):
+            x[i, maxlen - lengths[i]:] = ox[i]
+            xt[i, maxlen - lengths[i]:] = oxt[i]
+            y[i, maxlen - lengths[i]:] = oy[i]
+            yt[i, maxlen - lengths[i]:] = oyt[i]
+            x_mask[i, maxlen - lengths[i]:] = 1.0
+    else:
+        for i in range(len(ox)):
+            x[i, :lengths[i]] = ox[i]
+            xt[i, :lengths[i]] = oxt[i]
+            y[i, :lengths[i]] = oy[i]
+            yt[i, :lengths[i]] = oyt[i]
+            x_mask[i, :lengths[i]] = 1.0
     # return actual maxlength to know when to stop computing (np.max(lengths))
+
     return x, xt, y, yt, x_mask, np.max(lengths)
 
-def pick_batch(dataset, batch_indeces, max_length):
+def pick_batch(dataset, batch_indeces, max_length, task = 'PRED'):
     # Pick datapoints according to batch_indeces,
     # format the data
 
@@ -184,7 +191,8 @@ def pick_batch(dataset, batch_indeces, max_length):
                                                                     batch_y,
                                                                     batch_yt,
                                                                     maxlen=max_length,
-                                                                    extended_len=max_length)
+                                                                    extended_len=max_length,
+                                                                    task = task)
     # make an input set of dimensions (batch_size, max_length, frame_size)
     x_set = np.array([batch_x, batch_xt, batch_yt]).transpose([1,2,0])
     batch_size = len(batch_indeces)
