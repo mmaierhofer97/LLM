@@ -1,6 +1,6 @@
 import numpy as np
 import csv
-with open('records/accLSTMaccum0.0625.txt','rt') as csvfile:
+with open('records/accLSTMaccum16.txt','rt') as csvfile:
     data = csv.reader(csvfile, delimiter=',')
     rows = []
     for row in data:
@@ -13,8 +13,8 @@ with open('records/accLSTMaccum0.0625.txt','rt') as csvfile:
     test_m=np.average(test)
     train_s=np.sqrt(sum(np.square(train-train_m))/(len(train)-1))
     test_s=np.sqrt(sum(np.square(test-test_m))/(len(test)-1))
-    print('LSTM-{}: Train {} sd {}, Test {} sd {}'.format(len(train),train_m,train_s,test_m,test_s))
-with open('records/accLLMaccum0.0625.txt','rt') as csvfile:
+    print('LSTM-{}: Train {} +- {}, Test {} +- {}'.format(len(train),train_m,train_s*1.96,test_m,test_s*1.96))
+with open('records/accLLMaccum16.txt','rt') as csvfile:
     data = csv.reader(csvfile, delimiter=',')
     rows = []
     for row in data:
@@ -27,4 +27,4 @@ with open('records/accLLMaccum0.0625.txt','rt') as csvfile:
     test_m=np.average(test)
     train_s=np.sqrt(sum(np.square(train-train_m))/(len(train)-1))
     test_s=np.sqrt(sum(np.square(test-test_m))/(len(test)-1))
-    print('LLM-{}: Train {} sd {}, Test {} sd {}'.format(len(train),train_m,train_s,test_m,test_s))
+    print('LLM-{}: Train {} +- {}, Test {} +- {}'.format(len(train),train_m,train_s*1.96,test_m,test_s*1.96))

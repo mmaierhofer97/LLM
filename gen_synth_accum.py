@@ -5,12 +5,12 @@ lams = [1]
 ends = ['.train','.test']
 for lam in lams:
     for end in ends:
-        filename = filepath+str(lam)+end
+        filename = filepath+'Simp'+str(lam)+end
         myfile = open(filename,'w')
         myfile.write('')
         myfile.close()
         myfile = open(filename,'a')
-        for count in range(1000):
+        for count in range(10000):
             id=str(count+1).zfill(5)
             #A_timescale = random.expovariate(1)
             #B_timescale = random.expovariate(1)
