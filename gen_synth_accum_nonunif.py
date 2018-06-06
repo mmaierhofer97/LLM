@@ -46,10 +46,10 @@ for lam in lams:
                 #print(class_id[j])
             #print(len(time1),len(time2),len(ordinal))
             #print(accum, int(np.sign(accum)),len(events))
-
-            myfile.write(id + ' '+' '.join(ordinal)+'\n')
-            myfile.write(id + ' '+' '.join(time1)+'\n')
-            myfile.write(id + ' '+' '.join(class_id)+'\n')
-            myfile.write(id + ' '+' '.join(time2)+'\n')
+            if len(events)>5:
+                myfile.write(id + ' '+' '.join(ordinal)+'\n')
+                myfile.write(id + ' '+' '.join(time1)+'\n')
+                myfile.write(id + ' '+' '.join(class_id)+'\n')
+                myfile.write(id + ' '+' '.join(time2)+'\n')
             #myfile.write('foo2')
         myfile.close()
