@@ -1,6 +1,6 @@
 import numpy as np
 import csv
-with open('records/accLSTMaccum16.txt','rt') as csvfile:
+with open('records/accLSTMaccum16_nonunif.txt','rt') as csvfile:
     data = csv.reader(csvfile, delimiter=',')
     rows = []
     for row in data:
@@ -14,7 +14,7 @@ with open('records/accLSTMaccum16.txt','rt') as csvfile:
     train_s=np.sqrt(sum(np.square(train-train_m))/(len(train)-1))
     test_s=np.sqrt(sum(np.square(test-test_m))/(len(test)-1))
     print('LSTM-{}: Train {} +- {}, Test {} +- {}'.format(len(train),train_m,train_s*1.96,test_m,test_s*1.96))
-with open('records/accLLMaccum16.txt','rt') as csvfile:
+with open('records/accLLMaccum16_nonunif.txt','rt') as csvfile:
     data = csv.reader(csvfile, delimiter=',')
     rows = []
     for row in data:
