@@ -16,11 +16,11 @@ for lam in lams:
             B_timescale = random.expovariate(1)
             events = []
             t = 0
-            while t<300:
+            while t<100:
                t += random.expovariate(A_timescale)
                events.append([1,t])
             t = 0
-            while t<300:
+            while t<100:
                t += random.expovariate(B_timescale)
                events.append([2,t])
             events.sort(key=lambda x: x[1])
