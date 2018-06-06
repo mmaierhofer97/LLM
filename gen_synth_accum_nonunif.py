@@ -25,28 +25,29 @@ for lam in lams:
                events.append([2,t])
             events.sort(key=lambda x: x[1])
             events = events[:-2]
-            accum = np.sign(events[0][0]-1.5)
-            time1 = [str(0.0)]
-            time2 = []
-            ordinal = []
-            ordinal2 = []
-            class_id = []
-            for i in range(1,len(events)):
-                ordinal.append(str(events[i-1][0]))
-                delta_t = events[i][1]-events[i-1][1]
-                accum = accum * np.exp(lam*-(delta_t))
-                accum += np.sign(events[i][0]-1.5)
-                time1.append(str(delta_t))
-                time2.append(str(delta_t))
-                class_id.append(str(0))
-                ordinal2.append(str(events[i][0]))
-            time1 = time1[:-1]
-            #print(len(time1))
-            class_id[-1] = str(int(np.sign(accum)))
+            if len(events)>5:
+                accum = np.sign(events[0][0]-1.5)
+                time1 = [str(0.0)]
+                time2 = []
+                ordinal = []
+                ordinal2 = []
+                class_id = []
+                for i in range(1,len(events)):
+                    ordinal.append(str(events[i-1][0]))
+                    delta_t = events[i][1]-events[i-1][1]
+                    accum = accum * np.exp(lam*-(delta_t))
+                    accum += np.sign(events[i][0]-1.5)
+                    time1.append(str(delta_t))
+                    time2.append(str(delta_t))
+                    class_id.append(str(0))
+                    ordinal2.append(str(events[i][0]))
+                time1 = time1[:-1]
+                #print(len(time1))
+                class_id[-1] = str(int(np.sign(accum)))
                 #print(class_id[j])
             #print(len(time1),len(time2),len(ordinal))
             #print(accum, int(np.sign(accum)),len(events))
-            if len(events)>5:
+
                 myfile.write(id + ' '+' '.join(ordinal)+'\n')
                 myfile.write(id + ' '+' '.join(time1)+'\n')
                 myfile.write(id + ' '+' '.join(class_id)+'\n')
