@@ -280,3 +280,10 @@ def empty_directory(path):
             except OSError:
                 pass
         print( "Emptied direcotry: " + path)
+def longest_seq(datasets):
+    m = 0
+    for dataset in datasets:
+        for seq in dataset:
+            if m<len(seq[0]):
+                m = len(seq[0])
+    return m

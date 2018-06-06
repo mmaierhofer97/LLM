@@ -78,9 +78,8 @@ ops = {
 
 # load the dataset
 train_set, valid_set, test_set = DH.load_data(ops['dataset'], sort_by_len=True)
-longest_seq = np.max([len(train_set[-1][0]),len(valid_set[-1][0]),len(test_set[-1][0])])
 if ops['max_length'] == "ALL" or ops['task'] == 'CLASS':
-    ops['max_length'] = longest_seq #Can't concatenate classification data
+    ops['max_length'] = DH.longest_seq([train_set,valid_set,test_set]) #Can't concatenate classification data
 if ops['embedding']:
     extract_ids = lambda set: np.concatenate(np.array([set[i][0] for i in range(len(set))]))
     all_ids = np.concatenate([np.array(extract_ids(train_set)),
