@@ -2,23 +2,24 @@ import random
 import numpy as np
 import matplotlib.pyplot as plt
 import pandas
-A_timescale = random.expovariate(1)
-B_timescale = random.expovariate(1)
+
+import sys
+sys.path.insert(0, '/home/matt/Documents/mozerlab/LLM')
+
+import data_help as DH
 lam = 1
+train, test, valid = DH.load_data('accum_nonunif'+str(lam))
+r = random.randint(0,(len(train))-1)
+
+
 events = []
 t = 0
 colors = ['red','blue']
-while len(events)<20:
-    t += random.expovariate(A_timescale)
-    events.append([0,t])
+for i in range(len(train[r][0])):
+    t += train[r][1][i]
+    events.append([int(train[r][0][i]-1),t])
     #print(len(events))
-t = 0
-while len(events)<40:
-   t += random.expovariate(B_timescale)
-   events.append([1,t])
-   #print(len(events))
-events.sort(key=lambda x: x[1])
-events = events[:21]
+
 times = []
 labels = []
 c = []
@@ -56,7 +57,7 @@ for i in range(1,len(events)):
 #plt.scatter(times, labels, color=c, alpha=0.85, s=10)
 f, axarr = plt.subplots(2, sharex=True)
 
-axarr[0].set_title('Synthetic Accumulator Data \n A='+str(int(A_timescale*100)/100)+', B='+str(int(B_timescale*100)/100))
+axarr[0].set_title('Synthetic Accumulator Data\n Number of Events = '+str(len(events))+'\n Lambda = '+str(lam))# \n A='+str(int(A_timescale*100)/100)+', B='+str(int(B_timescale*100)/100))
 axarr[1].plot(accumsT,accumsV, color = 'green')
 axarr[1].axhline(y = 0, color = 'black' )
 for i in range(len(times)):
