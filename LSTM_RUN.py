@@ -60,7 +60,7 @@ ops = {
             'batch_size': 64,
             'max_length': 100, # Integer vs "ALL"
             'encoder': 'LSTM',
-            'dataset': 'data/synth_accum/accum_nonunif',
+            'dataset': 'data/synth_accum/accum1_nonunif',
             'overwrite': False,
             "write_history": True, #whether to write the history of training
             'model_save_name': None,
