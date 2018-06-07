@@ -315,7 +315,7 @@ with tf.device(ops['device']):
             best_results = [accuracy_entry, losses_entry]
             best_model = T_sess
             iterations_since_best = 0
-	    #reset_count = 0
+            reset_count = 0
         else:
             iterations_since_best += 1
 
@@ -323,12 +323,12 @@ with tf.device(ops['device']):
             T_sess = best_model
             [accuracy_entry, losses_entry] = best_results
             iterations_since_best = 0
-	    #reset_counter += 1
-	    #if reset_counter>5:
-            #    print( "Model Halting, Best Validation Results:\n Accuracy:{}, Losses:{}".format( accuracy_entry, losses_entry))
-	    #	epoch = op['epochs']
-	    #else:          
-	#	print( "Model Resetting, Best Validation Results:\n Accuracy:{}, Losses:{}".format( accuracy_entry, losses_entry))
+            reset_counter += 1
+            if reset_counter>5:
+                print( "Model Halting, Best Validation Results:\n Accuracy:{}, Losses:{}".format( accuracy_entry, losses_entry))
+                epoch = op['epochs']
+            else:
+                print( "Model Resetting, Best Validation Results:\n Accuracy:{}, Losses:{}".format( accuracy_entry, losses_entry))
         else:
             print( "Epoch:{}, Accuracy:{}, Losses:{}".format(epoch, accuracy_entry, losses_entry))
             if ops['model_save_name'] != None and iterations_since_best == 0:
