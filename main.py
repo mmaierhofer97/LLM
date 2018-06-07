@@ -315,16 +315,16 @@ with tf.device(ops['device']):
             best_results = [accuracy_entry, losses_entry]
             best_model = T_sess
             iterations_since_best = 0
-            reset_count = 0
+            reset_counter = 0
         else:
             iterations_since_best += 1
 
-        if iterations_since_best > 0:
+        if iterations_since_best > 2:
             T_sess = best_model
             [accuracy_entry, losses_entry] = best_results
             iterations_since_best = 0
             reset_counter += 1
-            if reset_counter>5:
+            if reset_counter>2:
                 print( "Model Halting, Best Validation Results:\n Accuracy:{}, Losses:{}".format( accuracy_entry, losses_entry))
                 epoch = op['epochs']
             else:
