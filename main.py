@@ -313,14 +313,14 @@ with tf.device(ops['device']):
         if epoch == 1 or best_valid_loss > losses_entry[2]:
             best_valid_loss = losses_entry[2]
             best_results = [accuracy_entry, losses_entry]
-            best_model = T_sess
+            saver.save(T_sess, ops['dataset']+'.mdl')
             iterations_since_best = 0
             reset_counter = 0
         else:
             iterations_since_best += 1
 
         if iterations_since_best > 2 or epoch == ops['epochs']:
-            T_sess = best_model
+            saver.restore(T_sess, ops['dataset']+'.mdl')
             [accuracy_entry, losses_entry] = best_results
             iterations_since_best = 0
             reset_counter += 1
@@ -331,9 +331,7 @@ with tf.device(ops['device']):
                 print( "Model Resetting, Best Validation Results:\n Accuracy:{}, Losses:{}".format( accuracy_entry, losses_entry))
         else:
             print( "Epoch:{}, Accuracy:{}, Losses:{}".format(epoch, accuracy_entry, losses_entry))
-            if ops['model_save_name'] != None and iterations_since_best == 0:
-                print( "Model Saved as ", ops['model_save_name'])
-                saver.save(T_sess, 'saved_models/' + ops['model_save_name'])
+            
 
         if ops['write_history'] and epoch==ops['epochs']:
             DH.write_history(accuracy_entry, ops['dataset']+ops['task']+'_acc.txt', epoch, ops['overwrite'])
