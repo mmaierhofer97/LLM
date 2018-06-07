@@ -75,7 +75,12 @@ ops = {
             'task': "CLASS", #CLASS vs PRED
             'device':"/device:GPU:0"
           }
-
+if len(sys.argv)>1:
+    ops['dataset'] = sys.argv[1]
+if len(sys.argv)>2:
+    ops['encoder'] = sys.argv[2]
+if len(sys.argv)>3:
+    ops['device'] = "/device:"+sys.argv[2]+":0"
 # load the dataset
 train_set, valid_set, test_set = DH.load_data(ops['dataset'], sort_by_len=True)
 if ops['max_length'] == "ALL" or ops['task'] == 'CLASS':
@@ -237,6 +242,7 @@ with tf.device(ops['device']):
     summary, deb_var, summary_weights, y_answer = None, None, None, None
 
     print("Format: Train, Test, Valid")
+    best_valid_loss = 0;
     while epoch < ops['epochs']:
         train_batch_indices = DH.get_minibatches_ids(len(train_set), ops['batch_size'], shuffle=True)
         epoch += 1
@@ -304,11 +310,25 @@ with tf.device(ops['device']):
         accuracy_entry, losses_entry = TCH.errors_and_losses(T_sess, P_x, P_y,
                                                             P_len, P_mask, P_batch_size, T_accuracy, T_cost, T_embedding_matrix,
                                                             dataset_names, datasets, ops)
-        print( "Epoch:{}, Accuracy:{}, Losses:{}".format(epoch, accuracy_entry, losses_entry))
-        if ops['model_save_name'] != None:
-            print( "Model Saved as ", ops['model_save_name'])
-            saver.save(T_sess, 'saved_models/' + ops['model_save_name'])
+        if epoch == 1 or best_valid_loss > losses_entry[2]:
+            best_valid_loss = losses_entry[2]
+            best_results = [accuracy_entry, losses_entry]
+            best_model = T_sess
+            iterations_since_best = 0
+        else:
+            iterations_since_best += 1
+
+        if iterations_since_best > 15:
+            T_sess = best_model
+            [accuracy_entry, losses_entry] = best_results
+            print( "Model Halting, Best Validation Results:\n Accuracy:{}, Losses:{}".format(epoch, accuracy_entry, losses_entry))
+            epoch = ops['epochs']
+        else:
+            print( "Epoch:{}, Accuracy:{}, Losses:{}".format(epoch, accuracy_entry, losses_entry))
+            if ops['model_save_name'] != None and iterations_since_best == 0:
+                print( "Model Saved as ", ops['model_save_name'])
+                saver.save(T_sess, 'saved_models/' + ops['model_save_name'])
 
         if ops['write_history'] and epoch==ops['epochs']:
-            DH.write_history(accuracy_entry, 'records/acc.txt', epoch, ops['overwrite'])
+            DH.write_history(accuracy_entry, ops['dataset']+ops['task']+'_acc.txt', epoch, ops['overwrite'])
             DH.write_history(losses_entry, 'records/loss.txt', epoch, ops['overwrite'])
