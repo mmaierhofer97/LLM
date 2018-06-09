@@ -52,7 +52,7 @@ tensor_classes_helpers:
 
 
 ops = {
-            'epochs': 500,
+            'epochs': 200,
             'frame_size': 3,
             'n_hidden': 50,
             'n_classes': 50, # aka n_input
@@ -272,7 +272,7 @@ with tf.device(ops['device']):
 
             #print(np.array(deb_var[0]).shape,deb_var[0][0,0,0,:] )
             names = ["h","o", "h_prev","o_prev","q","s","sigma","r","rho",'mul','decay']
-            np.set_printoptions(precision=5)
+            np.set_printoptions(precision=4)
             #print(yo)
             for i,var in enumerate(deb_var):
                 var = np.array(var)
@@ -325,12 +325,12 @@ with tf.device(ops['device']):
             iterations_since_best = 0
             reset_counter += 1
             if reset_counter>2:
-                print( "Model Halting, Best Validation Results:\n Accuracy:{}, Losses:{}".format( accuracy_entry, losses_entry))
+                print( "Model Halting, Best Validation Results:\n Accuracy:{}, Losses:{}".format( np.array(accuracy_entry),losses_entry))
                 epoch = ops['epochs']
             else:
-                print( "Model Resetting, Best Validation Results:\n Accuracy:{}, Losses:{}".format( accuracy_entry, losses_entry))
+                print( "Model Resetting, Best Validation Results:\n Accuracy:{}, Losses:{}".format( np.array(accuracy_entry), losses_entry))
         else:
-            print( "Epoch:{}, Accuracy:{}, Losses:{}".format(epoch, accuracy_entry, losses_entry))
+            print( "Epoch:{}, Accuracy:{}, Losses:{}".format(epoch, np.array(accuracy_entry), losses_entry))
             
 
         if ops['write_history'] and epoch==ops['epochs']:

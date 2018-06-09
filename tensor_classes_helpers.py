@@ -181,7 +181,7 @@ def errors_and_losses(sess, P_x, P_y, P_len, P_mask, P_batch_size, T_accuracy,  
             acc_tot += accuracy_batch*len(batch_ids)
             loss_tot += cost_batch*len(batch_ids)
             samples += len(batch_ids)
-        accuracy_entry.append(acc_tot/samples))
+        accuracy_entry.append(acc_tot/samples)
         losses_entry.append(loss_tot/samples)
     return accuracy_entry, losses_entry
 
