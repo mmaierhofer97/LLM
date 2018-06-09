@@ -1,19 +1,21 @@
 import random
 import numpy as np
 filepath = 'data/synth_accum/accum_length_vary'
-restricts = [[5,1000],[50,700],[100,500],[200,300]]
+restricts = [[5,1000],[50,700],[100,500],[200,300],[225,275],[250,250]]
 lam = 1
 ends = ['.train','.test']
 for ind in range(len(restricts)):
     for end in ends:
+        print(ind,end)
+        seqs = 0
         filename = filepath+str(ind)+end
         rest = restricts[ind]
         myfile = open(filename,'w')
         myfile.write('')
         myfile.close()
         myfile = open(filename,'a')
-        for count in range(1000):
-            id=str(count+1).zfill(5)
+        while seqs < 1000:
+            id=str(seqs+1).zfill(5)
             A_timescale = random.expovariate(1)
             B_timescale = random.expovariate(1)
             events = []
@@ -27,7 +29,8 @@ for ind in range(len(restricts)):
                events.append([2,t])
             events.sort(key=lambda x: x[1])
             events = events[:-2]
-            if len(events)>rest[0] and len(events)<rest[1]:
+            if len(events)>rest[0]:
+                events = events[:rest[1]]
                 accum = np.sign(events[0][0]-1.5)
                 time1 = [str(0.0)]
                 time2 = []
@@ -54,5 +57,6 @@ for ind in range(len(restricts)):
                 myfile.write(id + ' '+' '.join(time1)+'\n')
                 myfile.write(id + ' '+' '.join(class_id)+'\n')
                 myfile.write(id + ' '+' '.join(time2)+'\n')
+                seqs += 1
             #myfile.write('foo2')
         myfile.close()
