@@ -138,7 +138,7 @@ with tf.device(ops['device']):
     elif ops['encoder'] == "HPM":
         params_hpm = TCH.HPM_params_init(ops)
     elif ops['encoder'] == "LLM":
-        params_hpm = TCH.LLM_params_init(ops)
+        params_llm = TCH.LLM_params_init(ops)
     elif ops['encoder'] == "LSTM_RAW":
         params_lstm = TCH.LSTM_raw_params_init(ops)
     elif ops['encoder'] == "GRU":
@@ -153,7 +153,7 @@ with tf.device(ops['device']):
     elif ops['encoder'] == 'HPM':
         T_pred, T_summary_weights, debugging_stuff = TCH.HPM(P_x, P_len, P_batch_size, ops, params_hpm, P_batch_size)
     elif ops['encoder'] == 'LLM':
-        T_pred, T_summary_weights, debugging_stuff = TCH.LLM(P_x, P_len, P_batch_size, ops, params_hpm, P_batch_size)
+        T_pred, T_summary_weights, debugging_stuff = TCH.LLM(P_x, P_len, P_batch_size, ops, params_llm, P_batch_size)
     elif ops['encoder'] == "LSTM_RAW":
         T_pred, T_summary_weights, debugging_stuff = TCH.LSTM([P_x, P_len, P_batch_size], ops, params_lstm)
     elif ops['encoder'] == "GRU":
@@ -324,14 +324,16 @@ with tf.device(ops['device']):
             [accuracy_entry, losses_entry] = best_results
             iterations_since_best = 0
             reset_counter += 1
-            if reset_counter>2:
+            if epoch == ops['epochs']:
+                print( "Epoch:{}, Accuracy:{}, Losses:{}".format(epoch, np.array(accuracy_entry), losses_entry))
+            elif reset_counter>2:
                 print( "Model Halting, Best Validation Results:\n Accuracy:{}, Losses:{}".format( np.array(accuracy_entry),losses_entry))
                 epoch = ops['epochs']
             else:
                 print( "Model Resetting, Best Validation Results:\n Accuracy:{}, Losses:{}".format( np.array(accuracy_entry), losses_entry))
         else:
             print( "Epoch:{}, Accuracy:{}, Losses:{}".format(epoch, np.array(accuracy_entry), losses_entry))
-            
+
 
         if ops['write_history'] and epoch==ops['epochs']:
             DH.write_history(accuracy_entry, ops['dataset']+ops['encoder']+'_acc.txt', epoch, ops['overwrite'])
