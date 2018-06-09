@@ -282,8 +282,12 @@ def empty_directory(path):
         print( "Emptied direcotry: " + path)
 def longest_seq(datasets):
     m = 0
+    l = 0
     for dataset in datasets:
         for seq in dataset:
             if m<len(seq[0]):
                 m = len(seq[0])
+            if l>len(seq[0]) or l==0:
+                l = len(seq[0])
+    print(' Minimum length is {}\n Maximum length is {}'.format(l,m))
     return m
