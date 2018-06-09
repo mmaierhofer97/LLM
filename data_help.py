@@ -58,7 +58,7 @@ def load_data(dir, sort_by_len=True, valid_ratio=0.1):
     train_set = read_file_time_sequences(dir + '.train')
     test_set = read_file_time_sequences(dir + '.test')
 
-    # make validation set from test set before sorting by length
+    # make validation set from train set before sorting by length
     valid_n = int(len(train_set)*valid_ratio)
     if valid_n == 0:
         valid_n = 1

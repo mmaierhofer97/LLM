@@ -155,8 +155,9 @@ def errors_and_losses(sess, P_x, P_y, P_len, P_mask, P_batch_size, T_accuracy,  
         dataset_name = dataset_names[i]
         batch_indeces_arr = DH.get_minibatches_ids(len(dataset), ops['batch_size'], shuffle=True)
 
-        acc_avg = 0.0
-        loss_avg = 0.0
+        acc_tot = 0.0
+        loss_tot = 0.0
+        samples = 0
         for batch_ids in batch_indeces_arr:
             x_set, batch_y, batch_maxlen, batch_size, mask = DH.pick_batch(
                                             dataset = dataset,
@@ -177,10 +178,11 @@ def errors_and_losses(sess, P_x, P_y, P_len, P_mask, P_batch_size, T_accuracy,  
                                                         P_len: batch_maxlen,
                                                         P_mask: mask,
                                                         P_batch_size: batch_size})
-            acc_avg += accuracy_batch
-            loss_avg += cost_batch
-        accuracy_entry.append(acc_avg/len(batch_indeces_arr))
-        losses_entry.append(cost_batch/len(batch_indeces_arr))
+            acc_tot += accuracy_batch*len(batch_ids)
+            loss_tot += cost_batch*len(batch_ids)
+            samples += len(batch_ids)
+        accuracy_entry.append(acc_tot/samples))
+        losses_entry.append(loss_tot/samples)
     return accuracy_entry, losses_entry
 
 
