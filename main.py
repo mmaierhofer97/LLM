@@ -52,7 +52,7 @@ tensor_classes_helpers:
 
 
 ops = {
-            'epochs': 200,
+            'epochs': 500,
             'frame_size': 3,
             'n_hidden': 50,
             'n_classes': 50, # aka n_input
@@ -316,10 +316,12 @@ with tf.device(ops['device']):
             saver.save(T_sess, ops['dataset']+'.mdl')
             iterations_since_best = 0
             reset_counter = 0
+        elif epoch < 10:
+            iterations_since_best = 0
         else:
             iterations_since_best += 1
-
-        if iterations_since_best > 2 or epoch == ops['epochs']:
+        
+        if iterations_since_best > 4 or epoch == ops['epochs']:
             saver.restore(T_sess, ops['dataset']+'.mdl')
             [accuracy_entry, losses_entry] = best_results
             iterations_since_best = 0
