@@ -339,5 +339,5 @@ with tf.device(ops['device']):
 
 
         if ops['write_history'] and epoch==ops['epochs']:
-            DH.write_history(accuracy_entry, ops['dataset']+ops['encoder']+'_acc.txt', epoch, ops['overwrite'])
+            DH.write_history(accuracy_entry, ops['dataset']+ops['encoder']+'mask_acc.txt', epoch, ops['overwrite'])
             DH.write_history(losses_entry, 'records/loss.txt', epoch, ops['overwrite'])
