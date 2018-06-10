@@ -60,7 +60,7 @@ ops = {
             'batch_size': 64,
             'max_length': 100, # Integer vs "ALL"
             'encoder': 'LSTM',
-            'dataset': 'data/synth_accum/accum_nonunif',
+            'dataset': 'data/synth_accum/accum_length_vary0',
             'overwrite': False,
             "write_history": True, #whether to write the history of training
             'model_save_name': None,
@@ -73,7 +73,7 @@ ops = {
             'embedding_size': 30,
             'vocab_size': 10000,
             'task': "CLASS", #CLASS vs PRED
-            'device':"/device:GPU:0"
+            'device':"/device:CPU:0"
           }
 if len(sys.argv)>1:
     ops['dataset'] = sys.argv[1]
