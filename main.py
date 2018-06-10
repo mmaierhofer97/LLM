@@ -262,8 +262,9 @@ with tf.device(ops['device']):
             else:
                 # (batch_size, steps, n_classes)
                 y_answer = DH.embed_one_hot(batch_y, 0.0, ops['n_classes'], ops['max_length'])
-            _, deb_var, summary_weights,yo= T_sess.run(
-                                                    [T_optimizer, debugging_stuff, T_summary_weights,T_cost],
+            #print(np.sum(np.array(batch_y)[0,:]*np.array(mask)[0,:]))
+            _, deb_var, summary_weights= T_sess.run(
+                                                    [T_optimizer, debugging_stuff, T_summary_weights],
                                                     feed_dict={
                                                                 P_x: x_set,
                                                                 P_y: y_answer,

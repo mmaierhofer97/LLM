@@ -1,4 +1,4 @@
-daimport tensorflow as tf
+import tensorflow as tf
 import numpy as np
 import random
 import os
@@ -162,7 +162,7 @@ def prepare_data(ox, oxt, oy, oyt, maxlen=None, extended_len=0, task = 'PRED'):
             xt[i, :lengths[i]] = oxt[i]
             y[i, :lengths[i]] = oy[i]
             yt[i, :lengths[i]] = oyt[i]
-            x_mask[lengths[i]-1] = 1.0
+            x_mask[i, lengths[i]-1] = 1.0
     else:
         for i in range(len(ox)):
             x[i, :lengths[i]] = ox[i]
