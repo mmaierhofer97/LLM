@@ -193,15 +193,16 @@ with tf.device(ops['device']):
         elif ops['task'] == "CLASS":
             y_answer = P_y
             T_cost = tf.reduce_sum(
-                    - tf.reduce_sum(
-                        (y_answer * tf.log(T_pred)),
-                        reduction_indices=[2])[:,-1]
-                    ) / tf.reduce_sum(tf.reduce_sum(y_answer))
+                        tf.reduce_sum(
+                            - tf.reduce_sum(
+                                (y_answer * tf.log(T_pred)),
+                            reduction_indices=[2]) * P_mask,
+                        reduction_indices=[1])) / tf.reduce_sum(tf.reduce_sum(P_mask))
 
             # Evaluate the model
-            T_correct_pred = tf.cast(tf.equal(tf.argmax(T_pred, 2), tf.argmax(y_answer, 2)), tf.float32)
-            T_accuracy = tf.reduce_sum(tf.cast(T_correct_pred[:,-1], tf.float32)) / tf.reduce_sum(
-                tf.reduce_sum(y_answer[:,-1,:]))
+            T_correct_pred = tf.cast(tf.equal(tf.argmax(T_pred, 2), tf.argmax(y_answer, 2)), tf.float32) * P_mask
+            T_accuracy = tf.reduce_sum(tf.reduce_sum(tf.cast(T_correct_pred, tf.float32))) / tf.reduce_sum(
+                tf.reduce_sum(P_mask))
 
     T_optimizer = tf.train.AdamOptimizer(learning_rate=ops['learning_rate']).minimize(T_cost)
 
@@ -320,7 +321,7 @@ with tf.device(ops['device']):
             iterations_since_best = 0
         else:
             iterations_since_best += 1
-        
+
         if iterations_since_best > 4 or epoch == ops['epochs']:
             saver.restore(T_sess, ops['dataset']+'.mdl')
             [accuracy_entry, losses_entry] = best_results

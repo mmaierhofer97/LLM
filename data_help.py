@@ -1,4 +1,4 @@
-import tensorflow as tf
+daimport tensorflow as tf
 import numpy as np
 import random
 import os
@@ -158,11 +158,11 @@ def prepare_data(ox, oxt, oy, oyt, maxlen=None, extended_len=0, task = 'PRED'):
     x_mask = np.zeros((batch_size, maxlen)).astype(np.float32)
     if task == 'CLASS':
         for i in range(len(ox)):
-            x[i, maxlen - lengths[i]:] = ox[i]
-            xt[i, maxlen - lengths[i]:] = oxt[i]
-            y[i, maxlen - lengths[i]:] = oy[i]
-            yt[i, maxlen - lengths[i]:] = oyt[i]
-            x_mask[i, maxlen - lengths[i]:] = 1.0
+            x[i, :lengths[i]] = ox[i]
+            xt[i, :lengths[i]] = oxt[i]
+            y[i, :lengths[i]] = oy[i]
+            yt[i, :lengths[i]] = oyt[i]
+            x_mask[lengths[i]-1] = 1.0
     else:
         for i in range(len(ox)):
             x[i, :lengths[i]] = ox[i]
