@@ -14,7 +14,7 @@ for ind in range(len(restricts)):
         myfile.write('')
         myfile.close()
         myfile = open(filename,'a')
-        while seqs < 1000:
+        while seqs < 100:
             id=str(seqs+1).zfill(5)
             A_timescale = random.expovariate(1)
             B_timescale = random.expovariate(1)

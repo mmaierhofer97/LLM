@@ -169,7 +169,7 @@ def errors_and_losses(sess, P_x, P_y, P_len, P_mask, P_batch_size, T_accuracy,  
                 # batch_y = (batch, n_steps_padded)
                 y_answer = np.array(batch_y).astype(np.int32)
             else:
-                y_answer = DH.embed_one_hot(batch_y, 0.0, ops['n_classes'], ops['max_length'])
+                y_answer = DH.embed_one_hot(batch_y, 0.0, ops['n_classes'], ops['max_length'],ops['task'])
 
             accuracy_batch, cost_batch = sess.run([T_accuracy, T_cost],
                                                     feed_dict={

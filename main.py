@@ -204,6 +204,7 @@ with tf.device(ops['device']):
             T_accuracy = tf.reduce_sum(tf.reduce_sum(tf.cast(T_correct_pred, tf.float32))) / tf.reduce_sum(
                 tf.reduce_sum(P_mask))
 
+
     T_optimizer = tf.train.AdamOptimizer(learning_rate=ops['learning_rate']).minimize(T_cost)
 
 
@@ -261,8 +262,9 @@ with tf.device(ops['device']):
                 y_answer = np.array(batch_y).astype(np.int32)
             else:
                 # (batch_size, steps, n_classes)
-                y_answer = DH.embed_one_hot(batch_y, 0.0, ops['n_classes'], ops['max_length'])
-            #print(np.sum(np.array(batch_y)[0,:]*np.array(mask)[0,:]))
+                y_answer = DH.embed_one_hot(batch_y, 0.0, ops['n_classes'], ops['max_length'],ops['task'])
+            ind = list(mask[0,:]).index(1)
+            #print(np.array(y_answer).shape,np.sum(y_answer[0,:,:]),batch_y[0,ind])
             _, deb_var, summary_weights= T_sess.run(
                                                     [T_optimizer, debugging_stuff, T_summary_weights],
                                                     feed_dict={
