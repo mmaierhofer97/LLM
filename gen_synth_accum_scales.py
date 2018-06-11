@@ -4,13 +4,13 @@ filepath = 'data/synth_accum/accum_scales'
 scales = [1/8,8]
 lam = 1
 ends = ['.train','.test']
-for scale in scales:
-    for end in ends:
-        filename = filepath+str(lam)+end
-        myfile = open(filename,'w')
-        myfile.write('')
-        myfile.close()
-        myfile = open(filename,'a')
+for end in ends:
+    filename = filepath+str(lam)+end
+    myfile = open(filename,'w')
+    myfile.write('')
+    myfile.close()
+    myfile = open(filename,'a')
+    for scale in scales:
         for count in range(1000):
             id=str(count+1).zfill(5)
             A_timescale = random.expovariate(1)*scale
