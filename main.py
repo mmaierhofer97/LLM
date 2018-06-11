@@ -59,8 +59,8 @@ ops = {
             'learning_rate': 0.002,
             'batch_size': 64,
             'max_length': 100, # Integer vs "ALL"
-            'encoder': 'LSTM',
-            'dataset': 'data/synth_accum/accum_length_vary0',
+            'encoder': 'LLM',
+            'dataset': 'data/synth_accum/accum_overfit',
             'overwrite': False,
             "write_history": True, #whether to write the history of training
             'model_save_name': None,
@@ -317,7 +317,7 @@ with tf.device(ops['device']):
         if epoch == 1 or best_valid_loss > losses_entry[2]:
             best_valid_loss = losses_entry[2]
             best_results = [accuracy_entry, losses_entry]
-            saver.save(T_sess, ops['dataset']+'.mdl')
+            saver.save(T_sess, ops['dataset']+'_model/'+ops['encoder']+'model')
             iterations_since_best = 0
             reset_counter = 0
         elif epoch < 10:
@@ -326,7 +326,7 @@ with tf.device(ops['device']):
             iterations_since_best += 1
 
         if iterations_since_best > 4 or epoch == ops['epochs']:
-            saver.restore(T_sess, ops['dataset']+'.mdl')
+            saver.restore(T_sess, ops['dataset']+'_model/'+ops['encoder']+'model')
             [accuracy_entry, losses_entry] = best_results
             iterations_since_best = 0
             reset_counter += 1
