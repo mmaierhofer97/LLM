@@ -12,10 +12,10 @@ for lam in lams:
         myfile = open(filename,'a')
         for count in range(1000):
             id=str(count+1).zfill(5)
-            A_timescale = random.expovariate(1)
-            B_timescale = random.expovariate(1)
-            #A_timescale = 1
-            #B_timescale = 1
+            #A_timescale = random.expovariate(1)
+            #B_timescale = random.expovariate(1)
+            A_timescale = 1
+            B_timescale = 1
             events = []
             t = 0
             while len(events)<100:

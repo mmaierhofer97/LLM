@@ -1,6 +1,6 @@
 import os
 import sys
-filename = "'data/synth_accum/accum_nonunif0.25'"
+filename = "'data/synth_accum/accum1'"
 if len(sys.argv)>1:
     filename = sys.argv[1]
 cwd = os.path.join(os.getcwd(), "main.py "+filename+" 'LSTM' 'GPU'")

@@ -1,7 +1,8 @@
 import numpy as np
 import csv
 for i in range(6):
-    with open('data/synth_accum/accum_length_vary'+str(i)+'maskLLM_acc.txt','rt') as csvfile:
+    print(i)
+    with open('data/synth_accum/accum_length_vary'+str(i)+'LLMmask_acc.txt','rt') as csvfile:
         data = csv.reader(csvfile, delimiter=',')
         rows = []
         for row in data:
@@ -15,7 +16,7 @@ for i in range(6):
         train_s=np.sqrt(sum(np.square(train-train_m))/(len(train)-1))
         test_s=np.sqrt(sum(np.square(test-test_m))/(len(test)-1))
         print('LLM-{}: Train {} +- {}, Test {} +- {}'.format(len(train),train_m,train_s*1.96,test_m,test_s*1.96))
-    with open('data/synth_accum/accum_length_vary'+str(i)+'maskLSTM_acc.txt','rt') as csvfile:
+    with open('data/synth_accum/accum_length_vary'+str(i)+'LSTMmask_acc.txt','rt') as csvfile:
         data = csv.reader(csvfile, delimiter=',')
         rows = []
         for row in data:
