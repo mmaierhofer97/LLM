@@ -13,7 +13,7 @@ for lam in lams:
         myfile.close()
         myfile = open(filename,'a')
         for scale in scales:
-            for count in range(5000):
+            for count in range(2000):
                 id=str(count+1).zfill(5)
                 A_timescale = random.expovariate(scale)
                 B_timescale = random.expovariate(scale)
@@ -39,9 +39,10 @@ for lam in lams:
                 for i in range(1,len(events)):
                     ordinal.append(str(events[i-1][0]))
                     delta_t = events[i][1]-events[i-1][1]
-                    accum = accum * np.exp(lam*-(delta_t))
                     if i != len(events)-1:
-                        accum += np.sign(events[i][0]-1.5)                    time1.append(str(delta_t))
+                        accum = accum * np.exp(lam*-(delta_t))
+                        accum += np.sign(events[i][0]-1.5)
+                    time1.append(str(delta_t))
                     time2.append(str(delta_t))
                     class_id.append(str(0))
                     ordinal2.append(str(events[i][0]))
