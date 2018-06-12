@@ -2,10 +2,11 @@ import random
 import numpy as np
 filepath = 'data/synth_accum/accum_scales'
 scales = [1/16,16]
-lams = [1/16,1/4,1,4,16]
+lams = [1/64,1/16,1/4,1,4,16,64]
 ends = ['.train','.test']
 for lam in lams:
     for end in ends:
+        print(lam,end)
         filename = filepath+str(lam)+end
         myfile = open(filename,'w')
         myfile.write('')
