@@ -62,22 +62,24 @@ def output_placeholder(max_length_seq=100,
                         number_of_classes], name=name)
     return y
 
-def weights_init(n_input, n_output, name=None, small_dev=False, idendity=False, forced_zero=False, llm_identity=0):
+def weights_init(n_input, n_output, name=None, small_dev=False, identity=False, forced_zero=False, llm_identity=0):
     init_matrix = None
     if small_dev:
         init_matrix = tf.random_normal([n_input, n_output], stddev=small_dev)
     else:
         init_matrix = tf.random_normal([n_input, n_output])
 
-    if idendity:
+    if identity:
         init_matrix = tf.diag(tf.ones([n_input]))
     elif forced_zero:
         init_matrix = tf.diag(tf.zeros([n_input]))
     if llm_identity!=0:
         numpy_matrix = np.repeat(np.eye(int(n_input/llm_identity)),llm_identity,axis=0)
+        if small_dev:
+            numpy_matrix += np.random.normal(size = (n_input,n_output), scale = small_dev)
         init_matrix = tf.convert_to_tensor(numpy_matrix, dtype=tf.float32)
     trainable = True
-    if idendity or forced_zero:
+    if identity or forced_zero:
         trainable = False
     learnable_print = lambda bool: "Learned" if bool else "Not Learned"
     print( name, learnable_print(trainable))
@@ -640,7 +642,7 @@ def HPM_params_init(ops):
         # W = {'in': weights_init(n_input=ops['n_classes'],
         #                         n_output=ops['n_hidden'],
         #                         name='W_in',
-        #                         idendity=True),
+        #                         identity=True),
         #      'recurrent': weights_init(n_input=ops['n_hidden'],
         #                                n_output=ops['n_hidden'],
         #                                name='W_recurrent',
@@ -649,7 +651,7 @@ def HPM_params_init(ops):
         #      'out':  weights_init(n_input=ops['n_hidden'],
         #                                n_output=ops['n_classes'],
         #                                name='W_out',
-        #                                idendity=True)
+        #                                identity=True)
         #      }
         #
         # b = {
@@ -672,7 +674,7 @@ def HPM_params_init(ops):
         W = {'in': weights_init(n_input=ops['n_classes'],
                                 n_output=ops['n_hidden'],
                                 name='W_in',
-                                idendity=identity_flag),
+                                identity=identity_flag),
              'recurrent': weights_init(n_input=ops['n_hidden'],
                                        n_output=ops['n_hidden'],
                                        name='W_recurrent',
@@ -681,7 +683,7 @@ def HPM_params_init(ops):
              'out': weights_init(n_input=ops['n_hidden'],
                                  n_output=ops['n_classes'],
                                  name='W_out',
-                                 idendity=identity_flag)
+                                 identity=identity_flag)
              }
 
         b = {
@@ -911,11 +913,12 @@ def LLM_params_init(ops):
         identity_flag = False
         forced_zero_flag = False
         timescales = 2.0 ** np.arange(-7,7)
+        timescales = np.append(10**64,timescales)
         n_timescales = len(timescales)
         W = {'in_feat': weights_init(n_input=ops['n_classes'],
                                 n_output=ops['n_hidden'],
                                 name='W_in',
-                                idendity=identity_flag),
+                                identity=identity_flag),
              'recurrent_feat': weights_init(n_input=ops['n_hidden']*n_timescales,
                                        n_output=ops['n_hidden'],
                                        name='W_recurrent',
@@ -925,7 +928,7 @@ def LLM_params_init(ops):
              'in_gate': weights_init(n_input=ops['n_classes'],
                                 n_output=ops['n_hidden'],
                                 name='W_in',
-                                idendity=identity_flag),
+                                identity=identity_flag),
              'recurrent_gate': weights_init(n_input=ops['n_hidden']*n_timescales,
                                        n_output=ops['n_hidden'],
                                        name='W_recurrent',
@@ -936,7 +939,7 @@ def LLM_params_init(ops):
              'out': weights_init(n_input=ops['n_hidden']*n_timescales,
                                  n_output=ops['n_classes'],
                                  name='W_out',
-                                 idendity=identity_flag)
+                                 identity=identity_flag)
              }
 
         b = {
@@ -955,7 +958,7 @@ def LLM_params_init(ops):
 
 
         gamma = 1.0 / timescales
-
+        print(gamma)
 
 
 

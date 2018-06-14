@@ -60,7 +60,7 @@ ops = {
             'batch_size': 128,
             'max_length': 100, # Integer vs "ALL"
             'encoder': 'LLM',
-            'dataset': 'data/synth_accum/accum0.00390625',
+            'dataset': 'data/synth_accum/accum',
             'overwrite': False,
             "write_history": True, #whether to write the history of training
             'model_save_name': None,
