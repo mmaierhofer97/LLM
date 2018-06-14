@@ -15,8 +15,8 @@ for lam in lams:
         for scale in scales:
             for count in range(1000):
                 id=str(count+1).zfill(5)
-                A_timescale = random.expovariate(scale)
-                B_timescale = random.expovariate(scale)
+                A_timescale = abs(random.normalvariate(scale,scale/10))
+                B_timescale = abs(random.normalvariate(scale,scale/10))
                 #A_timescale = scale
                 #B_timescale = scale
                 events = []
