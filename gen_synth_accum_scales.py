@@ -13,7 +13,7 @@ for lam in lams:
         myfile.close()
         myfile = open(filename,'a')
         for scale in scales:
-            for count in range(2000):
+            for count in range(1000):
                 id=str(count+1).zfill(5)
                 A_timescale = random.expovariate(scale)
                 B_timescale = random.expovariate(scale)

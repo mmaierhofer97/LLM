@@ -60,7 +60,7 @@ ops = {
             'batch_size': 64,
             'max_length': 100, # Integer vs "ALL"
             'encoder': 'LLM',
-            'dataset': 'data/synth_accum/accum_scales1',
+            'dataset': 'data/synth_accum/accum0.00390625',
             'overwrite': False,
             "write_history": True, #whether to write the history of training
             'model_save_name': None,
@@ -83,6 +83,8 @@ if len(sys.argv)>3:
     ops['device'] = "/device:"+sys.argv[2]+":0"
 # load the dataset
 train_set, valid_set, test_set = DH.load_data(ops['dataset'], sort_by_len=True)
+print(ops['dataset'])
+#valid_set = test_set
 if ops['max_length'] == "ALL" or ops['task'] == 'CLASS':
     ops['max_length'] = DH.longest_seq([train_set,valid_set,test_set]) #Can't concatenate classification data
 if ops['embedding']:
@@ -325,14 +327,14 @@ with tf.device(ops['device']):
         else:
             iterations_since_best += 1
 
-        if iterations_since_best > 4 or epoch == ops['epochs']:
+        if iterations_since_best > 6 or epoch == ops['epochs']:
             saver.restore(T_sess, ops['dataset']+'_model/'+ops['encoder']+'model')
             [accuracy_entry, losses_entry] = best_results
             iterations_since_best = 0
             reset_counter += 1
             if epoch == ops['epochs']:
                 print( "Epoch:{}, Accuracy:{}, Losses:{}".format(epoch, np.array(accuracy_entry), losses_entry))
-            elif reset_counter>2:
+            elif reset_counter>2 or (accuracy_entry[2]==1 and accuracy_entry[0]==1):
                 print( "Model Halting, Best Validation Results:\n Accuracy:{}, Losses:{}".format( np.array(accuracy_entry),losses_entry))
                 epoch = ops['epochs']
             else:
@@ -342,5 +344,5 @@ with tf.device(ops['device']):
 
 
         if ops['write_history'] and epoch==ops['epochs']:
-            DH.write_history(accuracy_entry, ops['dataset']+ops['encoder']+'mask_acc.txt', epoch, ops['overwrite'])
+            DH.write_history(accuracy_entry, ops['dataset']+ops['encoder']+'_acc.txt', epoch, ops['overwrite'])
             DH.write_history(losses_entry, 'records/loss.txt', epoch, ops['overwrite'])

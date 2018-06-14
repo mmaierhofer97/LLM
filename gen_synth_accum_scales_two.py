@@ -11,9 +11,10 @@ for lam in lams:
         myfile = open(filename,'w')
         myfile.write('')
         myfile.close()
-        myfile = open(filename,'a') 
+        #print(filename)
+        myfile = open(filename,'a')
         for count in range(2000):
-            a = int(random.uniform(0,500))
+            a = int(random.uniform(10,490))
             counts = [a,500-a]
             events_all = []
             for j,scale in enumerate(scales):
@@ -34,6 +35,8 @@ for lam in lams:
                 events.sort(key=lambda x: x[1])
                 events = events[:counts[j]+1]
                 events_all.extend(events)
+            events_all.sort(key = lambda x: x[1])
+            events = events_all
             accum = np.sign(events[0][0]-1.5)
             time1 = [str(0.0)]
             time2 = []

@@ -1,7 +1,7 @@
 import random
 import numpy as np
 filepath = 'data/synth_accum/accum'
-lams = [1/16,1/4,1,4,16]
+lams = [64,1/256,1/64,1/16,1/4,1,4,16,256]
 ends = ['.train','.test']
 for lam in lams:
     for end in ends:
@@ -12,8 +12,8 @@ for lam in lams:
         myfile = open(filename,'a')
         for count in range(1000):
             id=str(count+1).zfill(5)
-            #A_timescale = random.expovariate(1)
-            #B_timescale = random.expovariate(1)
+            A_timescale = random.expovariate(1)
+            B_timescale = random.expovariate(1)
             A_timescale = 1
             B_timescale = 1
             events = []
