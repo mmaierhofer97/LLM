@@ -52,7 +52,7 @@ tensor_classes_helpers:
 
 
 ops = {
-            'epochs': 500,
+            'epochs': 400,
             'frame_size': 3,
             'n_hidden': 10,
             'n_classes': 5, # aka n_input
@@ -60,7 +60,7 @@ ops = {
             'batch_size': 128,
             'max_length': 100, # Integer vs "ALL"
             'encoder': 'LLM',
-            'dataset': 'data/synth_accum/accum',
+            'dataset': 'data/synth_accum/accum_scales64',
             'overwrite': False,
             "write_history": True, #whether to write the history of training
             'model_save_name': None,
@@ -73,7 +73,7 @@ ops = {
             'embedding_size': 30,
             'vocab_size': 10000,
             'task': "CLASS", #CLASS vs PRED
-            'device':"/device:CPU:0"
+            'device':"/device:GPU:0"
           }
 if len(sys.argv)>1:
     ops['dataset'] = sys.argv[1]
@@ -316,8 +316,8 @@ with tf.device(ops['device']):
         accuracy_entry, losses_entry = TCH.errors_and_losses(T_sess, P_x, P_y,
                                                             P_len, P_mask, P_batch_size, T_accuracy, T_cost, T_embedding_matrix,
                                                             dataset_names, datasets, ops)
-        if epoch == 1 or best_valid_loss > losses_entry[2]:
-            best_valid_loss = losses_entry[2]
+        if epoch == 1 or (best_loss > max(losses_entry[2],losses_entry[0])):
+            best_loss = max(losses_entry[2],losses_entry[0])
             best_results = [accuracy_entry, losses_entry]
             saver.save(T_sess, ops['dataset']+'_model/'+ops['encoder']+'model')
             iterations_since_best = 0
@@ -327,13 +327,13 @@ with tf.device(ops['device']):
         else:
             iterations_since_best += 1
 
-        if iterations_since_best > 6 or epoch == ops['epochs']:
+        if iterations_since_best > 9 or epoch == ops['epochs']:
             saver.restore(T_sess, ops['dataset']+'_model/'+ops['encoder']+'model')
             [accuracy_entry, losses_entry] = best_results
             iterations_since_best = 0
             reset_counter += 1
             if epoch == ops['epochs']:
-                print( "Epoch:{}, Accuracy:{}, Losses:{}".format(epoch, np.array(accuracy_entry), losses_entry))
+                print( "Epoch:{}\n Best Model: Accuracy:{}, Losses:{}".format(epoch, np.array(accuracy_entry), losses_entry))
             elif reset_counter>2 or (accuracy_entry[2]==1 and accuracy_entry[0]==1):
                 print( "Model Halting, Best Validation Results:\n Accuracy:{}, Losses:{}".format( np.array(accuracy_entry),losses_entry))
                 epoch = ops['epochs']

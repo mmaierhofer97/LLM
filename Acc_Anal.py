@@ -3,7 +3,7 @@ import csv
 lams = [1/16,1/4,1,4,16]
 for i in lams:
     print(i)
-    with open('data/synth_accum/accum'+str(i)+'LLM_acc.txt','rt') as csvfile:
+    with open('data/synth_accum/accum'+str(i)+'LLMINIT_acc.txt','rt') as csvfile:
         data = csv.reader(csvfile, delimiter=',')
         rows = []
         for row in data:

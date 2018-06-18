@@ -75,8 +75,8 @@ def weights_init(n_input, n_output, name=None, small_dev=False, identity=False, 
         init_matrix = tf.diag(tf.zeros([n_input]))
     if llm_identity!=0:
         numpy_matrix = np.repeat(np.eye(int(n_input/llm_identity)),llm_identity,axis=0)
-        if small_dev:
-            numpy_matrix += np.random.normal(size = (n_input,n_output), scale = small_dev)
+        #if small_dev:
+        #    numpy_matrix += np.random.normal(size = (n_input,n_output), scale = small_dev)
         init_matrix = tf.convert_to_tensor(numpy_matrix, dtype=tf.float32)
     trainable = True
     if identity or forced_zero:
@@ -913,7 +913,7 @@ def LLM_params_init(ops):
         identity_flag = False
         forced_zero_flag = False
         timescales = 2.0 ** np.arange(-7,7)
-        timescales = np.append(10**64,timescales)
+        #timescales = np.append(10**64,timescales)
         n_timescales = len(timescales)
         W = {'in_feat': weights_init(n_input=ops['n_classes'],
                                 n_output=ops['n_hidden'],
@@ -958,7 +958,7 @@ def LLM_params_init(ops):
 
 
         gamma = 1.0 / timescales
-        print(gamma)
+        #print(gamma)
 
 
 
