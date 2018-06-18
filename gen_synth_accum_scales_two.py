@@ -14,7 +14,7 @@ for lam in lams:
         myfile = open(filename,'a')
         for scale in scales:
             for scale2 in scales:
-                for count in range(1000):
+                for count in range(500):
                     id=str(count+1).zfill(5)
                     A_timescale = abs(random.normalvariate(scale,scale/10))
                     B_timescale = abs(random.normalvariate(scale2,scale2/10))
