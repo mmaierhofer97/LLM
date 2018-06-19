@@ -1,7 +1,7 @@
 import os
 import sys
-filepath = "'data/synth_accum/accum"
-filenames = ["16'","1'","4'","0.0625'","0.25'"]
+filepath = "'data/synth_accum/accum_pred"
+filenames = ["16'","4'","1'","0.25'","0.0625'"]
 for i in range(10):
 	print(i)
 	for filename in filenames:

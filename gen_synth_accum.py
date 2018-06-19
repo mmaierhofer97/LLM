@@ -1,6 +1,6 @@
 import random
 import numpy as np
-filepath = 'data/synth_accum/accum'
+filepath = 'data/synth_accum/accum_pred'
 lams = [1/16,1/4,1,4,16]
 ends = ['.train','.test']
 for lam in lams:
@@ -52,7 +52,7 @@ for lam in lams:
 
             myfile.write(id + ' '+' '.join(ordinal)+'\n')
             myfile.write(id + ' '+' '.join(time1)+'\n')
-            myfile.write(id + ' '+' '.join(class_id)+'\n')
+            myfile.write(id + ' '+' '.join(ordinal2)+'\n')
             myfile.write(id + ' '+' '.join(time2)+'\n')
             #myfile.write('foo2')
         myfile.close()

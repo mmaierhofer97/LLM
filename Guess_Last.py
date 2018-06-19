@@ -1,10 +1,10 @@
 import csv
 import numpy as np
 ends = ['.train','.test']
-lams = ['0.0625','0.25','1','4','16']
+lams = ['0.015625','0.0625','0.25','1','4','16','64']
 for lam in lams:
     for end in ends:
-        filename ='data/synth_accum/accum'+lam+end
+        filename ='data/synth_accum/accum_scales_two'+lam+end
         print(filename)
         with open(filename,'rt') as csvfile:
             rows=[]

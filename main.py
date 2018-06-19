@@ -58,7 +58,7 @@ ops = {
             'n_classes': 5, # aka n_input
             'learning_rate': 0.002,
             'batch_size': 128,
-            'max_length': 100, # Integer vs "ALL"
+            'max_length': "ALL", # Integer vs "ALL"
             'encoder': 'LLM',
             'dataset': 'data/synth_accum/accum_scales64',
             'overwrite': False,
