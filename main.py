@@ -81,6 +81,8 @@ if len(sys.argv)>2:
     ops['encoder'] = sys.argv[2]
 if len(sys.argv)>3:
     ops['device'] = "/device:"+sys.argv[2]+":0"
+if len(sys.argv)>4:
+    ops['task'] = sys.argv[3]
 # load the dataset
 train_set, valid_set, test_set = DH.load_data(ops['dataset'], sort_by_len=True)
 print(ops['dataset'])
