@@ -212,7 +212,7 @@ def embed_one_hot(batch_array, batch_size, depth, length, task):
     if task == 'PRED':
         for i,array in enumerate(batch_array):
             # only put ones until the first padded element in current array
-            print(array)
+            #print(array)
             first_zero_id = len(array)
             if array[-1] == 0:
                 first_zero_id = find_first_zero(array)

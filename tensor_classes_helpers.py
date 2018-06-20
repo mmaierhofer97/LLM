@@ -913,8 +913,9 @@ def LLM_params_init(ops):
         identity_flag = False
         forced_zero_flag = False
         timescales = 2.0 ** np.arange(-7,7)
-        #timescales = np.append(10**64,timescales)
-        n_timescales = len(timescales)
+        #timescales = np.append(-1*timescales,timescales)
+        #print(timescales)
+        n_timescales = len(timescales)#+1
         W = {'in_feat': weights_init(n_input=ops['n_classes'],
                                 n_output=ops['n_hidden'],
                                 name='W_in',
@@ -958,6 +959,7 @@ def LLM_params_init(ops):
 
 
         gamma = 1.0 / timescales
+        #gamma = np.append(0,gamma)
         #print(gamma)
 
 
@@ -988,6 +990,7 @@ def LLM(x_set, P_len, P_batch_size, ops, params, batch_size):
         h_prev_tr = tf.transpose(h_prev, [1,0,2]) #[batch_size, n_hid, n_timescales] -> [n_hid, batch_size, n_timescales}
 
         result = tf.exp(-gamma * delta_t) * h_prev_tr
+        print(result)
         return tf.transpose(result, [1,0,2], name='H')
 
     def _had(f, g):

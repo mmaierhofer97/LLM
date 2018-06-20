@@ -1,32 +1,33 @@
 import random
 import numpy as np
 filepath = 'data/synth_accum/accum_pred'
-lams = [1/16,1/4,1,4,16]
+lens = [10,30,50,100]
 ends = ['.train','.test']
-for lam in lams:
+for l in lens:
     for end in ends:
-        filename = filepath+str(lam)+end
+        lam = 1
+        filename = filepath+str(l)+end
         myfile = open(filename,'w')
         myfile.write('')
         myfile.close()
         myfile = open(filename,'a')
         for count in range(1000):
             id=str(count+1).zfill(5)
-            A_timescale = random.normalvariate(1,1/10)
-            B_timescale = random.normalvariate(1,1/10)
+            A_timescale = random.expovariate(1)
+            B_timescale = random.expovariate(1)
             #A_timescale = 1
             #B_timescale = 1
             events = []
             t = 0
-            while len(events)<100:
+            while len(events)<l:
                t += random.expovariate(A_timescale)
                events.append([1,t])
             t = 0
-            while len(events)<200:
+            while len(events)<2*l:
                t += random.expovariate(B_timescale)
                events.append([2,t])
             events.sort(key=lambda x: x[1])
-            events = events[:101]
+            events = events[:l+1]
             accum = np.sign(events[0][0]-1.5)
             time1 = [str(0.0)]
             time2 = []

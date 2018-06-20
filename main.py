@@ -72,7 +72,7 @@ ops = {
             'embedding': False, #only for CTGRU so far TODO: extract to be generic
             'embedding_size': 30,
             'vocab_size': 10000,
-            'task': "CLASS", #CLASS vs PRED
+            'task': "PRED", #CLASS vs PRED
             'device':"/device:GPU:0"
           }
 if len(sys.argv)>1:
@@ -80,9 +80,10 @@ if len(sys.argv)>1:
 if len(sys.argv)>2:
     ops['encoder'] = sys.argv[2]
 if len(sys.argv)>3:
-    ops['device'] = "/device:"+sys.argv[2]+":0"
+    ops['device'] = "/device:"+sys.argv[3]+":0"
 if len(sys.argv)>4:
-    ops['task'] = sys.argv[3]
+    ops['task'] = sys.argv[4]
+print(ops['task'])
 # load the dataset
 train_set, valid_set, test_set = DH.load_data(ops['dataset'], sort_by_len=True)
 print(ops['dataset'])
