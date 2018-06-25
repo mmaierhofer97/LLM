@@ -1,7 +1,7 @@
 import random
 import numpy as np
 filepath = 'data/synth_accum/accum_pred'
-lens = [10,30,50,100]
+lens = [10,30,100,300,1000]
 ends = ['.train','.test']
 for l in lens:
     for end in ends:
