@@ -52,19 +52,19 @@ tensor_classes_helpers:
 
 
 ops = {
-            'epochs': 400,
+            'epochs': 4000,
             'frame_size': 3,
-            'n_hidden': 10,
-            'n_classes': 5, # aka n_input
-            'learning_rate': 0.002,
-            'batch_size': 128,
+            'n_hidden': 50,
+            'n_classes': 100, # aka n_input
+            'learning_rate': 0.001,
+            'batch_size': 64,
             'max_length': "ALL", # Integer vs "ALL"
             'encoder': 'LLM',
             'dataset': 'data/synth_accum/accum_scales64',
             'overwrite': False,
             "write_history": True, #whether to write the history of training
-            'model_save_name': None,
-            'model_load_name': None,
+            'model_save_name': True,
+            'model_load_name': True,
             'store_graph': False,
             'collect_histograms': False,
             'unique_mus_alphas': False, #HPM only
@@ -83,6 +83,8 @@ if len(sys.argv)>3:
     ops['device'] = "/device:"+sys.argv[3]+":0"
 if len(sys.argv)>4:
     ops['task'] = sys.argv[4]
+if len(sys.argv)>5:
+    ops['model_load_name'] = sys.argv[5]
 print(ops['task'])
 # load the dataset
 train_set, valid_set, test_set = DH.load_data(ops['dataset'], sort_by_len=True)
@@ -232,15 +234,18 @@ with tf.device(ops['device']):
         # T_sess = tf_debug.LocalCLIDebugWrapperSession(T_sess)
         # T_sess.add_tensor_filter("has_inf_or_nan", tf_debug.has_inf_or_nan)
     saver = tf.train.Saver()
-    try:
-        new_saver = tf.train.import_meta_graph('saved_models/' + ops['model_load_name'] + '.meta')
-        new_saver.restore(T_sess, 'saved_models/' + ops['model_load_name'])
-        print ("Model Loaded from " + ops['model_load_name'])
-    except:
-        print ("Failed to load the model: " + str(ops['model_load_name']))
+    if ops['model_load_name'] == True:
+       print(ops['dataset']+'_model/'+ops['encoder']+'model' + '.meta')
+       try:
+          new_saver = tf.train.import_meta_graph(ops['dataset']+'_model/'+ops['encoder']+'model' + '.meta')
+          new_saver.restore(T_sess, ops['dataset'] +'_model/'+ops['encoder']+'model' )
+          print ("Model Loaded", ops['model_load_name'])
+       except:
+          print ("Failed to load the model: " + str(ops['model_load_name']))
+          T_sess.run(init)
+
+    else:
         T_sess.run(init)
-
-
 
 
 
@@ -319,10 +324,11 @@ with tf.device(ops['device']):
         accuracy_entry, losses_entry = TCH.errors_and_losses(T_sess, P_x, P_y,
                                                             P_len, P_mask, P_batch_size, T_accuracy, T_cost, T_embedding_matrix,
                                                             dataset_names, datasets, ops)
-        if epoch == 1 or (best_loss > max(losses_entry[2],losses_entry[0])):
+        if  epoch == 1 or (best_loss > max(losses_entry[2],losses_entry[0])):
             best_loss = max(losses_entry[2],losses_entry[0])
             best_results = [accuracy_entry, losses_entry]
-            saver.save(T_sess, ops['dataset']+'_model/'+ops['encoder']+'model')
+            if epoch >= 10:
+                saver.save(T_sess, ops['dataset']+'_model/'+ops['encoder']+'model')
             iterations_since_best = 0
             reset_counter = 0
         elif epoch < 10:
@@ -349,3 +355,4 @@ with tf.device(ops['device']):
         if ops['write_history'] and epoch==ops['epochs']:
             DH.write_history(accuracy_entry, ops['dataset']+ops['encoder']+'_acc.txt', epoch, ops['overwrite'])
             DH.write_history(losses_entry, 'records/loss.txt', epoch, ops['overwrite'])
+saver.save(T_sess, ops['dataset']+'_model/'+ops['encoder']+'model')

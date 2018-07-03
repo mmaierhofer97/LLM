@@ -1,14 +1,14 @@
 import random
 import numpy as np
-filepath = 'data/synth_accum/accum_multiclass'
-lams = [1/16,1/4,1,4,16]
+filepath = 'data/synth_accum/accum_multiclass_pred'
+lens = [10,30,100]
 ends = ['.train','.test']
 ev_types = 4
-for lam in lams:
+for l in lens:
     for end in ends:
-        print(lam, end)
-        l = 100
-        filename = filepath+str(lam)+end
+        print(l, end)
+        lam = 1
+        filename = filepath+str(l)+end
         myfile = open(filename,'w')
         myfile.write('')
         myfile.close()

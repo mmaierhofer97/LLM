@@ -1,6 +1,6 @@
 import csv
 import numpy as np
-with open('data/phone/phone.train','rt') as csvfile:
+with open('data/synth_accum/accum_multiclass_pred100.train','rt') as csvfile:
     rows=[]
     data = csv.reader(csvfile, delimiter=' ')
     for row in data:
