@@ -54,7 +54,7 @@ tensor_classes_helpers:
 ops = {
             'epochs': 4000,
             'frame_size': 3,
-            'n_hidden': 50,
+            'n_hidden': 100,
             'n_classes': 100, # aka n_input
             'learning_rate': 0.001,
             'batch_size': 64,
@@ -113,6 +113,7 @@ print ("Loaded the set: train({}), valid({}), test({})".format(len(train_set),
 tf.reset_default_graph()
 with tf.device(ops['device']):
     config = tf.ConfigProto(allow_soft_placement = True)
+    config.gpu_options.allow_growth = True
     T_sess=tf.Session(config = config)
 
     # Graph placeholders
