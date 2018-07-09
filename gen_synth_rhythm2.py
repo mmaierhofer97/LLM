@@ -1,12 +1,12 @@
 import random
 import numpy as np
 import sys
-filepath = 'data/synth_rhythm/rhythm'
+filepath = 'data/synth_rhythm/rhythm2'
 lens = [10,30,100]
 if len(sys.argv)>1:
     lens = [int(sys.argv[1])]
 ends = ['.train','.test']
-ev_types = 4
+ev_types = 10
 for l in lens:
     for end in ends:
         classes = [1,2]
@@ -21,7 +21,7 @@ for l in lens:
             for count in range(1000):
                 scales = []
                 for i in range(ev_types):
-                    scales.append(2**i)
+                    scales.append(2**(i-int(ev_types)/2))
 
                 if c == classes[1]:
                     num_diff = random.randint(1,ev_types)

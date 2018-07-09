@@ -1,10 +1,10 @@
 import csv
 import numpy as np
 ends = ['.train','.test']
-lams = ['','_med','_small',]
+lams = ['10','30','100']
 for lam in lams:
     for end in ends:
-        filename ='data/atus/atusact_sex'+lam+end
+        filename ='data/synth_rhythm/rhythm'+lam+end
         print(filename)
         with open(filename,'rt') as csvfile:
             rows=[]

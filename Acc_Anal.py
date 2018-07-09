@@ -1,8 +1,8 @@
 import numpy as np
 import csv
 import sys
-lams = [16]
-filename = 'data/synth_accum/accum_multiclass_scales_bin'
+lams = [10,30,210,230,100]
+filename = 'data/synth_rhythm/rhythm'
 #for filename in filenames:
 
 if len(sys.argv)>1:
