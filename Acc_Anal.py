@@ -1,7 +1,7 @@
 import numpy as np
 import csv
 import sys
-lams = [10,30,210,230,100]
+lams = [10,30,100,210,230,2100,310,330,3100,410,430,4100,5,52,610,630,6100]
 filename = 'data/synth_rhythm/rhythm'
 #for filename in filenames:
 

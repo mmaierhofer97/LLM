@@ -2,10 +2,29 @@ import random
 import numpy as np
 import matplotlib.pyplot as plt
 import pandas
-
+import six
+from matplotlib import colors as colors2
 import sys
+from matplotlib.pyplot import cm
 sys.path.insert(0, '/home/matt/Documents/mozerlab/LLM')
+#colors = [color for color in list(six.iteritems(colors2.cnames)) if not  ':' in color]
 
+def colors_spaced(n):
+  ret = []
+  r = int(random.random() * 256)
+  g = int(random.random() * 256)
+  b = int(random.random() * 256)
+  step = 256 / n
+  for i in range(n):
+    r += step
+    g += step
+    b += step
+    r = int(r) % 256
+    g = int(g) % 256
+    b = int(b) % 256
+    ret.append((r/256,g/256,b/256)) 
+  return ret
+  #https://www.quora.com/How-do-I-generate-n-visually-distinct-RGB-colours-in-Python
 import data_help as DH
 lams = [1/16,1/4,1,4,16]
 filename = 'accum_multiclass'
@@ -16,7 +35,7 @@ for lam in lams:
 
     events = []
     t = 0
-    colors = ['red','blue','green','black']
+     
     for i in range(len(train[r][0])):
         t += train[r][1][i]
         events.append([int(train[r][0][i]-1),t])
@@ -25,6 +44,7 @@ for lam in lams:
     times = []
     labels = []
     c = []
+    colors = colors_spaced(max([ev[0] for ev in events])+1)
     for ev in events:
         times.append(ev[1])
         labels.append(1)

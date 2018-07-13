@@ -52,7 +52,7 @@ tensor_classes_helpers:
 
 
 ops = {
-            'epochs': 4000,
+            'epochs': 300,
             'frame_size': 3,
             'n_hidden': 100,
             'n_classes': 100, # aka n_input
@@ -328,8 +328,7 @@ with tf.device(ops['device']):
         if  epoch == 1 or (best_loss > max(losses_entry[2],losses_entry[0])):
             best_loss = max(losses_entry[2],losses_entry[0])
             best_results = [accuracy_entry, losses_entry]
-            if epoch >= 10:
-                saver.save(T_sess, ops['dataset']+'_model/'+ops['encoder']+'model')
+            saver.save(T_sess, ops['dataset']+'_model/'+ops['encoder']+'model')
             iterations_since_best = 0
             reset_counter = 0
         elif epoch < 10:
@@ -344,7 +343,7 @@ with tf.device(ops['device']):
             reset_counter += 1
             if epoch == ops['epochs']:
                 print( "Epoch:{}\n Best Model: Accuracy:{}, Losses:{}".format(epoch, np.array(accuracy_entry), losses_entry))
-            elif reset_counter>2 or (accuracy_entry[2]==1 and accuracy_entry[0]==1):
+            elif reset_counter>3 or (accuracy_entry[2]==1 and accuracy_entry[0]==1):
                 print( "Model Halting, Best Validation Results:\n Accuracy:{}, Losses:{}".format( np.array(accuracy_entry),losses_entry))
                 epoch = ops['epochs']
             else:
