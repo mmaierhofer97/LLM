@@ -10,7 +10,7 @@ import random
 import numpy as np
 import sys
 filepath = 'data/synth_hawkes/hawkes'
-lens = [10,30,100]
+lens = [10,30,100,400]
 if len(sys.argv)>1:
     lens = [int(sys.argv[1])]
 ends = ['.train','.test']
@@ -18,8 +18,6 @@ ev_types = 4
 time_scales = []
 mu = .02
 alph = 0.5
-for i in range (ev_types):
-    time_scales.append(2**i)
 for l in lens:
     for end in ends:
         countall = 0
@@ -28,11 +26,10 @@ for l in lens:
         myfile = open(filename,'w')
         myfile.write('')
         myfile.close()
-        myfile = open(filename,'a')
+        myfile = open(filename,'a')a
         for count in range(1000):
-            scales = []
-            for i in range(ev_types):
-                scales.append(2**i)
+            for i in range (ev_types):
+                time_scales.append(4**i)
             countall += 1
             id=str(countall).zfill(5)
             events = []

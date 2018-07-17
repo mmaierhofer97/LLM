@@ -1,8 +1,8 @@
 import numpy as np
 import csv
 import sys
-lams = [10,30,100,210,230,2100,310,330,3100,410,430,4100,5,52,610,630,6100]
-filename = 'data/synth_rhythm/rhythm'
+lams = [10,30,100,400]
+filename = 'data/synth_hawkes/hawkes_class'
 #for filename in filenames:
 
 if len(sys.argv)>1:
