@@ -6,6 +6,9 @@ import six
 from matplotlib import colors as colors2
 import sys
 from matplotlib.pyplot import cm
+from numpydoc import docscrape
+from tick.hawkes import SimuHawkes, HawkesKernelExp
+from tick.plot import plot_point_process
 sys.path.insert(0, '/home/matt/Documents/mozerlab/LLM')
 #colors = [color for color in list(six.iteritems(colors2.cnames)) if not  ':' in color]
 
@@ -22,67 +25,71 @@ def colors_spaced(n):
     r = int(r) % 256
     g = int(g) % 256
     b = int(b) % 256
-    ret.append((r/256,g/256,b/256)) 
+    ret.append((r/256,g/256,b/256))
   return ret
   #https://www.quora.com/How-do-I-generate-n-visually-distinct-RGB-colours-in-Python
 import data_help as DH
-lams = [10,30,100,210,230,2100,310,330,3100,410,430]
-filename = 'rhythm'
-for lam in lams:
-    train, test, valid = DH.load_data(filename+str(lam))
-    r = random.randint(0,(len(train))-1)
 
-
+mu = .02
+alph = 0.5
+lens = [10,30,100,400]
+ev_types=4
+m = 0
+for l in lens:
+    time_scales = []
+    for i in range (ev_types):
+        time_scales.append(4**i)
     events = []
     t = 0
-     
-    for i in range(len(train[r][0])):
-        t += train[r][1][i]
-        events.append([int(train[r][0][i]-1),t])
-        #print(len(events))
-
+    intensities = []
+    intense_times = []
+    for ev in range(ev_types):
+        ts = time_scales[ev]
+        hawkes = SimuHawkes(n_nodes=1, verbose=False, max_jumps = l)
+        kernel = HawkesKernelExp(alph, 1/ts)
+        hawkes.set_kernel(0, 0, kernel)
+        hawkes.set_baseline(0, mu)
+        dt = 0.01
+        hawkes.track_intensity(dt)
+        hawkes.simulate()
+        timestamps = hawkes.timestamps
+        intensities.append(hawkes.tracked_intensity)
+        intense_times.append(hawkes.intensity_tracked_times)
+        for t in timestamps[0]:
+            events.append([ev+1,t])
+    events.sort(key=lambda x: x[1])
+    events = events[:l]
+    et = events[-1][1]
+    for ev in range(ev_types):
+        j = 0
+        while intense_times[ev][j]<et and j<len(intense_times[ev])-1:
+            j+=1
+        intense_times[ev] = intense_times[ev][:j]
+        intensities[ev][0] = intensities[ev][0][:j]
+        if max(intensities[ev][0]) > m:
+            m = max(intensities[ev][0])
     times = []
     labels = []
     c = []
     colors = colors_spaced(max([ev[0] for ev in events])+1)
+    colors = ['red','blue','black','yellow']
     for ev in events:
         times.append(ev[1])
         labels.append(1)
-        c.append(colors[ev[0]])
-
-#    accum = np.sign(events[0][0]-1.5)
-#    accumsT = []
-#    accumsV = []
-#    accumsT.append(events[0][1])
-#    accumsV.append(0)
-#    accumsT.append(events[0][1]+0.001)
-#    accumsV.append(accum)
-#    for i in range(1,len(events)):
-#        delta_t = events[i][1]-events[i-1][1]
-#        tmpT = events[i-1][1]
-#        for j in range(99):
-#            tmpT+=delta_t/99
-#            accumsT.append(tmpT)
-#            accumsV.append(accum)
-#            accum = accum * np.exp(lam*-(delta_t/99))
-
-#        accumsT.append(events[i][1]-delta_t/100)
-#        accumsV.append(accum)
-        #print(accum,events[i][0])
-#        accum += np.sign(events[i][0]-0.5)
-        #print(accum)
-#        accumsT.append(events[i][1])
-#        accumsV.append(accum)
+        c.append(colors[ev[0]-1])
 
 
-    #fig, ax = plt.subplots()
-    #plt.scatter(times, labels, color=c, alpha=0.85, s=10)
-    f, axarr = plt.subplots(1, sharex=True)
+    f, axarr = plt.subplots(ev_types+1, sharex=True)
 
-    axarr.set_title('Synthetic Accumulator Data\n Number of Events = '+str(len(events)))# \n A='+str(int(A_timescale*100)/100)+', B='+str(int(B_timescale*100)/100))
+    axarr[0].set_title('Hawkes Process Data\n Number of Events = '+str(len(events)))# \n A='+str(int(A_timescale*100)/100)+', B='+str(int(B_timescale*100)/100))
 #    axarr[1].plot(accumsT,accumsV, color = 'green')
 #    axarr[1].axhline(y = 0, color = 'black' )
     for i in range(len(times)):
-        axarr.axvline(x=times[i], color = c[i])
+        axarr[0].axvline(x=times[i], color = c[i])
+        #axarr[0].axis([0,et,0,1])
+    for i in range(ev_types):
+        #axarr[i+1].axis([0,et,0,m])
+        axarr[i+1].plot(intense_times[i],intensities[i][0]  , color = colors[i])
     plt.xlabel('Time')
-    plt.savefig('images/'+filename+str(lam)+'.png')
+    #plt.show()
+    plt.savefig('images/'+'hawkes'+str(l)+'.png')
