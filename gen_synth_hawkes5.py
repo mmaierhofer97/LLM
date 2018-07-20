@@ -36,8 +36,12 @@ for l in lens:
             events = []
             t = 0
 
-            k = (np.eye(ev_types)*(1/np.array(time_scales)))
-            hawkes = SimuHawkesExpKernels(decays = k, baseline =mu,adjacency = alph*np.eye(ev_types), verbose=False, max_jumps = l)
+            k = (np.zeros([ev_types,ev_type]))
+            for i in range(ev_types):
+                for j in range(ev_types):
+                    if i != j:
+                        k[i,j] = 1/time_scales[j]
+            hawkes = SimuHawkesExpKernels(decays = k, baseline =mu,adjacency = alph*np.ones([ev_types,ev_types]), verbose=False, max_jumps = l)
             dt = 0.01
             hawkes.track_intensity(dt)
             hawkes.simulate()
