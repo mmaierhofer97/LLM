@@ -9,12 +9,12 @@ from tick.plot import plot_point_process
 import random
 import numpy as np
 import sys
-filepath = 'data/synth_hawkes/hawkes'
+filepath = 'data/synth_hawkes/hawkes2'
 lens = [10,30,100,400]
 if len(sys.argv)>1:
     lens = [int(sys.argv[1])]
 ends = ['.train','.test']
-ev_types = 4
+ev_types = 2
 time_scales = []
 mu = .02
 alph = 0.5
@@ -26,7 +26,7 @@ for l in lens:
         myfile = open(filename,'w')
         myfile.write('')
         myfile.close()
-        myfile = open(filename,'a')a
+        myfile = open(filename,'a')
         for count in range(1000):
             for i in range (ev_types):
                 time_scales.append(4**i)

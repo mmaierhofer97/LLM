@@ -52,7 +52,7 @@ tensor_classes_helpers:
 
 
 ops = {
-            'epochs': 300,
+            'epochs': 500,
             'frame_size': 3,
             'n_hidden': 100,
             'n_classes': 100, # aka n_input
