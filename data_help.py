@@ -46,7 +46,7 @@ def read_file_time_sequences(fname):
 
 
 
-def load_data(dir, sort_by_len=True, valid_ratio=0.1):
+def load_data(dir, sort_by_len=True, valid_ratio=0.1, samples = 'ALL'):
     """
     Reads the directory for test and train datasets.
     Divides test set into validation set and test set.
@@ -57,12 +57,14 @@ def load_data(dir, sort_by_len=True, valid_ratio=0.1):
     """
     train_set = read_file_time_sequences(dir + '.train')
     test_set = read_file_time_sequences(dir + '.test')
-
+    if samples != 'ALL':
+        train_set = train_set[:samples]
+        test_set = test_set[:samples]
     # make validation set from train set before sorting by length
     valid_n = int(len(train_set)*valid_ratio)
+    random.shuffle(train_set)
     if valid_n == 0:
         valid_n = 1
-    random.shuffle(train_set)
     valid_set = train_set[0:valid_n]
     train_set = train_set[valid_n:]
 

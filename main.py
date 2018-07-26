@@ -54,8 +54,8 @@ tensor_classes_helpers:
 ops = {
             'epochs': 500,
             'frame_size': 3,
-            'n_hidden': 100,
-            'n_classes': 100, # aka n_input
+            'n_hidden': 200,
+            'n_classes': 200, # aka n_input
             'learning_rate': 0.001,
             'batch_size': 64,
             'max_length': "ALL", # Integer vs "ALL"
@@ -63,8 +63,8 @@ ops = {
             'dataset': 'data/synth_accum/accum_scales64',
             'overwrite': False,
             "write_history": True, #whether to write the history of training
-            'model_save_name': True,
-            'model_load_name': True,
+            'model_save_name':' True',
+            'model_load_name': 'True',
             'store_graph': False,
             'collect_histograms': False,
             'unique_mus_alphas': False, #HPM only
@@ -73,7 +73,8 @@ ops = {
             'embedding_size': 30,
             'vocab_size': 10000,
             'task': "PRED", #CLASS vs PRED
-            'device':"/device:GPU:0"
+            'device':"/device:GPU:0",
+            'samples': 'ALL'
           }
 if len(sys.argv)>1:
     ops['dataset'] = sys.argv[1]
@@ -85,9 +86,14 @@ if len(sys.argv)>4:
     ops['task'] = sys.argv[4]
 if len(sys.argv)>5:
     ops['model_load_name'] = sys.argv[5]
+if len(sys.argv)>6:
+   ops['max_length'] = int(sys.argv[6])
+if len(sys.argv)>7:
+    ops['samples'] = int(sys.argv[7])
+
 print(ops['task'])
 # load the dataset
-train_set, valid_set, test_set = DH.load_data(ops['dataset'], sort_by_len=True)
+train_set, valid_set, test_set = DH.load_data(ops['dataset'], sort_by_len=True, samples = ops['samples'])
 print(ops['dataset'])
 #valid_set = test_set
 if ops['max_length'] == "ALL" or ops['task'] == 'CLASS':
@@ -235,7 +241,7 @@ with tf.device(ops['device']):
         # T_sess = tf_debug.LocalCLIDebugWrapperSession(T_sess)
         # T_sess.add_tensor_filter("has_inf_or_nan", tf_debug.has_inf_or_nan)
     saver = tf.train.Saver()
-    if ops['model_load_name'] == True:
+    if ops['model_load_name'] == 'True':
        print(ops['dataset']+'_model/'+ops['encoder']+'model' + '.meta')
        try:
           new_saver = tf.train.import_meta_graph(ops['dataset']+'_model/'+ops['encoder']+'model' + '.meta')

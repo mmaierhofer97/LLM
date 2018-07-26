@@ -36,13 +36,14 @@ for ind in inds:
                         a = (parse(l['t'])).timestamp()/3600
                         if not l['a'] in evs:
                             evs.append(l['a'])
-                        ev = evs.index(l['a'])
+                        ev = evs.index(l['a'])+1
                         events.append([ev,a])
                     except:
                         a = 'date error'
                         events = []
                         break
                 if events and len(evs)>1:
+                    events.sort(key=lambda x: x[1])
                     countall += 1
                     if countall%1000 == 0:
                         print(countall)
