@@ -27,10 +27,7 @@ for ind in inds:
         for line in f:
             c = json.loads(line)
             if len(c['c'])>= 10:
-                countall += 1
-                if countall%1000 == 0:
-                    print(countall)
-                id=str(countall).zfill(5)
+
                 events = []
                 evs = []
                 a = 0
@@ -45,7 +42,11 @@ for ind in inds:
                         a = 'date error'
                         events = []
                         break
-                if events:
+                if events and len(evs)>1:
+                    countall += 1
+                    if countall%1000 == 0:
+                        print(countall)
+                    id=str(countall).zfill(5)
                     bool = not bool
                     time1 = [str(0.0)]
                     time2 = []

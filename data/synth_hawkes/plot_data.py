@@ -30,7 +30,7 @@ def colors_spaced(n):
   #https://www.quora.com/How-do-I-generate-n-visually-distinct-RGB-colours-in-Python
 import data_help as DH
 
-lens = [10]#[10,30,100,400]
+lens = [10,30]#[10,30,100,400]
 ev_types=4
 mu = np.repeat(.02,ev_types)
 alph = 0.5
@@ -45,9 +45,7 @@ for l in lens:
 
     k = np.zeros([ev_types,ev_types])
     for i in range(ev_types):
-        for j in range(ev_types):
-            if i != j:
-                k[i,j] = 1/time_scales[j]
+        k[i,i-1] = 1/time_scales[i]
     hawkes = SimuHawkesExpKernels(decays = k, baseline =mu,adjacency = alph*np.ones([ev_types,ev_types]), verbose=False, max_jumps = l)
     dt = 0.01
     hawkes.track_intensity(dt)
@@ -92,5 +90,4 @@ for l in lens:
         #axarr[i+1].axis([0,et,0,m])
         axarr[i+1].plot(intense_times,intensities[i]  , color = colors[i])
     plt.xlabel('Time')
-    plt.show()
-    plt.savefig('images/'+'hawkes'+str(l)+'.png')
+    plt.savefig('images/'+'hawkes6'+str(l)+'.png')

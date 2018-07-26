@@ -4,42 +4,42 @@ import pandas
 import six
 import sys
 from numpydoc import docscrape
-from tick.hawkes import SimuHawkes, HawkesKernelExp
+from tick.hawkes import SimuHawkesExpKernels, HawkesKernelExp
 from tick.plot import plot_point_process
 sys.path.insert(0, '/home/matt/Documents/mozerlab/LLM')
 
-mu = .02
+ev_types=4
+mu = np.repeat(.02,ev_types)
 alph = 0.5
 lens = [10,30,100,400]
-ev_types=8
+
 if len(sys.argv)>1:
     ev_types = int(sys.argv[1])
 m = 0
 for l in lens:
   cor = 0
   tot = 0
-  for i in range(int(2400/l)):
+  for i in range(int(9600/l)):
     time_scales = []
     for i in range (ev_types):
         time_scales.append(4**i)
+
     events = []
     t = 0
-    intensities = []
-    intense_times = []
+
+    k = (np.zeros([ev_types,ev_types]))
+    for i in range(ev_types):
+            k[i,i-1] = 1/time_scales[i]
+    hawkes = SimuHawkesExpKernels(decays = k, baseline =mu,adjacency = alph*np.ones([ev_types,ev_types]), verbose=False, max_jumps = l+1)
+    dt = 0.01
+    hawkes.track_intensity(dt)
+    hawkes.simulate()
+    timestamps = hawkes.timestamps
+    intensities = hawkes.tracked_intensity
+    intense_times = hawkes.intensity_tracked_times
+    intense_times = np.round(intense_times, decimals = 2)
     for ev in range(ev_types):
-        ts = time_scales[ev]
-        hawkes = SimuHawkes(n_nodes=1, verbose=False, max_jumps = l)
-        kernel = HawkesKernelExp(alph, 1/ts)
-        hawkes.set_kernel(0, 0, kernel)
-        hawkes.set_baseline(0, mu)
-        dt = 0.01
-        hawkes.track_intensity(dt)
-        hawkes.simulate()
-        timestamps = hawkes.timestamps
-        intensities.append(hawkes.tracked_intensity)
-        intense_times.append(hawkes.intensity_tracked_times)
-        intense_times[ev] = np.round(intense_times[ev], decimals = 2)
-        for t in timestamps[0]:
+        for t in timestamps[ev]:
             events.append([ev+1,t])
     events.sort(key=lambda x: x[1])
     events = events[:l]
@@ -53,8 +53,8 @@ for l in lens:
         t = times[i] - 0.01
         m = 0
         for ev in range(ev_types):
-            if(intensities[ev][0][list(intense_times[ev]).index(int(t*100)/100)])>m:
-                m = intensities[ev][0][list(intense_times[ev]).index(int(t*100)/100)]
+            if(intensities[ev][list(intense_times).index(int(t*100)/100)])>m:
+                m = intensities[ev][list(intense_times).index(int(t*100)/100)]
                 lab = ev+1
         tot += 1
         if lab == labels[i]:
