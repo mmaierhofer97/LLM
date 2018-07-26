@@ -1,7 +1,7 @@
 import numpy as np
 import csv
 import sys
-lams = [10,30,100,400,510,530,5100,5400,610,630,6100,6400]
+lams = [10,30,100,400,510,530,5100,5400,610,630,6100,6400,710,730,7100,7400]
 filename = 'data/synth_hawkes/hawkes'
 #for filename in filenames:
 
