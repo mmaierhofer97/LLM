@@ -44,6 +44,11 @@ for ind in inds:
                         break
                 if events and len(evs)>1:
                     events.sort(key=lambda x: x[1])
+                    reind = []
+                    for i in range(len(events)):
+                        if events[i][0] not in reind:
+                             reind.append(events[i][0])
+                        events[i][0] = reind.index(events[i][0])+1
                     countall += 1
                     if countall%1000 == 0:
                         print(countall)

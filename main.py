@@ -54,8 +54,8 @@ tensor_classes_helpers:
 ops = {
             'epochs': 500,
             'frame_size': 3,
-            'n_hidden': 200,
-            'n_classes': 200, # aka n_input
+            'n_hidden': 110,
+            'n_classes': 110, # aka n_input
             'learning_rate': 0.001,
             'batch_size': 64,
             'max_length': "ALL", # Integer vs "ALL"
@@ -91,7 +91,7 @@ if len(sys.argv)>6:
 if len(sys.argv)>7:
     ops['samples'] = int(sys.argv[7])
 
-print(ops['task'])
+print(ops['samples'])
 # load the dataset
 train_set, valid_set, test_set = DH.load_data(ops['dataset'], sort_by_len=True, samples = ops['samples'])
 print(ops['dataset'])
@@ -114,6 +114,7 @@ if ops['embedding']:
 print ("Loaded the set: train({}), valid({}), test({})".format(len(train_set),
                                                                 len(valid_set),
                                                                   len(test_set)))
+model_save_name = ops['dataset'] +'_model/'+ops['encoder']+str(ops['max_length'])+'model' 
 
 # Restart the graph
 tf.reset_default_graph()
@@ -242,10 +243,10 @@ with tf.device(ops['device']):
         # T_sess.add_tensor_filter("has_inf_or_nan", tf_debug.has_inf_or_nan)
     saver = tf.train.Saver()
     if ops['model_load_name'] == 'True':
-       print(ops['dataset']+'_model/'+ops['encoder']+'model' + '.meta')
+       print(model_save_name + '.meta')
        try:
-          new_saver = tf.train.import_meta_graph(ops['dataset']+'_model/'+ops['encoder']+'model' + '.meta')
-          new_saver.restore(T_sess, ops['dataset'] +'_model/'+ops['encoder']+'model' )
+          new_saver = tf.train.import_meta_graph(model_save_name + '.meta')
+          new_saver.restore(T_sess, model_save_name + ops['encoder']+'model' )
           print ("Model Loaded", ops['model_load_name'])
        except:
           print ("Failed to load the model: " + str(ops['model_load_name']))
@@ -273,7 +274,6 @@ with tf.device(ops['device']):
                                                 max_length = ops['max_length'],
                                                 task = ops['task'])
             # x_set: [batch_size, max_length, frame_size]
-
             if ops['embedding']:
                 # batch_y = (batch, n_steps_padded)
                 y_answer = np.array(batch_y).astype(np.int32)
@@ -334,7 +334,7 @@ with tf.device(ops['device']):
         if  epoch == 1 or (best_loss > max(losses_entry[2],losses_entry[0])):
             best_loss = max(losses_entry[2],losses_entry[0])
             best_results = [accuracy_entry, losses_entry]
-            saver.save(T_sess, ops['dataset']+'_model/'+ops['encoder']+'model')
+            saver.save(T_sess, model_save_name)
             iterations_since_best = 0
             reset_counter = 0
         elif epoch < 10:
@@ -343,7 +343,7 @@ with tf.device(ops['device']):
             iterations_since_best += 1
 
         if iterations_since_best > 9 or epoch == ops['epochs']:
-            saver.restore(T_sess, ops['dataset']+'_model/'+ops['encoder']+'model')
+            saver.restore(T_sess, model_save_name)
             [accuracy_entry, losses_entry] = best_results
             iterations_since_best = 0
             reset_counter += 1
@@ -359,6 +359,6 @@ with tf.device(ops['device']):
 
 
         if ops['write_history'] and epoch==ops['epochs']:
-            DH.write_history(accuracy_entry, ops['dataset']+ops['encoder']+'_acc.txt', epoch, ops['overwrite'])
+            DH.write_history(accuracy_entry, ops['dataset']+ops['encoder']+str(ops['max_length'])+'_acc.txt', epoch, ops['overwrite'])
             DH.write_history(losses_entry, 'records/loss.txt', epoch, ops['overwrite'])
 saver.save(T_sess, ops['dataset']+'_model/'+ops['encoder']+'model')
