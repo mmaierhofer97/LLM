@@ -307,3 +307,16 @@ def longest_seq(datasets):
                 l = len(seq[0])
     print(' Minimum length is {}\n Maximum length is {}'.format(l,m))
     return m
+
+def num_classes(datasets,max_length):
+    m = 0
+    for dataset in datasets:
+        for seq in dataset:
+            if len(seq[0])<=max_length:
+                l = max(max(seq[0]),seq[2][-1])
+            else:
+                l = max(seq[0][:max_length+1])
+            if l > m:
+                m = l
+    return m+1
+

@@ -1,20 +1,20 @@
 import numpy as np
 import csv
 import sys
-lams = list(range(100))
-filename = 'data/github/github'
-#for filename in filenames:
+lams = ['']
+filenames = ['data/reddit_comments/reddit_comments', 'data/freecodecamp/freecodecamp']
 
 if len(sys.argv)>1:
    filename = 'data/'+ sys.argv[1]
 lens = ['10','30','100','400']
-print(filename)
-for i in lens:
+
+for filename in filenames:
+  for i in lens:
         print(i)
         rows = []
         for l in lams:
             try:
-                csvfile = open(filename+str(l).zfill(2)+'LLM'+i+'_acc.txt','rt') 
+                csvfile = open(filename+l+'LLM'+i+'_acc.txt','rt') 
                 data = csv.reader(csvfile, delimiter=',')
                 for row in data:
                      rows.append(row)
@@ -32,7 +32,7 @@ for i in lens:
         rows = []
         for l in lams:
             try:
-                csvfile = open(filename+str(l).zfill(2)+'LSTM'+i+'_acc.txt','rt') 
+                csvfile = open(filename+l+'LSTM'+i+'_acc.txt','rt') 
                 data = csv.reader(csvfile, delimiter=',')
                 for row in data:
                      rows.append(row)

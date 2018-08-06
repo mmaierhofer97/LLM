@@ -54,8 +54,8 @@ tensor_classes_helpers:
 ops = {
             'epochs': 500,
             'frame_size': 3,
-            'n_hidden': 110,
-            'n_classes': 110, # aka n_input
+            'n_hidden': 100,
+            'n_classes': 100, # aka n_input
             'learning_rate': 0.001,
             'batch_size': 64,
             'max_length': "ALL", # Integer vs "ALL"
@@ -98,6 +98,10 @@ print(ops['dataset'])
 #valid_set = test_set
 if ops['max_length'] == "ALL" or ops['task'] == 'CLASS':
     ops['max_length'] = DH.longest_seq([train_set,valid_set,test_set]) #Can't concatenate classification data
+m = DH.num_classes([train_set,valid_set,test_set],ops['max_length'])
+if m > ops['n_classes']:
+    print('classes from {} to {}'.format(ops['n_classes'],int(m)))
+    ops['n_classes'] = int(m)
 if ops['embedding']:
     extract_ids = lambda set: np.concatenate(np.array([set[i][0] for i in range(len(set))]))
     all_ids = np.concatenate([np.array(extract_ids(train_set)),
@@ -246,7 +250,7 @@ with tf.device(ops['device']):
        print(model_save_name + '.meta')
        try:
           new_saver = tf.train.import_meta_graph(model_save_name + '.meta')
-          new_saver.restore(T_sess, model_save_name + ops['encoder']+'model' )
+          new_saver.restore(T_sess, model_save_name )
           print ("Model Loaded", ops['model_load_name'])
        except:
           print ("Failed to load the model: " + str(ops['model_load_name']))
@@ -312,7 +316,13 @@ with tf.device(ops['device']):
                 if np.isnan(var).any():
                     #import pdb; pdb.set_trace()
                     print( "FOUND NAN")#, names[i]
-                    sys.exit()
+                    if epoch > 10:
+                        saver.restore(T_sess, model_save_name)
+                        [accuracy_entry, losses_entry] = best_results
+                        print('restoring previous')
+                        continue
+                    else:
+                        sys.exit()
 
             #Print parameters
             # for v in tf.global_variables():
@@ -342,7 +352,7 @@ with tf.device(ops['device']):
         else:
             iterations_since_best += 1
 
-        if iterations_since_best > 9 or epoch == ops['epochs']:
+        if iterations_since_best > 9 or epoch == ops['epochs'] or max(losses_entry[0],losses_entry[2])>10*best_loss:
             saver.restore(T_sess, model_save_name)
             [accuracy_entry, losses_entry] = best_results
             iterations_since_best = 0
@@ -358,7 +368,7 @@ with tf.device(ops['device']):
             print( "Epoch:{}, Accuracy:{}, Losses:{}".format(epoch, np.array(accuracy_entry), losses_entry))
 
 
-        if ops['write_history'] and epoch==ops['epochs']:
-            DH.write_history(accuracy_entry, ops['dataset']+ops['encoder']+str(ops['max_length'])+'_acc.txt', epoch, ops['overwrite'])
-            DH.write_history(losses_entry, 'records/loss.txt', epoch, ops['overwrite'])
+    if ops['write_history'] and epoch==ops['epochs']:
+        DH.write_history(accuracy_entry, ops['dataset']+ops['encoder']+str(ops['max_length'])+'_acc.txt', epoch, ops['overwrite'])
+        DH.write_history(losses_entry, 'records/loss.txt', epoch, ops['overwrite'])
 saver.save(T_sess, ops['dataset']+'_model/'+ops['encoder']+'model')

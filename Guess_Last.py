@@ -1,14 +1,14 @@
 import csv
 import numpy as np
 ends = ['.train','.test']
-lams = list(range(10))
-length = 400
+lams = ['']
+length = 10000
 for end in ends:
     cor = 0
     tot = 0
     print(end)
     for lam in lams:
-        filename ='data/github/github'+str(lam).zfill(2)+end
+        filename ='data/freecodecamp/freecodecamp'+end
         with open(filename,'rt') as csvfile:
             rows=[]
             data = csv.reader(csvfile, delimiter=' ')
