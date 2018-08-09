@@ -87,7 +87,10 @@ if len(sys.argv)>4:
 if len(sys.argv)>5:
     ops['model_load_name'] = sys.argv[5]
 if len(sys.argv)>6:
-   ops['max_length'] = int(sys.argv[6])
+   try:
+       ops['max_length'] = int(sys.argv[6])
+   except:
+       ops['max_length'] = sys.argv[6]
 if len(sys.argv)>7:
     ops['samples'] = int(sys.argv[7])
 

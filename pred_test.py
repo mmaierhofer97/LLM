@@ -1,13 +1,15 @@
 import csv
 import numpy as np
-with open('data/github/github00.train','rt') as csvfile:
+ends = ['.train','.test']
+for end in ends:
+  with open('data/dota/dota'+end,'rt') as csvfile:
     rows=[]
     data = csv.reader(csvfile, delimiter=' ')
     for row in data:
         #print(row)
         rows.append(row)
     rows = np.array(rows)
-    for k in range(8):
+    for k in range(10):
        cor = 0
        tot = 0
    

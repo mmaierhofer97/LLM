@@ -8,7 +8,7 @@ for end in ends:
     tot = 0
     print(end)
     for lam in lams:
-        filename ='data/freecodecamp/freecodecamp'+end
+        filename ='data/dota/dota'+end
         with open(filename,'rt') as csvfile:
             rows=[]
             data = csv.reader(csvfile, delimiter=' ')

@@ -2,11 +2,11 @@ import numpy as np
 import csv
 import sys
 lams = ['']
-filenames = ['data/reddit_comments/reddit_comments', 'data/freecodecamp/freecodecamp']
+filenames = ['data/reddit_comments/reddit_comments', 'data/freecodecamp/freecodecamp','data/freecodecamp_students/freecodecamp_students']
 
 if len(sys.argv)>1:
    filename = 'data/'+ sys.argv[1]
-lens = ['10','30','100','400']
+lens = ['100','10','30']
 
 for filename in filenames:
   for i in lens:
