@@ -6,7 +6,7 @@ import sys
 from tensorflow.python import debug as tf_debug
 import os
 
-os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2' 
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 """
 STRUCTURE:
 data_help:
@@ -123,7 +123,7 @@ if ops['embedding']:
 print ("Loaded the set: train({}), valid({}), test({})".format(len(train_set),
                                                                 len(valid_set),
                                                                   len(test_set)))
-model_save_name = ops['dataset'] +'_model/'+ops['encoder']+str(ml)+'model' 
+model_save_name = ops['dataset'] +'_model/'+ops['encoder']+str(ml)+'model'
 
 # Restart the graph
 tf.reset_default_graph()

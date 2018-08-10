@@ -57,9 +57,14 @@ def load_data(dir, sort_by_len=True, valid_ratio=0.1, samples = 'ALL'):
     """
     train_set = read_file_time_sequences(dir + '.train')
     test_set = read_file_time_sequences(dir + '.test')
-    
-    random.shuffle(train_set)
-    random.shuffle(test_set)
+    shuff_train = list(range(len(train_set)))
+    random.shuffle(shuff_train)
+    shuff_test = list(range(len(test_set)))
+    random.shuffle(shuff_test)
+    tmp = [train_set[x] for x in shuff_train]
+    train_set = tmp
+    tmp = [test_set[x] for x in shuff_test]
+    test_set = tmp
     if samples != 'ALL':
         train_set = train_set[:samples]
         test_set = test_set[:samples]
@@ -67,10 +72,9 @@ def load_data(dir, sort_by_len=True, valid_ratio=0.1, samples = 'ALL'):
     valid_n = int(len(train_set)*valid_ratio)
     if valid_n == 0:
         valid_n = 1
-    valid_set = train_set.copy()[0:valid_n]
-    
+    valid_set = train_set.copy()[:valid_n]
+
     train_set = train_set[valid_n:]
-    
 
     # sort each set by length to minimize padding in the future
     if sort_by_len:
@@ -323,4 +327,3 @@ def num_classes(datasets,max_length):
             if l > m:
                 m = l
     return m+1
-
