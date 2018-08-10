@@ -710,11 +710,9 @@ def HPM_params_init(ops):
                         tf.random_uniform([ops['n_hidden'], n_timescales], minval=0.5, maxval=0.5001, dtype=tf.float32),
                         name='alpha')
         else:
-            # TODO: Understand why and how it works. so by putting  a log there, we are skewing the gradient?
             mu = tf.Variable(-tf.log(
                                 tf.fill([n_timescales], 1e-3)),
                              name='mu', trainable=True, dtype=tf.float32)
-            # alpha is just initialized to a const value
             alpha = tf.Variable(
                         tf.random_uniform([n_timescales], minval=0.5, maxval=0.5001, dtype=tf.float32),
                         name='alpha')
@@ -990,7 +988,6 @@ def LLM(x_set, P_len, P_batch_size, ops, params, batch_size):
         h_prev_tr = tf.transpose(h_prev, [1,0,2]) #[batch_size, n_hid, n_timescales] -> [n_hid, batch_size, n_timescales}
 
         result = tf.exp(-gamma * delta_t) * h_prev_tr
-        print(result)
         return tf.transpose(result, [1,0,2], name='H')
 
     def _had(f, g):
@@ -1026,7 +1023,6 @@ def LLM(x_set, P_len, P_batch_size, ops, params, batch_size):
 
 
 
-    print( x, xt, yt)
     # collect all the variables of interest
     T_summary_weights = W['recurrent_feat']
     if ops['collect_histograms']:
@@ -1061,7 +1057,6 @@ def LLM(x_set, P_len, P_batch_size, ops, params, batch_size):
     output_projection = lambda x: tf.clip_by_value(tf.nn.softmax(x + b['out']), 1e-8, 1.0)
 
     prediction_outputed = tf.map_fn(output_projection, hidden_prediction)
-    print('test;',prediction_outputed)
 
 
     return prediction_outputed, T_summary_weights, [rval[0], rval[1], rval[2], rval[3], rval[4], prediction_outputed]

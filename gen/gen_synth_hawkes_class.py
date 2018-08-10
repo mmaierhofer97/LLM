@@ -10,7 +10,7 @@ import random
 import numpy as np
 import sys
 filepath = 'data/synth_hawkes/hawkes_class'
-lens = [10,30,100,400]
+lens = [10]
 if len(sys.argv)>1:
     lens = [int(sys.argv[1])]
 ends = ['.train','.test']
@@ -29,7 +29,7 @@ for l in lens:
         myfile.close()
         myfile = open(filename,'a')
         for c in classes:
-          for count in range(4000):
+          for count in range(100):
             for i in range (ev_types):
                 time_scales.append(4**i)
             if c == 2:
@@ -72,7 +72,7 @@ for l in lens:
                 ordinal2.append(str(events[i][0]))
             time1 = time1[:-1]
             #print(len(time1))
-            class_id[-1] = str(1)
+            class_id[-1] = str(random.uniform(1,2))
                 #print(class_id[j])
             #print(len(time1),len(time2),len(ordinal))
             #print(accum, int(np.sign(accum)),len(events))

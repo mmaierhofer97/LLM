@@ -6,6 +6,7 @@ import sys
 from tensorflow.python import debug as tf_debug
 import os
 
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2' 
 """
 STRUCTURE:
 data_help:
@@ -55,7 +56,7 @@ ops = {
             'epochs': 500,
             'frame_size': 3,
             'n_hidden': 100,
-            'n_classes': 100, # aka n_input
+            'n_classes': 10, # aka n_input
             'learning_rate': 0.001,
             'batch_size': 64,
             'max_length': "ALL", # Integer vs "ALL"
@@ -96,9 +97,10 @@ if len(sys.argv)>7:
 
 print(ops['samples'])
 # load the dataset
-train_set, valid_set, test_set = DH.load_data(ops['dataset'], sort_by_len=True, samples = ops['samples'])
+train_set, valid_set, test_set = DH.load_data(ops['dataset'], sort_by_len=False, samples = ops['samples'])
 print(ops['dataset'])
 #valid_set = test_set
+ml = ops['max_length']
 if ops['max_length'] == "ALL" or ops['task'] == 'CLASS':
     ops['max_length'] = DH.longest_seq([train_set,valid_set,test_set]) #Can't concatenate classification data
 m = DH.num_classes([train_set,valid_set,test_set],ops['max_length'])
@@ -121,7 +123,7 @@ if ops['embedding']:
 print ("Loaded the set: train({}), valid({}), test({})".format(len(train_set),
                                                                 len(valid_set),
                                                                   len(test_set)))
-model_save_name = ops['dataset'] +'_model/'+ops['encoder']+str(ops['max_length'])+'model' 
+model_save_name = ops['dataset'] +'_model/'+ops['encoder']+str(ml)+'model' 
 
 # Restart the graph
 tf.reset_default_graph()
@@ -199,30 +201,17 @@ with tf.device(ops['device']):
                     reduction_indices=[2]) * P_mask,
                 reduction_indices=[1])) / tf.reduce_sum(tf.reduce_sum(P_mask))
     else:
-        if ops['task'] == 'PRED':
+        if ops['task'] == 'PRED' or ops['task'] == 'CLASS':
             y_answer = P_y
             T_cost = tf.reduce_sum(
                         tf.reduce_sum(
                             - tf.reduce_sum(
-                                (y_answer * tf.log(T_pred)),
+                                (P_y * tf.log(T_pred)),
                             reduction_indices=[2]) * P_mask,
                         reduction_indices=[1])) / tf.reduce_sum(tf.reduce_sum(P_mask))
 
             # Evaluate the model
-            T_correct_pred = tf.cast(tf.equal(tf.argmax(T_pred, 2), tf.argmax(y_answer, 2)), tf.float32) * P_mask
-            T_accuracy = tf.reduce_sum(tf.reduce_sum(tf.cast(T_correct_pred, tf.float32))) / tf.reduce_sum(
-                tf.reduce_sum(P_mask))
-        elif ops['task'] == "CLASS":
-            y_answer = P_y
-            T_cost = tf.reduce_sum(
-                        tf.reduce_sum(
-                            - tf.reduce_sum(
-                                (y_answer * tf.log(T_pred)),
-                            reduction_indices=[2]) * P_mask,
-                        reduction_indices=[1])) / tf.reduce_sum(tf.reduce_sum(P_mask))
-
-            # Evaluate the model
-            T_correct_pred = tf.cast(tf.equal(tf.argmax(T_pred, 2), tf.argmax(y_answer, 2)), tf.float32) * P_mask
+            T_correct_pred = tf.cast(tf.equal(tf.argmax(T_pred, 2), tf.argmax(P_y, 2)), tf.float32) * P_mask
             T_accuracy = tf.reduce_sum(tf.reduce_sum(tf.cast(T_correct_pred, tf.float32))) / tf.reduce_sum(
                 tf.reduce_sum(P_mask))
 
@@ -372,6 +361,6 @@ with tf.device(ops['device']):
 
 
     if ops['write_history'] and epoch==ops['epochs']:
-        DH.write_history(accuracy_entry, ops['dataset']+ops['encoder']+str(ops['max_length'])+'_acc.txt', epoch, ops['overwrite'])
+        DH.write_history(accuracy_entry, ops['dataset']+ops['encoder']+str(ml)+'_acc.txt', epoch, ops['overwrite'])
         DH.write_history(losses_entry, 'records/loss.txt', epoch, ops['overwrite'])
 saver.save(T_sess, ops['dataset']+'_model/'+ops['encoder']+'model')
