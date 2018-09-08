@@ -71,7 +71,8 @@ def load_data(dir, sort_by_len=True, valid_ratio=0.1, samples = 'ALL'):
         for j in range(i+1,len(train_set)):
             if (train_set[i]==train_set[j]).all():
                 s+=1
-    print('Post-Shuffle duplicates: ',s)'''
+    print('Post-Shuffle duplicates: ',s)
+    '''
 
     shuff_train = list(range(len(train_set)))
     random.shuffle(shuff_train)
@@ -79,6 +80,12 @@ def load_data(dir, sort_by_len=True, valid_ratio=0.1, samples = 'ALL'):
     random.shuffle(shuff_test)
     tmp = [train_set[x] for x in shuff_train]
     train_set = tmp
+    s = 0
+    for i in range(len(train_set)):
+        for j in range(i+1,len(train_set)):
+            if (train_set[i]==train_set[j]).all():
+                s+=1
+    print('Post-Shuffle duplicates: ',s)
     tmp = [test_set[x] for x in shuff_test]
     test_set = tmp
     if samples != 'ALL':
