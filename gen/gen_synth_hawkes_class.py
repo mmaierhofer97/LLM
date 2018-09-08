@@ -68,11 +68,11 @@ for l in lens:
                 delta_t = events[i][1]-events[i-1][1]
                 time1.append(str(delta_t))
                 time2.append(str(delta_t))
-                class_id.append(str(c))
+                class_id.append(str(0))
                 ordinal2.append(str(events[i][0]))
             time1 = time1[:-1]
             #print(len(time1))
-            class_id[-1] = str(random.uniform(1,2))
+            class_id[-1] = str(random.randint(1,2))
                 #print(class_id[j])
             #print(len(time1),len(time2),len(ordinal))
             #print(accum, int(np.sign(accum)),len(events))
