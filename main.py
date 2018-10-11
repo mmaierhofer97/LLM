@@ -75,7 +75,8 @@ ops = {
             'vocab_size': 10000,
             'task': "PRED", #CLASS vs PRED
             'device':"/device:GPU:0",
-            'samples': 'ALL'
+            'samples': 'ALL',
+            'timescales' : 2.0 ** np.arange(-7,7)
           }
 if len(sys.argv)>1:
     ops['dataset'] = sys.argv[1]
@@ -107,6 +108,7 @@ m = DH.num_classes([train_set,valid_set,test_set],ops['max_length'])
 if m > ops['n_classes']:
     print('classes from {} to {}'.format(ops['n_classes'],int(m)))
     ops['n_classes'] = int(m)
+ops['timescales'] = DH.set_timescales(train_set,len(ops['timescales']))
 if ops['embedding']:
     extract_ids = lambda set: np.concatenate(np.array([set[i][0] for i in range(len(set))]))
     all_ids = np.concatenate([np.array(extract_ids(train_set)),

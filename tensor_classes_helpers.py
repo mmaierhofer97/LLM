@@ -910,7 +910,7 @@ def LLM_params_init(ops):
 
         identity_flag = False
         forced_zero_flag = False
-        timescales = 2.0 ** np.arange(-7,7)
+        timescales = ops['timescales']
         #timescales = np.append(-1*timescales,timescales)
         #print(timescales)
         n_timescales = len(timescales)#+1

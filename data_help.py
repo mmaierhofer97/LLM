@@ -80,12 +80,12 @@ def load_data(dir, sort_by_len=True, valid_ratio=0.1, samples = 'ALL'):
     random.shuffle(shuff_test)
     tmp = [train_set[x] for x in shuff_train]
     train_set = tmp
-    s = 0
+    '''s = 0
     for i in range(len(train_set)):
         for j in range(i+1,len(train_set)):
             if (train_set[i]==train_set[j]).all():
                 s+=1
-    print('Post-Shuffle duplicates: ',s)
+    print('Post-Shuffle duplicates: ',s)'''
     tmp = [test_set[x] for x in shuff_test]
     test_set = tmp
     if samples != 'ALL':
@@ -350,3 +350,16 @@ def num_classes(datasets,max_length):
             if l > m:
                 m = l
     return m+1
+
+def set_timescales(dataset,n):
+    m = 0
+    l = 10**8
+    for seq in dataset:
+        s = np.extract(seq[XT]>0,seq[XT])
+        m = max(m,max(s))
+        l = min(l,min(s))
+    r = (m/l)**(1/(n-3))
+    d = 1 - np.log(l)/np.log(r)
+    ts = (r ** (np.arange(0,n)-d))
+    print(l,m,r,d,ts)
+    return ts
