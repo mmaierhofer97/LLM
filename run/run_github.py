@@ -27,7 +27,7 @@ for st in sys.argv[1:]:
     args[key]=val
 for i in range(10):
     print(i)
-	r = str(random.randint(0,99)).zfill(2)
+    r = str(random.randint(0,99)).zfill(2)
     args['seed'] = random.randint(1,10**8)
     args['encoder'] = 'LLM'
 	args['dataset'] = args['gdataset']+r
