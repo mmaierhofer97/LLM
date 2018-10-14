@@ -104,6 +104,8 @@ if len(sys.argv)>6:
        ops['max_length'] = sys.argv[6]
 if len(sys.argv)>7:
     ops['samples'] = int(sys.argv[7])'''
+ops['samples']=int(ops['samples'])
+ops['max_length']=int(ops['max_length'])
 
 print(ops['samples'])
 # load the dataset
