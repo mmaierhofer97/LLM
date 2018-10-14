@@ -78,7 +78,16 @@ ops = {
             'samples': 'ALL',
             'timescales' : 2.0 ** np.arange(-7,7)
           }
-if len(sys.argv)>1:
+args = {}
+for st in sys.argv[1:]:
+    splt = st.index('=')
+    key = st[:splt]
+    val = st[splt+1:]
+    args[key]=val
+print(args)
+for key in args.keys():
+    ops[key]=args[key]
+'''if len(sys.argv)>1:
     ops['dataset'] = sys.argv[1]
 if len(sys.argv)>2:
     ops['encoder'] = sys.argv[2]
@@ -94,7 +103,7 @@ if len(sys.argv)>6:
    except:
        ops['max_length'] = sys.argv[6]
 if len(sys.argv)>7:
-    ops['samples'] = int(sys.argv[7])
+    ops['samples'] = int(sys.argv[7])'''
 
 print(ops['samples'])
 # load the dataset
