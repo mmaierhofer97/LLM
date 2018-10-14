@@ -351,15 +351,22 @@ def num_classes(datasets,max_length):
                 m = l
     return m+1
 
-def set_timescales(dataset,n):
+def set_timescales(dataset,timescales):
+    n = len(timescales)
     m = 0
     l = 10**8
     for seq in dataset:
-        s = np.extract(seq[XT]>0,seq[XT])
-        m = max(m,max(s))
-        l = min(l,min(s))
-    r = (m/l)**(1/(n-3))
-    d = 1 - np.log(l)/np.log(r)
-    ts = (r ** (np.arange(0,n)-d))
-    print(l,m,r,d,ts)
+        try:
+          s = np.array(seq[XT][1:])
+          s = np.extract(s>0,s)
+          m = max(m,max(s))
+          l = min(l,min(s))
+        except:
+          0
+    if m>l:
+      r = (m/l)**(1/(n-3))
+      d = 1 - np.log(l)/np.log(r)
+      ts = (r ** (np.arange(0,n)-d))
+    else:
+      ts = timecales
     return ts

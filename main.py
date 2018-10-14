@@ -108,7 +108,8 @@ m = DH.num_classes([train_set,valid_set,test_set],ops['max_length'])
 if m > ops['n_classes']:
     print('classes from {} to {}'.format(ops['n_classes'],int(m)))
     ops['n_classes'] = int(m)
-ops['timescales'] = DH.set_timescales(train_set,len(ops['timescales']))
+if ops['encoder'] == 'LLM':
+    ops['timescales'] = DH.set_timescales(train_set,(ops['timescales']))
 if ops['embedding']:
     extract_ids = lambda set: np.concatenate(np.array([set[i][0] for i in range(len(set))]))
     all_ids = np.concatenate([np.array(extract_ids(train_set)),
@@ -346,14 +347,14 @@ with tf.device(ops['device']):
         else:
             iterations_since_best += 1
 
-        if iterations_since_best > 9 or epoch == ops['epochs'] or max(losses_entry[0],losses_entry[2])>10*best_loss:
+        if iterations_since_best > 4 or epoch == ops['epochs'] or max(losses_entry[0],losses_entry[2])>10*best_loss:
             saver.restore(T_sess, model_save_name)
             [accuracy_entry, losses_entry] = best_results
             iterations_since_best = 0
             reset_counter += 1
             if epoch == ops['epochs']:
                 print( "Epoch:{}\n Best Model: Accuracy:{}, Losses:{}".format(epoch, np.array(accuracy_entry), losses_entry))
-            elif reset_counter>3 or (accuracy_entry[2]==1 and accuracy_entry[0]==1):
+            elif reset_counter>1 or (accuracy_entry[2]==1 and accuracy_entry[0]==1):
                 print( "Model Halting, Best Validation Results:\n Accuracy:{}, Losses:{}".format( np.array(accuracy_entry),losses_entry))
                 epoch = ops['epochs']
             else:
