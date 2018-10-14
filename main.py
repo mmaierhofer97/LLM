@@ -76,7 +76,8 @@ ops = {
             'task': "PRED", #CLASS vs PRED
             'device':"/device:GPU:0",
             'samples': 'ALL',
-            'timescales' : 2.0 ** np.arange(-7,7)
+            'timescales' : 2.0 ** np.arange(-7,7),
+            'seed' : None
           }
 args = {}
 for st in sys.argv[1:]:
@@ -104,12 +105,18 @@ if len(sys.argv)>6:
        ops['max_length'] = sys.argv[6]
 if len(sys.argv)>7:
     ops['samples'] = int(sys.argv[7])'''
-ops['samples']=int(ops['samples'])
-ops['max_length']=int(ops['max_length'])
-
+ops['epochs'] = int(ops['epochs'])
+try:
+    ops['samples']=int(ops['samples'])
+except:
+    0
+try:
+    ops['max_length']=int(ops['max_length'])
+except:
+    0
 print(ops['samples'])
 # load the dataset
-train_set, valid_set, test_set = DH.load_data(ops['dataset'], sort_by_len=False, samples = ops['samples'])
+train_set, valid_set, test_set = DH.load_data(ops['dataset'], sort_by_len=False, samples = ops['samples'],seed = ops['seed'])
 print(ops['dataset'])
 #valid_set = test_set
 ml = ops['max_length']
@@ -377,4 +384,5 @@ with tf.device(ops['device']):
     if ops['write_history'] and epoch==ops['epochs']:
         DH.write_history(accuracy_entry, ops['dataset']+ops['encoder']+str(ml)+'_acc.txt', epoch, ops['overwrite'])
         DH.write_history(losses_entry, 'records/loss.txt', epoch, ops['overwrite'])
+DH.write_history(accuracy_entry[1], 'records/tmp_'+ops['encoder']+'.txt', 1, True)
 saver.save(T_sess, ops['dataset']+'_model/'+ops['encoder']+'model')

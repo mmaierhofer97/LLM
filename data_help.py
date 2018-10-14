@@ -46,7 +46,7 @@ def read_file_time_sequences(fname):
 
 
 
-def load_data(dir, sort_by_len=True, valid_ratio=0.1, samples = 'ALL'):
+def load_data(dir, sort_by_len=True, valid_ratio=0.1, samples = 'ALL', seed=None):
     """
     Reads the directory for test and train datasets.
     Divides test set into validation set and test set.
@@ -55,6 +55,7 @@ def load_data(dir, sort_by_len=True, valid_ratio=0.1, samples = 'ALL'):
 
     Returns: train, valid, test
     """
+    random.seed(seed)
     train_set = read_file_time_sequences(dir + '.train')
     test_set = read_file_time_sequences(dir + '.test')
 

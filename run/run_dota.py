@@ -10,7 +10,6 @@ print(args)
 for i in range(10):
 	print(i)
 	cwd = os.path.join(os.getcwd(), "main.py dataset="+filepath+"' 'encoder=LLM' 'device=GPU' 'task=PRED' 'model_load_name=FALSE'"+args)
-	print(cwd)
 	os.system('{} {}'.format('python3', cwd))
 	cwd = os.path.join(os.getcwd(), "main.py dataset="+filepath+"' 'encoder=LSTM' 'device=GPU' 'task=PRED' 'model_load_name=FALSE'"+args)
 	os.system('{} {}'.format('python3', cwd))
