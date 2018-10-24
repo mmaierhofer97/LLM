@@ -116,8 +116,14 @@ except:
     0
 print(ops['samples'])
 # load the dataset
-train_set, valid_set, test_set = DH.load_data(ops['dataset'], sort_by_len=False, samples = ops['samples'],seed = ops['seed'])
-print(ops['dataset'])
+datasets = DH.load_data(ops['dataset'], sort_by_len=False, samples = ops['samples'],seed = ops['seed'],task = ops['task'])
+train_set = datasets['train_set']
+test_set = datasets['test_set']
+valid_set = datasets['valid_set']
+if ops['task'] = 'PRED_CORR':
+    train_corr = datasets['train_corr']
+    test_corr = datasets['test_corr']
+    valid_corr = datasets['valid_corr']
 #valid_set = test_set
 ml = ops['max_length']
 if ops['max_length'] == "ALL" or ops['task'] == 'CLASS':
