@@ -4,8 +4,8 @@ import sys
 lams = ['']
 
 if len(sys.argv)>1:
-   filename = 'data/'+ sys.argv[1]
-lens = ['100','10','30']
+   filename =  sys.argv[1]
+lens = ['']
 
 for i in lens:
     print(i)

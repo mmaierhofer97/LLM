@@ -120,7 +120,7 @@ datasets = DH.load_data(ops['dataset'], sort_by_len=False, samples = ops['sample
 train_set = datasets['train_set']
 test_set = datasets['test_set']
 valid_set = datasets['valid_set']
-if ops['task'] = 'PRED_CORR':
+if ops['task'] == 'PRED_CORR':
     train_corr = datasets['train_corr']
     test_corr = datasets['test_corr']
     valid_corr = datasets['valid_corr']
