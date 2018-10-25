@@ -2,13 +2,14 @@ import numpy as np
 import csv
 import sys
 lams = ['']
-
+filenames = []
 if len(sys.argv)>1:
-   filename = 'data/'+ sys.argv[1]
+   for f in sys.argv[1:]:
+       filenames.append(f)
 lens = ['']
 
-for i in lens:
-    print(i)
+for filename in filenames:
+    print(filename)
     rows = []
     for l in lams:
         try:
