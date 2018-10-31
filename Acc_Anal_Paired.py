@@ -8,7 +8,10 @@ if len(sys.argv)>1:
    for f in sys.argv[1:]:
        filenames.append(f)
 lens = ['']
-
+accs = []
+errs = []
+paccs = []
+perrs = []
 for filename in filenames:
     print(filename)
     rows = []
@@ -41,3 +44,16 @@ for filename in filenames:
     print('LSTM-{}:  {} +- {}'.format(len(llm),lstm_m,lstm_s*1.96))
     print('Diff-{}:  {} +- {}'.format(len(llm),m,s*interval))
     print("P Value of {} better than {}: ".format(labs[i],labs[i-1]),min(1-p,p))
+    accs.append(llm_m)
+    errs.append(llm_s*1.96)
+    accs.append(lstm_m)
+    errs.append(lstm_s*1.96)
+    paccs.append(m)
+    perrs.append(s*interval)
+print(accs)
+print(errs)
+print()
+print(paccs)
+print(perrs)
+
+
