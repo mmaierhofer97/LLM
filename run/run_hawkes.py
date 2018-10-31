@@ -20,10 +20,19 @@ args['task']='PRED'
 args['model_load_name']='FALSE'
 filepath = "data/synth_hawkes/hawkes"
 filename = "100"
-if len(sys.argv)>1:
-	filename = sys.argv[1]
+
+for st in sys.argv[1:]:
+    splt = st.index('=')
+    key = st[:splt]
+    val = st[splt+1:]
+    args[key]=val
+try:
+    filename = args['gen_length']
+except:
+    0
+
 for i in range(10):
-	args['seed'] = random.randint(1,10**8)
+    args['seed'] = random.randint(1,10**8)
     args['dataset'] = filepath+filename
     cwd = os.path.join(os.getcwd(), "gen/gen_synth_hawkes.py "+filename)
     os.system('{} {}'.format('python3', cwd))
@@ -40,8 +49,8 @@ for i in range(10):
         argstr+=' '+str(key)+'='+str(args[key])
     cwd = os.path.join(os.getcwd(), "main.py"+argstr)
     os.system('{} {}'.format('python3', cwd))
-    LLMfile = open('records/tmp_LLM.txt','rt')
-    LSTMfile = open('records/tmp_LSTM.txt','rt')
+    LLMfile = open(args['dataset']+'tmp_LLM.txt','rt')
+    LSTMfile = open(args['dataset']+'tmp_LSTM.txt','rt')
     a = float(LLMfile.read())
     b = float(LSTMfile.read())
     ml = str(args['max_length'])

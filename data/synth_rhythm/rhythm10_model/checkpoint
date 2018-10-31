@@ -1,2 +1,3 @@
 model_checkpoint_path: "LSTMmodel"
+all_model_checkpoint_paths: "LSTMALLmodel"
 all_model_checkpoint_paths: "LSTMmodel"

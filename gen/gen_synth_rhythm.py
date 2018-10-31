@@ -18,7 +18,7 @@ for l in lens:
         myfile.close()
         myfile = open(filename,'a')
         for c in classes:
-            for count in range(1000):
+            for count in range(2000):
                 scales = []
                 for i in range(ev_types):
                     scales.append(2**i)

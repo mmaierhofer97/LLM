@@ -42,7 +42,7 @@ for filename in filenames:
     labs = ['LSTM','LLM']
     print('LLM-{}:  {} +- {}'.format(len(llm),llm_m,llm_s*1.96))
     print('LSTM-{}:  {} +- {}'.format(len(llm),lstm_m,lstm_s*1.96))
-    print('Diff-{}:  {} +- {}'.format(len(llm),m,s*interval))
+    print('Diff-{}:  {} +- {}'.format(len(llm),m,se*interval))
     print("P Value of {} better than {}: ".format(labs[i],labs[i-1]),min(1-p,p))
     accs.append(llm_m)
     errs.append(llm_s*1.96)
