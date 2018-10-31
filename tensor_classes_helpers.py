@@ -115,24 +115,41 @@ def softmax_init(shape):
 # TODO: amake rray-like arguments for concise format
 def cut_up_x(x_set, ops, P_len=None, n_timescales=None, P_batch_size=None, embedding_matrix=None):
     # x_set: [batch_size, max_length, frame_size]
+    task=ops['task']
     x_set = tf.transpose(x_set, [1,0,2])
     x_set = tf.cast(x_set, tf.float32)
     # x_set: [max_length, batch_size, frpoame_size]
     # splits accross 2nd axis, into 3 splits of x_set tensor (very backwards argument arrangement)
     x, xt, yt = tf.split(x_set, 3, 2)
-
+    print(x.shape)
     # at this point x,xt,yt : [max_length, batch_size, 1] => collapse
-    x = tf.reduce_sum(x, reduction_indices=2)
+    if task == 'PRED_CORR':
+        tmp = x
+
+        #try:
+        #    x_extra =  np.expand_dims([[inp[1] for inp in seq] for seq in tmp],axis=2)
+        #except:
+        #    x_extra = np.expand_dims(np.zeros([[inp[0] for inp in seq] for seq in tmp].shape),axis=2)
+        x =tmp[:,:,0]
+        x_extra =tmp[:,:,1]
+        print(x.shape)
+        #[[inp[0] for inp in seq] for seq in tmp]
+    else:
+        x = tf.reduce_sum(x, reduction_indices=2)
     #xt = tf.reduce_sum(xt, reduction_indices=2)
     #yt = tf.reduce_sum(yt, reduction_indices=2)
 
     # one hot embedding of x (previous state)
+
     x = tf.cast(x, tf.int32) # needs integers for one hot embedding to work
     # depth=n_classes, by default 1 for active, 0 inactive, appended as last dimension
     if ops['embedding']:
         x_vectorized = tf.nn.embedding_lookup(embedding_matrix, x)
     else:
         x_vectorized = tf.one_hot(x - 1, ops['n_classes'], name='x_vectorized')
+    print(x_vectorized.shape)
+    if task == 'PRED_CORR':
+        x_vectorized = np.concatenate((x_vectorized,x_extra),axis = 2)
     # x_vectorized: [n_steps, batch_size, n_classes]
     x_leftover = None
     if P_len != None:
@@ -193,6 +210,7 @@ def errors_and_losses(sess, P_x, P_y, P_len, P_mask, P_batch_size, T_accuracy,  
 ############################
 def LSTM_params_init(ops):
     with tf.variable_scope("LSTM"):
+
         W = {'out': weights_init(n_input=ops['n_hidden'] + 2,
                                      n_output=ops['n_classes'],
                                      name='W_out')}
@@ -247,11 +265,14 @@ def RNN(placeholders, ops, params):
 ############################
 def LSTM_raw_params_init(ops):
     with tf.variable_scope("LSTM"):
-
+        if ops['task']=="PRED_CORR":
+            in_extra = 1
+        else:
+            in_extra = 0
         W = {'out': weights_init(n_input=ops['n_hidden'],
                                  n_output=ops['n_classes'],
                                  name='W_out'),
-             'in_stack': weights_init(n_input = ops['n_classes'] + 2,
+             'in_stack': weights_init(n_input = ops['n_classes'] + 2 + in_extra,
                                       n_output = 4 * ops['n_hidden'],
                                       name = 'W_in_stack'),
              'rec_stack': weights_init(n_input=ops['n_hidden'],
@@ -914,7 +935,11 @@ def LLM_params_init(ops):
         #timescales = np.append(-1*timescales,timescales)
         #print(timescales)
         n_timescales = len(timescales)#+1
-        W = {'in_feat': weights_init(n_input=ops['n_classes'],
+        if ops['task'] == "PRED_CORR":
+            in_extra = 1
+        else:
+            in_extra = 0
+        W = {'in_feat': weights_init(n_input=ops['n_classes']+in_extra,
                                 n_output=ops['n_hidden'],
                                 name='W_in',
                                 identity=identity_flag),

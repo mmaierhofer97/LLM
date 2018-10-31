@@ -20,16 +20,22 @@ Y = 2
 YT = 3
 # pbd: b[line#], c, !<expr>, p <name>
 
-def read_file_time_sequences(fname):
+def read_file_time_sequences(fname,task="LLM"):
     sequences = []
     # ignore id number in the beginning of each line
     split_line = lambda l: [float(x) for x in l.split()][1:]
+    split_pred_corr1 = lambda l: [x for x in l.split()][1:]
+    split_pred_corr2 = lambda l: [float(x) for x in l.split(',')]
+
     with open(fname) as f:
         dtype = 0
         for l in f:
             if dtype == 0:
                 sequence_tuple = [] #x_in, t_in, y_out, t_out
-                sequence_tuple.append(split_line(l))
+                if task == 'PRED_CORR':
+                    sequence_tuple.append([split_pred_corr2(t) for t in split_pred_corr1(l)])
+                else:
+                    sequence_tuple.append(split_line(l))
                 dtype += 1
             elif dtype == 1:
                 sequence_tuple.append(split_line(l))
@@ -56,8 +62,8 @@ def load_data(dir, sort_by_len=True, valid_ratio=0.1, samples = 'ALL', seed=None
     Returns: train, valid, test
     """
     random.seed(seed)
-    train_set = read_file_time_sequences(dir + '.train')
-    test_set = read_file_time_sequences(dir + '.test')
+    train_set = read_file_time_sequences(dir + '.train',task)
+    test_set = read_file_time_sequences(dir + '.test',task)
 
     ''' Code showing shuffle creating duplicates
     s = 0
@@ -81,11 +87,6 @@ def load_data(dir, sort_by_len=True, valid_ratio=0.1, samples = 'ALL', seed=None
     random.shuffle(shuff_test)
     tmp = [train_set[x] for x in shuff_train]
     train_set = tmp
-    if task == 'PRED_CORR':
-        train_corr = read_file_time_sequences(dir + '.train_corr')
-        test_corr = read_file_time_sequences(dir + '.test_corr')
-        tmp = [train_corr[x] for x in shuff_train]
-        train_corr = tmp
     '''s = 0
     for i in range(len(train_set)):
         for j in range(i+1,len(train_set)):
@@ -97,9 +98,7 @@ def load_data(dir, sort_by_len=True, valid_ratio=0.1, samples = 'ALL', seed=None
     if samples != 'ALL':
         train_set = train_set[:samples]
         test_set = test_set[:samples]
-        if task == 'PRED_CORR':
-            train_corr = train_corr[:samples]
-            test_corr = test_corr[:samples]
+
     # make validation set from train set before sorting by length
     valid_n = int(len(train_set)*valid_ratio)
     if valid_n == 0:
@@ -107,9 +106,7 @@ def load_data(dir, sort_by_len=True, valid_ratio=0.1, samples = 'ALL', seed=None
     valid_set = train_set.copy()[:valid_n]
 
     train_set = train_set[valid_n:]
-    if task == 'PRED_CORR':
-        valid_corr = train_corr.copy()[:valid_n]
-        train_corr = train_corr[valid_n:]
+
 
     # sort each set by length to minimize padding in the future
     if sort_by_len:
@@ -118,20 +115,14 @@ def load_data(dir, sort_by_len=True, valid_ratio=0.1, samples = 'ALL', seed=None
         train_set = reorder(train_set, sorted_indeces(train_set))
         test_set = reorder(test_set, sorted_indeces(test_set))
         valid_set = reorder(valid_set, sorted_indeces(valid_set))
-        if task == 'PRED_CORR':
-            train_corr = reorder(train_corr, sorted_indeces(train_corr))
-            test_corr = reorder(test_corr, sorted_indeces(test_corr))
-            valid_corr = reorder(valid_corr, sorted_indeces(valid_corr))
+
 
     #print len(train_set), len(test_set), len(valid_set)
     datasets = {}
     datasets['train_set'] = train_set
     datasets['test_set'] = test_set
     datasets['valid_set'] = valid_set
-    if task == 'PRED_CORR':
-        datasets['train_corr'] = train_corr
-        datasets['test_corr'] = test_corr
-        datasets['valid_corr'] = valid_corr    
+
     return datasets
 
 
@@ -169,7 +160,7 @@ def prepare_data(ox, oxt, oy, oyt, maxlen=None, extended_len=0, task = 'PRED'):
             (n_steps, batch_size) for everything
     """
 
-    lengths = [len(seq) for seq in ox]
+    lengths = [len(seq) for seq in oxt]
     # cut if too long
     if maxlen > 0:
 
@@ -207,7 +198,6 @@ def prepare_data(ox, oxt, oy, oyt, maxlen=None, extended_len=0, task = 'PRED'):
         maxlen = extended_len
 
     batch_size = len(ox)
-
     x = np.zeros((batch_size, maxlen)).astype('int64')
     xt = np.zeros((batch_size, maxlen)).astype(np.float32)
     y = np.zeros((batch_size, maxlen)).astype('int64')
@@ -228,7 +218,6 @@ def prepare_data(ox, oxt, oy, oyt, maxlen=None, extended_len=0, task = 'PRED'):
             yt[i, :lengths[i]] = oyt[i]
             x_mask[i, :lengths[i]] = 1.0
     # return actual maxlength to know when to stop computing (np.max(lengths))
-
     return x, xt, y, yt, x_mask, np.max(lengths)
 
 def pick_batch(dataset, batch_indeces, max_length, task = 'PRED'):
@@ -251,6 +240,7 @@ def pick_batch(dataset, batch_indeces, max_length, task = 'PRED'):
                                                                     extended_len=max_length,
                                                                     task = task)
     # make an input set of dimensions (batch_size, max_length, frame_size)
+    print(batch_x.shape,'test')
     x_set = np.array([batch_x, batch_xt, batch_yt]).transpose([1,2,0])
     batch_size = len(batch_indeces)
     return x_set, batch_y, batch_maxlen, batch_size, mask
@@ -368,9 +358,9 @@ def num_classes(datasets,max_length):
     for dataset in datasets:
         for seq in dataset:
             if len(seq[0])<=max_length:
-                l = max(max(seq[0]),seq[2][-1])
+                l = max(seq[2])
             else:
-                l = max(seq[0][:max_length+1])
+                l = max(seq[2][:max_length+1])
             if l > m:
                 m = l
     return m+1

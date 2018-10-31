@@ -61,7 +61,7 @@ ops = {
             'batch_size': 64,
             'max_length': "ALL", # Integer vs "ALL"
             'encoder': 'LLM',
-            'dataset': 'data/synth_accum/accum_scales64',
+            'dataset': 'data/synth_accum/accum',
             'overwrite': False,
             "write_history": True, #whether to write the history of training
             'model_save_name':' True',
@@ -78,6 +78,7 @@ ops = {
             'samples': 'ALL',
             'timescales' : 2.0 ** np.arange(-7,7),
             'seed' : None
+
           }
 args = {}
 for st in sys.argv[1:]:
@@ -120,10 +121,7 @@ datasets = DH.load_data(ops['dataset'], sort_by_len=False, samples = ops['sample
 train_set = datasets['train_set']
 test_set = datasets['test_set']
 valid_set = datasets['valid_set']
-if ops['task'] == 'PRED_CORR':
-    train_corr = datasets['train_corr']
-    test_corr = datasets['test_corr']
-    valid_corr = datasets['valid_corr']
+
 #valid_set = test_set
 ml = ops['max_length']
 if ops['max_length'] == "ALL" or ops['task'] == 'CLASS':
@@ -228,7 +226,6 @@ with tf.device(ops['device']):
                     reduction_indices=[2]) * P_mask,
                 reduction_indices=[1])) / tf.reduce_sum(tf.reduce_sum(P_mask))
     else:
-        if ops['task'] == 'PRED' or ops['task'] == 'CLASS':
             y_answer = P_y
             T_cost = tf.reduce_sum(
                         tf.reduce_sum(
