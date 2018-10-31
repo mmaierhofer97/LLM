@@ -35,8 +35,9 @@ for filename in filenames:
     lstm_s=np.sqrt(sum(np.square((lstm)-lstm_m))/(len(lstm)-1))
     interval = t.ppf(.975,df)
     p = t.cdf(T,df)
-    print(interval)
+    i = int((np.sign(m)+1)/2)
+    labs = ['LSTM','LLM']
     print('LLM-{}:  {} +- {}'.format(len(llm),llm_m,llm_s*1.96))
     print('LSTM-{}:  {} +- {}'.format(len(llm),lstm_m,lstm_s*1.96))
     print('Diff-{}:  {} +- {}'.format(len(llm),m,s*interval))
-    print("P Value of LLM better than LSTM: ",p)
+    print("P Value of {} better than {}: ".format(labs[i],labs[i-1]),min(1-p,p))
