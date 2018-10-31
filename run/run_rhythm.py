@@ -23,6 +23,7 @@ filename = "100"
 if len(sys.argv)>1:
 	filename = sys.argv[1]
 for i in range(10):
+	args['seed'] = random.randint(1,10**8)
     args['dataset'] = filepath+filename
     cwd = os.path.join(os.getcwd(), "gen/gen_synth_rhythm.py "+filename)
     os.system('{} {}'.format('python3', cwd))
