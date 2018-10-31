@@ -240,7 +240,6 @@ def pick_batch(dataset, batch_indeces, max_length, task = 'PRED'):
                                                                     extended_len=max_length,
                                                                     task = task)
     # make an input set of dimensions (batch_size, max_length, frame_size)
-    print(batch_x.shape,'test')
     x_set = np.array([batch_x, batch_xt, batch_yt]).transpose([1,2,0])
     batch_size = len(batch_indeces)
     return x_set, batch_y, batch_maxlen, batch_size, mask

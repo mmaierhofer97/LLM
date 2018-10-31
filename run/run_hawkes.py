@@ -18,7 +18,7 @@ args['encoder']='LLM'
 args['device']='GPU'
 args['task']='PRED'
 args['model_load_name']='FALSE'
-filepath = "'data/synth_hawkes/hawkes"
+filepath = "data/synth_hawkes/hawkes"
 filename = "100"
 if len(sys.argv)>1:
 	filename = sys.argv[1]
@@ -30,6 +30,7 @@ for i in range(10):
     argstr = ''
     for key in args.keys():
         argstr+=' '+str(key)+'='+str(args[key])
+    print(argstr)
     cwd = os.path.join(os.getcwd(), "main.py" +argstr)
     os.system('{} {}'.format('python3', cwd))
     args['encoder'] = 'LSTM'
