@@ -23,9 +23,9 @@ filename = "100"
 if len(sys.argv)>1:
 	filename = sys.argv[1]
 for i in range(10):
-	args['dataset'] = filepath+filename
-	cwd = os.path.join(os.getcwd(), "gen_synth_hawkes.py "+filename)
-	os.system('{} {}'.format('python3', cwd))
+    args['dataset'] = filepath+filename
+    cwd = os.path.join(os.getcwd(), "gen/gen_synth_hawkes.py "+filename)
+    os.system('{} {}'.format('python3', cwd))
     args['encoder'] = 'LLM'
     argstr = ''
     for key in args.keys():
