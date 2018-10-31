@@ -16,7 +16,7 @@ if len(sys.argv)>1:
 ends = ['.train','.test']
 ev_types = 4
 time_scales = []
-mu = np.repeat(.02,ev_types)
+mu = .02
 alph = 0.5
 for l in lens:
     for end in ends:
@@ -32,23 +32,22 @@ for l in lens:
                 time_scales.append(4**i)
             countall += 1
             id=str(countall).zfill(5)
-
             events = []
             t = 0
-
-            k = (np.eye(ev_types)*(1/np.array(time_scales)))
-            hawkes = SimuHawkesExpKernels(decays = k, baseline =mu,adjacency = alph*np.eye(ev_types), verbose=False, max_jumps = l)
-            dt = 0.01
-            hawkes.track_intensity(dt)
-            hawkes.simulate()
-            timestamps = hawkes.timestamps
-            intensities = hawkes.tracked_intensity
-            intense_times = hawkes.intensity_tracked_times
-            print(intensities)
             for ev in range(ev_types):
-                for t in timestamps[ev]:
+                ts = time_scales[ev]
+                hawkes = SimuHawkes(n_nodes=1, verbose=False, max_jumps = l)
+                kernel = HawkesKernelExp(alph, 1/ts)
+                hawkes.set_kernel(0, 0, kernel)
+                hawkes.set_baseline(0, mu)
+
+
+                hawkes.simulate()
+                timestamps = hawkes.timestamps
+                for t in timestamps[0]:
                     events.append([ev+1,t])
             events.sort(key=lambda x: x[1])
+            events = events[:l+1]
             time1 = [str(0.0)]
             time2 = []
             ordinal = []
