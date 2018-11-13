@@ -20,7 +20,7 @@ args['device']='GPU'
 args['task']='PRED'
 args['model_load_name']='FALSE'
 args['gdataset'] = 'data/github/github'
-args['n_hidden'] = 100
+args['n_hidden'] = '100'
 for st in sys.argv[1:]:
     splt = st.index('=')
     key = st[:splt]

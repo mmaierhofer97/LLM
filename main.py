@@ -114,7 +114,8 @@ int_ops=['epochs',
 'batch_size',
 'max_length', # Integer vs "ALL"
 'embedding_size',
-'vocab_size']
+'vocab_size',
+'samples']
 for op in int_ops:
     try:
         ops[op]=int(ops[op])
@@ -335,7 +336,7 @@ with tf.device(ops['device']):
 
             names = ["h","o", "h_prev","o_prev","q","s","sigma","r","rho",'mul','decay']
             np.set_printoptions(precision=4)
-            print(deb_var[5]*y_answer)
+            #print(deb_var[5]*y_answer)
             for i,var in enumerate(deb_var):
                 var = np.array(var)
                 # if names[i] in ['o_prev','h_prev','q','h_hat']:
