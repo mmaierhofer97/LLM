@@ -115,7 +115,7 @@ try:
     ops['max_length']=int(ops['max_length'])
 except:
     0
-print(ops['samples'])
+#print(ops['samples'])
 # load the dataset
 datasets = DH.load_data(ops['dataset'], sort_by_len=False, samples = ops['samples'],seed = ops['seed'],task = ops['task'])
 train_set = datasets['train_set']
@@ -225,6 +225,19 @@ with tf.device(ops['device']):
                    tf.abs((y_answer*T_pred)/(tf.norm(y_answer,2,keep_dims=True)*tf.norm(T_pred,2,keep_dims=True)) - 1.0)**2,
                     reduction_indices=[2]) * P_mask,
                 reduction_indices=[1])) / tf.reduce_sum(tf.reduce_sum(P_mask))
+    elif ops['task']=="PRED_CORR":
+            y_answer = P_y
+            T_cost = tf.reduce_sum(
+                        tf.reduce_sum(
+                            - tf.reduce_sum(
+                                (tf.abs(P_y)* tf.log(1-tf.abs(T_pred-P_y)/2)),
+                            reduction_indices=[2]) * P_mask,
+                        reduction_indices=[1])) / tf.reduce_sum(tf.reduce_sum(P_mask))
+
+            # Evaluate the model
+            T_correct_pred = tf.cast(tf.equal(tf.argmax(T_pred, 2), tf.argmax(P_y, 2)), tf.float32) * P_mask
+            T_accuracy = tf.reduce_sum(tf.reduce_sum(tf.cast(T_correct_pred, tf.float32))) / tf.reduce_sum(
+                tf.reduce_sum(P_mask))
     else:
             y_answer = P_y
             T_cost = tf.reduce_sum(
@@ -302,7 +315,7 @@ with tf.device(ops['device']):
                 y_answer = DH.embed_one_hot(batch_y, 0.0, ops['n_classes'], ops['max_length'],ops['task'])
             ind = list(mask[0,:]).index(1)
             #print(np.array(y_answer).shape,np.sum(y_answer[0,:,:]),batch_y[0,ind])
-            _, deb_var, summary_weights= T_sess.run(
+            _, deb_var, summary_weights = T_sess.run(
                                                     [T_optimizer, debugging_stuff, T_summary_weights],
                                                     feed_dict={
                                                                 P_x: x_set,
@@ -311,7 +324,6 @@ with tf.device(ops['device']):
                                                                 P_mask: mask,
                                                                 P_batch_size: batch_size})
 
-            #print(np.array(deb_var[0]).shape,deb_var[0][0,0,0,:] )
             names = ["h","o", "h_prev","o_prev","q","s","sigma","r","rho",'mul','decay']
             np.set_printoptions(precision=4)
             #print(yo)
