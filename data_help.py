@@ -24,18 +24,13 @@ def read_file_time_sequences(fname,task="LLM"):
     sequences = []
     # ignore id number in the beginning of each line
     split_line = lambda l: [float(x) for x in l.split()][1:]
-    split_pred_corr1 = lambda l: [x for x in l.split()][1:]
-    split_pred_corr2 = lambda l: [float(x) for x in l.split(',')]
 
     with open(fname) as f:
         dtype = 0
         for l in f:
             if dtype == 0:
                 sequence_tuple = [] #x_in, t_in, y_out, t_out
-                if task == 'PRED_CORR':
-                    sequence_tuple.append([split_pred_corr2(t) for t in split_pred_corr1(l)])
-                else:
-                    sequence_tuple.append(split_line(l))
+                sequence_tuple.append(split_line(l))
                 dtype += 1
             elif dtype == 1:
                 sequence_tuple.append(split_line(l))
@@ -116,7 +111,7 @@ def load_data(dir, sort_by_len=True, valid_ratio=0.1, samples = 'ALL', seed=None
         test_set = reorder(test_set, sorted_indeces(test_set))
         valid_set = reorder(valid_set, sorted_indeces(valid_set))
 
-
+    #print(train_set)
     #print len(train_set), len(test_set), len(valid_set)
     datasets = {}
     datasets['train_set'] = train_set
@@ -266,7 +261,16 @@ def embed_one_hot(batch_array, batch_size, depth, length, task):
             array = [array[j] - 1 for j in range(0, first_zero_id)]
 
             one_hot_matrix[i, np.arange(len(array)), array] = 1
-    else:
+    elif task == 'PRED_CORR':
+        for i,array in enumerate(batch_array):
+            first_zero_id = len(array)
+            if array[-1] == 0:
+                first_zero_id = find_first_zero(array)
+            signs = [np.sign(array[j]) for j in range(0, first_zero_id)]
+            array = [np.abs(array[j]) - 1 for j in range(0, first_zero_id)]
+
+            one_hot_matrix[i, np.arange(len(array)), array] = signs
+    elif task =='CLASS':
         for i,array in enumerate(batch_array):
             # only put ones until the first padded element in current array
             loc = list(np.not_equal(array,0).astype(int)).index(1)
