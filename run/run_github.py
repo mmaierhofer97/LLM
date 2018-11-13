@@ -20,6 +20,7 @@ args['device']='GPU'
 args['task']='PRED'
 args['model_load_name']='FALSE'
 args['gdataset'] = 'data/github/github'
+args['n_hidden'] = 100
 for st in sys.argv[1:]:
     splt = st.index('=')
     key = st[:splt]
@@ -47,4 +48,4 @@ for i in range(10):
     a = float(LLMfile.read())
     b = float(LSTMfile.read())
     ml = str(args['max_length'])
-    DH.write_history([a,b],args['gdataset']+'_'+str(ml)+'_paired_test.txt', i, False)
+    DH.write_history([a,b],args['gdataset']+'_'+str(ml)+'_paired_test'+args['n_hidden']+'.txt', i, False)
