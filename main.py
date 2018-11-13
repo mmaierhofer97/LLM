@@ -106,13 +106,22 @@ if len(sys.argv)>6:
        ops['max_length'] = sys.argv[6]
 if len(sys.argv)>7:
     ops['samples'] = int(sys.argv[7])'''
-ops['epochs'] = int(ops['epochs'])
+
+int_ops=['epochs',
+'frame_size',
+'n_hidden',
+'n_classes', # aka n_input
+'batch_size',
+'max_length', # Integer vs "ALL"
+'embedding_size',
+'vocab_size']
+for op in int_ops:
+    try:
+        ops[op]=int(ops[op])
+    except:
+        0
 try:
-    ops['samples']=int(ops['samples'])
-except:
-    0
-try:
-    ops['max_length']=int(ops['max_length'])
+    ops['learning_rate']=float(ops['learning_rate'])
 except:
     0
 #print(ops['samples'])
