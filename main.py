@@ -409,5 +409,5 @@ with tf.device(ops['device']):
     if ops['write_history'] and epoch==ops['epochs']:
         DH.write_history(accuracy_entry, ops['dataset']+ops['encoder']+str(ml)+'_acc.txt', epoch, ops['overwrite'])
         DH.write_history(losses_entry, 'records/loss.txt', epoch, ops['overwrite'])
-DH.write_history(accuracy_entry[1], ops['dataset']+'tmp_'+ops['encoder']+'.txt', 1, True)
+DH.write_history([accuracy_entry[0],accuracy_entry[1]], ops['dataset']+'tmp_'+ops['encoder']+'.txt', 1, True)
 saver.save(T_sess, ops['dataset']+'_model/'+ops['encoder']+'model')
