@@ -42,8 +42,8 @@ for i in range(10):
     os.system('{} {}'.format('python3', cwd))
     LLMfile = open(args['dataset']+'tmp_LLM.txt','rt')
     LSTMfile = open(args['dataset']+'tmp_LSTM.txt','rt')
-    a = float(LLMfile.read())
-    b = float(LSTMfile.read())
+    a = [float(i) for i in LLMfile.read()[:-2].split(',')]
+    b =  [float(i) for i in LSTMfile.read()[:-2].split(',')]
     ml = str(args['max_length'])
     DH.write_history([a[1],b[1]],args['dataset']+'_'+str(ml)+'_paired_test'+args['n_hidden']+'.txt', i, False)
     DH.write_history([a[0],b[0]],args['dataset']+'_'+str(ml)+'_paired_train'+args['n_hidden']+'.txt', i, False)
