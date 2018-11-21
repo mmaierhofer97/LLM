@@ -5,7 +5,7 @@ args['max_length'] = 'ALL'
 args['task']='PRED'
 args['n_hidden'] = '100'
 args['samples']='ALL'
-args['datasets'] = ['data/dota/dota_class','data/dota/dota','data/freecodecamp_students/freecodecamp_students','data/reddit/reddit','data/reddit_comments/reddit_comments','data/github/github']
+args['datasets'] = ['data/github/github','data/dota/dota_class','data/dota/dota','data/freecodecamp_students/freecodecamp_students','data/reddit/reddit','data/reddit_comments/reddit_comments']
 for st in sys.argv[1:]:
     splt = st.index('=')
     key = st[:splt]
@@ -17,6 +17,10 @@ for st in sys.argv[1:]:
 for ds in args['datasets']:
     print(ds)
     argstr = ''
+    if 'class' in ds:
+        args['task'] = 'CLASS'
+    else:
+        args['task'] = 'PRED'
     for key in args.keys():
         if key != 'datasets':
             argstr+=' '+str(key)+'='+str(args[key])

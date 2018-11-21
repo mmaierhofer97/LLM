@@ -47,7 +47,7 @@ def read_file_time_sequences(fname,task="LLM"):
 
 
 
-def load_data(dir, sort_by_len=True, valid_ratio=0.1, samples = 'ALL', seed=None,task='PRED'):
+def load_data(dir, sort_by_len=True, valid_ratio=0.1, samples = 'ALL', seed=None,task='PRED',max_length='ALL'):
     """
     Reads the directory for test and train datasets.
     Divides test set into validation set and test set.
@@ -110,7 +110,6 @@ def load_data(dir, sort_by_len=True, valid_ratio=0.1, samples = 'ALL', seed=None
         train_set = reorder(train_set, sorted_indeces(train_set))
         test_set = reorder(test_set, sorted_indeces(test_set))
         valid_set = reorder(valid_set, sorted_indeces(valid_set))
-
     #print(train_set)
     #print len(train_set), len(test_set), len(valid_set)
     datasets = {}

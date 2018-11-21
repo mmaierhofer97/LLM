@@ -127,16 +127,19 @@ except:
     0
 #print(ops['samples'])
 # load the dataset
-datasets = DH.load_data(ops['dataset'], sort_by_len=False, samples = ops['samples'],seed = ops['seed'],task = ops['task'])
+if ops['task'] == 'CLASS':
+    ops['max_length']='ALL'
+datasets = DH.load_data(ops['dataset'], sort_by_len=False, samples = ops['samples'],seed = ops['seed'],task = ops['task'],)
 train_set = datasets['train_set']
 test_set = datasets['test_set']
 valid_set = datasets['valid_set']
 
 #valid_set = test_set
 ml = ops['max_length']
-if ops['max_length'] == "ALL" or ops['task'] == 'CLASS':
+if ops['max_length'] == "ALL":
     ops['max_length'] = DH.longest_seq([train_set,valid_set,test_set]) #Can't concatenate classification data
 m = DH.num_classes([train_set,valid_set,test_set],ops['max_length'])
+print(len(train_set[0][0]))
 if m > ops['n_classes']:
     print('classes from {} to {}'.format(ops['n_classes'],int(m)))
     ops['n_classes'] = int(m)
@@ -158,7 +161,7 @@ if ops['embedding']:
 print ("Loaded the set: train({}), valid({}), test({})".format(len(train_set),
                                                                 len(valid_set),
                                                                   len(test_set)))
-model_save_name = ops['dataset'] +'_model/'+ops['encoder']+str(ml)+'model'
+model_save_name = ops['dataset'] +'_model/'+ops['encoder']+str(ml)+'model'+str(ops['n_hidden'])
 
 # Restart the graph
 tf.reset_default_graph()
@@ -409,5 +412,5 @@ with tf.device(ops['device']):
     if ops['write_history'] and epoch==ops['epochs']:
         DH.write_history(accuracy_entry, ops['dataset']+ops['encoder']+str(ml)+'_acc.txt', epoch, ops['overwrite'])
         DH.write_history(losses_entry, 'records/loss.txt', epoch, ops['overwrite'])
-DH.write_history([accuracy_entry[0],accuracy_entry[1],accuracy_entry[2]], ops['dataset']+'tmp_'+ops['encoder']+'.txt', 1, True)
+DH.write_history([accuracy_entry[0],accuracy_entry[1],accuracy_entry[2]], ops['dataset']+'tmp_'+ops['encoder']+str(ops['n_hidden'])+'.txt', 1, True)
 saver.save(T_sess, ops['dataset']+'_model/'+ops['encoder']+'model')
