@@ -77,8 +77,8 @@ ops = {
             'device':"/device:GPU:0",
             'samples': 'ALL',
             'timescales' : 2.0 ** np.arange(-7,7),
-            'seed' : None
-
+            'seed' : None,
+            'valid_ratio' : 0.1
           }
 args = {}
 for st in sys.argv[1:]:
@@ -125,11 +125,15 @@ try:
     ops['learning_rate']=float(ops['learning_rate'])
 except:
     0
+try:
+    ops['valid_ratio']=float(ops['valid_ratio'])
+except:
+    0
 #print(ops['samples'])
 # load the dataset
 if ops['task'] == 'CLASS':
     ops['max_length']='ALL'
-datasets = DH.load_data(ops['dataset'], sort_by_len=False, samples = ops['samples'],seed = ops['seed'],task = ops['task'],)
+datasets = DH.load_data(ops['dataset'], sort_by_len=False, samples = ops['samples'],seed = ops['seed'],task = ops['task'],valid_ratio=ops['valid_ratio'])
 train_set = datasets['train_set']
 test_set = datasets['test_set']
 valid_set = datasets['valid_set']
