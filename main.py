@@ -310,9 +310,12 @@ with tf.device(ops['device']):
     epoch = 0
     counter = 0
     summary, deb_var, summary_weights, y_answer = None, None, None, None
-
+    if ops['valid_ratio'] != 0:
+        reset_vals = [0,2]
+    else:
+        reset_vals = [0]
     print("Format: Train, Test, Valid")
-    best_valid_loss = 0;
+    best_loss = 0;
     while epoch < ops['epochs']:
         train_batch_indices = DH.get_minibatches_ids(len(train_set), ops['batch_size'], shuffle=True)
         epoch += 1
@@ -386,8 +389,8 @@ with tf.device(ops['device']):
         accuracy_entry, losses_entry = TCH.errors_and_losses(T_sess, P_x, P_y,
                                                             P_len, P_mask, P_batch_size, T_accuracy, T_cost, T_embedding_matrix,
                                                             dataset_names, datasets, ops)
-        if  epoch == 1 or (best_loss > max(losses_entry[2],losses_entry[0])):
-            best_loss = max(losses_entry[2],losses_entry[0])
+        if  epoch == 1 or (best_loss > max([losses_entry[ijk] for ijk in reset_vals])):
+            best_loss = max([losses_entry[ijk] for ijk in reset_vals])
             best_results = [accuracy_entry, losses_entry]
             saver.save(T_sess, model_save_name)
             iterations_since_best = 0
@@ -397,7 +400,7 @@ with tf.device(ops['device']):
         else:
             iterations_since_best += 1
 
-        if iterations_since_best > 4 or epoch == ops['epochs'] or max(losses_entry[0],losses_entry[2])>10*best_loss:
+        if iterations_since_best > 4 or epoch == ops['epochs'] or max([losses_entry[ijk] for ijk in reset_vals])>10*best_loss:
             saver.restore(T_sess, model_save_name)
             [accuracy_entry, losses_entry] = best_results
             iterations_since_best = 0

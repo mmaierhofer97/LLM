@@ -96,7 +96,8 @@ def load_data(dir, sort_by_len=True, valid_ratio=0.1, samples = 'ALL', seed=None
 
     # make validation set from train set before sorting by length
     valid_n = int(len(train_set)*valid_ratio)
-
+    if valid_n == 0:
+        valid_n = 1
     valid_set = train_set.copy()[:valid_n]
 
     train_set = train_set[valid_n:]
@@ -111,9 +112,6 @@ def load_data(dir, sort_by_len=True, valid_ratio=0.1, samples = 'ALL', seed=None
         valid_set = reorder(valid_set, sorted_indeces(valid_set))
     #print(train_set)
     #print len(train_set), len(test_set), len(valid_set)
-    if valid_set == []:
-        print('No Valid')
-        valid_set = train_set
     datasets = {}
     datasets['train_set'] = train_set
     datasets['test_set'] = test_set
