@@ -5,7 +5,7 @@ from scipy.stats import t
 import glob, os
 
 lams=['']
-datasets = ['data/github/github','data/dota/dota','data/dota/dota_class','data/freecodecamp_students/freecodecamp_students','data/reddit/reddit','data/reddit_comments/reddit_comments']
+datasets = ['data/github/github']#,'data/dota/dota','data/dota/dota_class','data/freecodecamp_students/freecodecamp_students','data/reddit/reddit','data/reddit_comments/reddit_comments']
 filenames = []
 def searchDS(ds,encoder,val,col):
     found = 0
@@ -16,7 +16,7 @@ def searchDS(ds,encoder,val,col):
              if row[col] == val:
                  print(row[col],val)
 for ds in datasets:
-    for num in ['49','99','199','399','50','100','200','400']:
+    for num in ['49']#,'99','199','399','50','100','200','400']:
 
         filename = ds+'_100_paired_train'+num+'.txt'
         filename2 = ds+'_100_paired_test'+num+'.txt'
