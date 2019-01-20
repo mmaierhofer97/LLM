@@ -35,4 +35,4 @@ for ds in datasets:
                 0
         valids = []
         for row in rows:
-            searchDS(ds,'LLM',row[0],0)
+            print(row[0],searchDS(ds,'LLM',row[0],0))
