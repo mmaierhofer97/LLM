@@ -10,6 +10,7 @@ filenames = []
 def searchDS(ds,encoder,val,col):
     found = -1
     for file in glob.glob(ds+'*'+encoder+"*acc.txt"):
+        print(file)
         csvfile = open(file,'rt')
         data = csv.reader(csvfile, delimiter=',')
         for row in data:
