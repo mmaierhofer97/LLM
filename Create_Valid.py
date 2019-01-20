@@ -3,7 +3,7 @@ import csv
 import sys
 from scipy.stats import t
 import glob, os
-
+import data_help as DH
 lams=['']
 datasets = ['data/github/github','data/dota/dota','data/dota/dota_class','data/freecodecamp_students/freecodecamp_students','data/reddit/reddit','data/reddit_comments/reddit_comments']
 filenames = []
