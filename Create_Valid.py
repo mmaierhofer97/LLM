@@ -23,7 +23,6 @@ for ds in datasets:
     for num in ['49','99','199','399','50','100','200','400']:
 
         filename = ds+'_100_paired_train'+num+'.txt'
-        filename2 = ds+'_100_paired_test'+num+'.txt'
         rows = []
         for l in lams:
             try:
@@ -34,5 +33,7 @@ for ds in datasets:
             except:
                 0
         valids = []
+        filename_out = ds+'_100_paired_train'+num+'.txt'
         for row in rows:
-            print(row[0],searchDS(ds,'LLM',row[0],0))
+            valids = [searchDS(ds,'LLM',row[0],0)searchDS(ds,'LSTM',row[0],0)]
+            DH.write_history(valids,args['dataset']+'_'+str(ml)+'_paired_valid'+args['n_hidden']+'.txt', i, False)
