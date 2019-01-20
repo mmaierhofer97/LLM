@@ -13,11 +13,12 @@ def searchDS(ds,encoder,val,col):
         csvfile = open(file,'rt')
         data = csv.reader(csvfile, delimiter=',')
         for row in data:
-             if row[col] == val:
-                 found = row[2]
-                 if encoder=='LSTM':
-                     print(found, "FOUND!!")
-                 break
+            if encoder=='LSTM':
+                print(row[col],val)
+            if row[col] == val:
+                found = row[2]
+                    print(found, "FOUND!!")
+                break
         if found != -1:
             break
     return float(found)
