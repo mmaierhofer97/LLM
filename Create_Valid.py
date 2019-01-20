@@ -2,13 +2,15 @@ import numpy as np
 import csv
 import sys
 from scipy.stats import t
+import glob, os
+os.chdir("/mydir")
 lams=['']
 datasets = ['data/github/github','data/dota/dota','data/dota/dota_class','data/freecodecamp_students/freecodecamp_students','data/reddit/reddit','data/reddit_comments/reddit_comments']
 filenames = []
-def searchDS(f,val,col):
-    csvfile = open(filename,'rt')
-    data = csv.reader(csvfile, delimiter=',')
+def searchDS(ds,encoder,val,col):
     found = 0
+    for file in glob.glob(ds+'*'+encoder+"*acc.txt"):
+        print(file)
     for row in data:
         print(row)
 for ds in datasets:
@@ -27,3 +29,4 @@ for ds in datasets:
                 0
         valids = []
         for row in rows:
+            searchDS(ds,'LLM',0,0)
