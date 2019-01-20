@@ -14,8 +14,8 @@ def searchDS(ds,encoder,val,col):
         data = csv.reader(csvfile, delimiter=',')
         for row in data:
             if encoder=='LSTM':
-                print(row[col]-val)
-            if row[col] - val == 0:
+                print(float(row[col])-float(val))
+            if float(row[col])-float(val) == 0:
                 found = row[2]
                 if encoder=='LSTM':
                     print(found, "FOUND!!")
