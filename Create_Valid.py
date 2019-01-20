@@ -10,9 +10,10 @@ filenames = []
 def searchDS(ds,encoder,val,col):
     found = 0
     for file in glob.glob(ds+'*'+encoder+"*acc.txt"):
-        print(file)
-    for row in data:
-        print(row)
+        csvfile = open(file,'rt')
+        data = csv.reader(csvfile, delimiter=',')
+        for row in data:
+             print(row[col],val)
 for ds in datasets:
     for num in ['49','99','199','399','50','100','200','400']:
 
@@ -29,4 +30,4 @@ for ds in datasets:
                 0
         valids = []
         for row in rows:
-            searchDS(ds,'LLM',0,0)
+            searchDS(ds,'LLM',row[0],0)
