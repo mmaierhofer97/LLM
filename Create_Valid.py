@@ -8,13 +8,17 @@ lams=['']
 datasets = ['data/github/github']#,'data/dota/dota','data/dota/dota_class','data/freecodecamp_students/freecodecamp_students','data/reddit/reddit','data/reddit_comments/reddit_comments']
 filenames = []
 def searchDS(ds,encoder,val,col):
-    found = 0
+    found = -1
     for file in glob.glob(ds+'*'+encoder+"*acc.txt"):
         csvfile = open(file,'rt')
         data = csv.reader(csvfile, delimiter=',')
         for row in data:
              if row[col] == val:
-                 print(row[col],val)
+                 found = row[2]
+                 break
+        if found != -1:
+            break
+    return found
 for ds in datasets:
     for num in ['49']: #,'99','199','399','50','100','200','400']:
 
