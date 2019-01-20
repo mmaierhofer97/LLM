@@ -36,4 +36,4 @@ for ds in datasets:
         filename_out = ds+'_100_paired_train'+num+'.txt'
         for row in rows:
             valids = [searchDS(ds,'LLM',row[0],0),searchDS(ds,'LSTM',row[0],0)]
-            DH.write_history(valids,args['dataset']+'_'+str(ml)+'_paired_valid'+args['n_hidden']+'.txt', i, False)
+            DH.write_history(valids,args['dataset']+'_'+str(ml)+'_paired_valid'+'100.txt', i, False)
