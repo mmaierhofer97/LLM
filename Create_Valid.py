@@ -13,7 +13,8 @@ def searchDS(ds,encoder,val,col):
         csvfile = open(file,'rt')
         data = csv.reader(csvfile, delimiter=',')
         for row in data:
-             print(row[col],val)
+             if row[col] == val:
+                 print(row[col],val)
 for ds in datasets:
     for num in ['49','99','199','399','50','100','200','400']:
 
