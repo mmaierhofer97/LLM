@@ -3,8 +3,14 @@ import csv
 import sys
 from scipy.stats import t
 lams = ['']
+datasets = ['data/github/github','data/dota/dota','data/dota/dota_class','data/freecodecamp_students/freecodecamp_students','data/reddit/reddit','data/reddit_comments/reddit_comments']
 filenames = []
+for ds in datasets:
+    for num in ['49','99','199','399']:
+        filenames.append(ds+'_100_paired_train'+num+'.txt')  
+        filenames.append(ds+'_100_paired_test'+num+'.txt')
 if len(sys.argv)>1:
+   filenames=[]
    for f in sys.argv[1:]:
        filenames.append(f)
 lens = ['']
@@ -13,6 +19,7 @@ errs = []
 paccs = []
 perrs = []
 for filename in filenames:
+  try:
     print(filename)
     rows = []
     for l in lams:
@@ -50,6 +57,8 @@ for filename in filenames:
     errs.append(lstm_s*1.96)
     paccs.append(m)
     perrs.append(s*interval)
+  except:
+    0
 print(accs)
 print(errs)
 print()
