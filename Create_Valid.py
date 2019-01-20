@@ -19,7 +19,7 @@ for ds in datasets:
                      rows.append(row)
             except:
                 0
-        print(len(rows))
+        l1 = (len(rows))
         rows = []
         for l in lams:
             try:
@@ -29,4 +29,6 @@ for ds in datasets:
                      rows.append(row)
             except:
                 0
-        print(len(rows))
+        l2 = (len(rows))
+        if l1!= l2:
+            print(l1,l2,filename)
