@@ -41,4 +41,4 @@ for ds in datasets:
         for row in rows:
             i+=1
             valids = [searchDS(ds,'LLM',row[0],0),searchDS(ds,'LSTM',row[1],0)]
-            DH.write_history(valids,ds+'_'+'100'+'_paired_valid'+num+'.txt', i, False)
+            #DH.write_history(valids,ds+'_'+'100'+'_paired_valid'+num+'.txt', i, False)
