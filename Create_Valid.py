@@ -15,5 +15,7 @@ for ds in datasets:
                 data = csv.reader(csvfile, delimiter=',')
                 for row in data:
                      rows.append(row)
+            except:
+                0
         for row in rows:
             print(row)
