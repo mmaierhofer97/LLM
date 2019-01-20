@@ -5,6 +5,12 @@ from scipy.stats import t
 lams=['']
 datasets = ['data/github/github','data/dota/dota','data/dota/dota_class','data/freecodecamp_students/freecodecamp_students','data/reddit/reddit','data/reddit_comments/reddit_comments']
 filenames = []
+def searchDS(f,val,col):
+    csvfile = open(filename,'rt')
+    data = csv.reader(csvfile, delimiter=',')
+    found = 0
+    for row in data:
+        print(row)
 for ds in datasets:
     for num in ['49','99','199','399','50','100','200','400']:
 
@@ -19,16 +25,5 @@ for ds in datasets:
                      rows.append(row)
             except:
                 0
-        l1 = (len(rows))
-        rows = []
-        for l in lams:
-            try:
-                csvfile = open(filename2,'rt')
-                data = csv.reader(csvfile, delimiter=',')
-                for row in data:
-                     rows.append(row)
-            except:
-                0
-        l2 = (len(rows))
-        if l1!= l2:
-            print(l1,l2,filename)
+        valids = []
+        for row in rows:
