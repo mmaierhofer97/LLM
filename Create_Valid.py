@@ -17,6 +17,7 @@ def searchDS(ds,encoder,val,col):
                 print(row[col],val)
             if row[col] == val:
                 found = row[2]
+                if encoder=='LSTM':
                     print(found, "FOUND!!")
                 break
         if found != -1:
