@@ -60,8 +60,8 @@ for filename in filenames:
     perrs.append(s*interval)
   except:
     0
-print(accs)
-print(errs)
-print()
-print(paccs)
-print(perrs)
+#print(accs)
+#print(errs)
+#print()
+#print(paccs)
+#print(perrs)
