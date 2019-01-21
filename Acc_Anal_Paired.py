@@ -6,7 +6,7 @@ lams = ['']
 datasets = ['data/github/github','data/dota/dota','data/dota/dota_class','data/freecodecamp_students/freecodecamp_students','data/reddit/reddit','data/reddit_comments/reddit_comments']
 filenames = []
 for ds in datasets:
-    for num in ['49','99','199','399']:
+    for num in ['49','99','199','399','50','100','200','400']:
         filenames.append(ds+'_100_paired_train'+num+'.txt')
         filenames.append(ds+'_100_paired_test'+num+'.txt')
         filenames.append(ds+'_100_paired_valid'+num+'.txt')
