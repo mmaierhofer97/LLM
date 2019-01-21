@@ -7,8 +7,9 @@ datasets = ['data/github/github','data/dota/dota','data/dota/dota_class','data/f
 filenames = []
 for ds in datasets:
     for num in ['49','99','199','399']:
-        filenames.append(ds+'_100_paired_train'+num+'.txt')  
+        filenames.append(ds+'_100_paired_train'+num+'.txt')
         filenames.append(ds+'_100_paired_test'+num+'.txt')
+        filenames.append(ds+'_100_paired_valid'+num+'.txt')
 if len(sys.argv)>1:
    filenames=[]
    for f in sys.argv[1:]:
@@ -64,5 +65,3 @@ print(errs)
 print()
 print(paccs)
 print(perrs)
-
-
