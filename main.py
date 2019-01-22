@@ -331,7 +331,7 @@ with tf.device(ops['device']):
                 y_answer = np.array(batch_y).astype(np.int32)
             else:
                 # (batch_size, steps, n_classes)
-                y_answer = DH.embed_one_hot(batch_y, 0.0, ops['n_classes'], ops['max_length'],ops['task'])
+                y_answer = tf.abs(DH.embed_one_hot(batch_y, 0.0, ops['n_classes'], ops['max_length'],ops['task']))
             ind = list(mask[0,:]).index(1)
             #print(np.array(y_answer).shape,np.sum(y_answer[0,:,:]),batch_y[0,ind])
             _, deb_var, summary_weights = T_sess.run(
@@ -348,7 +348,7 @@ with tf.device(ops['device']):
             #print(deb_var[5]*y_answer)
             print(y_answer)
             for i,var in enumerate(deb_var):
-                print(i)
+                print(i,var)
                 var = np.array(var)
                 # if names[i] in ['o_prev','h_prev','q','h_hat']:
                 #     print '\n'
