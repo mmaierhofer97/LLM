@@ -137,7 +137,6 @@ datasets = DH.load_data(ops['dataset'], sort_by_len=False, samples = ops['sample
 train_set = datasets['train_set']
 test_set = datasets['test_set']
 valid_set = datasets['valid_set']
-print(train_set[0:2])
 #valid_set = test_set
 ml = ops['max_length']
 if ops['max_length'] == "ALL":
@@ -347,6 +346,7 @@ with tf.device(ops['device']):
             names = ["h","o", "h_prev","o_prev","q","s","sigma","r","rho",'mul','decay']
             np.set_printoptions(precision=4)
             #print(deb_var[5]*y_answer)
+            print(P_y)
             for i,var in enumerate(deb_var):
                 var = np.array(var)
                 # if names[i] in ['o_prev','h_prev','q','h_hat']:
