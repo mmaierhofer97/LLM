@@ -137,7 +137,7 @@ datasets = DH.load_data(ops['dataset'], sort_by_len=False, samples = ops['sample
 train_set = datasets['train_set']
 test_set = datasets['test_set']
 valid_set = datasets['valid_set']
-
+print(train_set)
 #valid_set = test_set
 ml = ops['max_length']
 if ops['max_length'] == "ALL":
