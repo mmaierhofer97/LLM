@@ -1061,7 +1061,7 @@ def LLM(x_set, P_len, P_batch_size, ops, params, batch_size):
 
     hidden_prediction =tf.transpose(rval[2], [1, 0, 2])  # -> [batch_size, n_steps, n_hidden]
     if ops['task'] == 'PRED_CORR':
-        output_projection = lambda x: tf.sign(x)*tf.clip_by_value(tf.nn.softmax(tf.abs(x) + b['out']), 1e-8, 1.0)
+        output_projection = lambda x: tf.nn.tanh(x + b['out'])
     else:
         output_projection = lambda x: tf.clip_by_value(tf.nn.softmax(x + b['out']), 1e-8, 1.0)
 

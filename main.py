@@ -247,7 +247,7 @@ with tf.device(ops['device']):
             T_cost = tf.reduce_sum(
                         tf.reduce_sum(
                             - tf.reduce_sum(
-                                (tf.abs(P_y)* tf.log(1-tf.abs(T_pred-P_y)/2)),
+                                (tf.abs(P_y) * tf.log((tf.sign(P_y+0.1)*T_pred+1)/2)),
                             reduction_indices=[2]) * P_mask,
                         reduction_indices=[1])) / tf.reduce_sum(tf.reduce_sum(P_mask))
 
