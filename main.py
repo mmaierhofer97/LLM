@@ -246,7 +246,7 @@ with tf.device(ops['device']):
             T_cost = tf.reduce_sum(
                         tf.reduce_sum(
                             - tf.reduce_sum(
-                                (tf.abs(P_y) * tf.log((tf.sign(P_y+0.1)*T_pred+1)/2)),
+                                (tf.abs(y_answer) * tf.log((tf.sign(y_answer+0.1)*T_pred+1)/2)),
                             reduction_indices=[2]) * P_mask,
                         reduction_indices=[1])) / tf.reduce_sum(tf.reduce_sum(P_mask))
 
@@ -346,7 +346,7 @@ with tf.device(ops['device']):
             names = ["h","o", "h_prev","o_prev","q","s","sigma","r","rho",'mul','decay']
             np.set_printoptions(precision=4)
             #print(deb_var[5]*y_answer)
-            print(P_y)
+            print(y_answer)
             for i,var in enumerate(deb_var):
                 var = np.array(var)
                 # if names[i] in ['o_prev','h_prev','q','h_hat']:
