@@ -344,7 +344,7 @@ with tf.device(ops['device']):
                                                                 P_batch_size: batch_size})
 
             names = ["h","o", "h_prev","o_prev","q","s","sigma","r","rho",'mul','decay']
-            print(cost,deb_var[5])
+            print(cost,np.max(deb_var[5]),np.min(deb_var[5]))
             np.set_printoptions(precision=4)
             #print(deb_var[5]*y_answer)
             #print(y_answer)
