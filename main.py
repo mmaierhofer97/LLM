@@ -346,7 +346,7 @@ with tf.device(ops['device']):
             names = ["h","o", "h_prev","o_prev","q","s","sigma","r","rho",'mul','decay']
             np.set_printoptions(precision=4)
             #print(deb_var[5]*y_answer)
-            print(y_answer)
+            #print(y_answer)
             for i,var in enumerate(deb_var):
                 #print(i,var)
                 var = np.array(var)
