@@ -216,7 +216,6 @@ def LSTM_params_init(ops):
 
 
 def RNN(placeholders, ops, params):
-    print(ops['task'])
     x_set, T_seq_length = placeholders
     W = params['W']
     b = params['b']

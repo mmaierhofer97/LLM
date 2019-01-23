@@ -26,7 +26,7 @@ for l in lens:
             t = 0
             while len(events)<2*l:
                t += random.expovariate(B_timescale)
-               events.append([2,t*[1,.1][s]])
+               events.append([2,t*[.1,1][s]])
             events.sort(key=lambda x: x[1])
             events = events[:l+1]
             accum = np.sign(events[0][0]-1.5)

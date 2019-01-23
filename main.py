@@ -199,7 +199,6 @@ with tf.device(ops['device']):
 
     # params init
     if ops['encoder'] == "LSTM":
-        print(ops['task'])
         params_lstm = TCH.LSTM_params_init(ops)
     elif ops['encoder'] == "HPM":
         params_hpm = TCH.HPM_params_init(ops)
