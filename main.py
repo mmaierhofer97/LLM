@@ -348,7 +348,7 @@ with tf.device(ops['device']):
             #print(deb_var[5]*y_answer)
             print(y_answer)
             for i,var in enumerate(deb_var):
-                print(i,var)
+                #print(i,var)
                 var = np.array(var)
                 # if names[i] in ['o_prev','h_prev','q','h_hat']:
                 #     print '\n'
