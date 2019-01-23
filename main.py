@@ -246,7 +246,7 @@ with tf.device(ops['device']):
             T_cost = tf.reduce_sum(
                         tf.reduce_sum(
                             - tf.reduce_sum(
-                                (tf.abs(P_y) * tf.log((tf.sign(P_y+0.1)*T_pred+1)/2)),
+                                (tf.abs(P_y) * tf.log(tf.clip_by_value(tf.sign(P_y+0.1)*T_pred+1,1e-8, 2.0)/2)),
                             reduction_indices=[2]) * P_mask,
                         reduction_indices=[1])) / tf.reduce_sum(tf.reduce_sum(P_mask))
 
@@ -344,7 +344,7 @@ with tf.device(ops['device']):
                                                                 P_batch_size: batch_size})
 
             names = ["h","o", "h_prev","o_prev","q","s","sigma","r","rho",'mul','decay']
-            print(cost)
+            print(cost,deb_var[5])
             np.set_printoptions(precision=4)
             #print(deb_var[5]*y_answer)
             #print(y_answer)
