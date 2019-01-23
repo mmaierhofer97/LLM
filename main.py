@@ -251,7 +251,7 @@ with tf.device(ops['device']):
                         reduction_indices=[1])) / tf.reduce_sum(tf.reduce_sum(P_mask))
 
             # Evaluate the model
-            T_correct_pred = tf.reduce_sum(tf.sign(T_pred*P_y),reduction_indices=[2]) * P_mask
+            T_correct_pred = tf.reduce_sum(tf.equal(tf.sign(T_pred*P_y),1),reduction_indices=[2]) * P_mask
             T_accuracy = tf.reduce_sum(tf.reduce_sum(tf.cast(T_correct_pred, tf.float32))) / tf.reduce_sum(
                 tf.reduce_sum(P_mask))
     else:
