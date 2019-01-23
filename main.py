@@ -370,8 +370,9 @@ with tf.device(ops['device']):
                         [accuracy_entry, losses_entry] = best_results
                         print('restoring previous')
                         continue
+                    if i==4:
                     #else:
-                    #    sys.exit()
+                        sys.exit()
 
             #Print parameters
             # for v in tf.global_variables():
