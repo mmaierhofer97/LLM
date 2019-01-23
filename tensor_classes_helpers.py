@@ -216,6 +216,7 @@ def LSTM_params_init(ops):
 
 
 def RNN(placeholders, ops, params):
+    print(ops['task'])
     x_set, T_seq_length = placeholders
     W = params['W']
     b = params['b']
@@ -239,8 +240,11 @@ def RNN(placeholders, ops, params):
 
     # linear activation, using rnn innter loop last output
     # project into class space: x-[max_time, hidden_units], T_W-[hidden_units, n_classes]
-    output_projection = lambda x: tf.nn.softmax(tf.matmul(x, W['out']) + b['out'])
 
+    if ops['task'] == 'PRED_CORR':
+        output_projection = lambda x: tf.nn.tanh(tf.matmul(x, W['out']) + b['out'])
+    else:
+        output_projection = lambda x: tf.nn.softmax(tf.matmul(x, W['out']) + b['out'])
     T_summary_weights = tf.zeros([1], name='None_tensor1')
     debugging_stuff = states # this is just so that states here correspond to y_hats in HPM
     return tf.map_fn(output_projection, outputs), T_summary_weights, debugging_stuff
