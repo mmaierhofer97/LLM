@@ -31,6 +31,7 @@ for ind in inds:
     next_date = False
     curr = ''
     for line in c:
+        print(line)
         if line[0] == 'item' and line[1] == 'start_array':
             keys.append(line[2])
             json.append([])
@@ -47,7 +48,7 @@ for ind in inds:
             json[-1].append(d)
 
     print(len(json))
-    
+
     for item in ijson.items(f, "item"):
         bool = True
         print('thing', item)
