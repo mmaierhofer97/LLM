@@ -141,7 +141,7 @@ valid_set = datasets['valid_set']
 ml = ops['max_length']
 if ops['max_length'] == "ALL":
     ops['max_length'] = DH.longest_seq([train_set,valid_set,test_set]) #Can't concatenate classification data
-m = DH.num_classes([train_set,valid_set,test_set],ops['max_length'])
+m = DH.num_classes([train_set,valid_set,test_set],ops['max_length'])+1
 print(len(train_set[0][0]))
 if m > ops['n_classes']:
     print('classes from {} to {}'.format(ops['n_classes'],int(m)))
