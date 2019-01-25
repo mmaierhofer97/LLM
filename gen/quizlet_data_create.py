@@ -56,6 +56,7 @@ for ind in inds:
 
     for item in json_arr:
         bool = True
+        print(item)
         for line in item:
             if len(line)>= 10:
 
