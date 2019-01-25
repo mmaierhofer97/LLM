@@ -30,9 +30,12 @@ for ind in inds:
     next_name = False
     next_date = False
     curr = ''
+    it = 0
     for line in c:
         print(line)
-        break 
+        it+= 1
+        if it>20:
+            break
         if line[0] == 'item' and line[1] == 'start_array':
             keys.append(line[2])
             json.append([])
