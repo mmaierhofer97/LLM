@@ -38,6 +38,7 @@ for ind in inds:
                 for l in line:
                     try:
                         a = (parse(l['timestamp'])).timestamp()/3600
+                        print(a)
                         try:
                             ev = evs.index(l['front'])+1
                         except:
