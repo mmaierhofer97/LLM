@@ -1,4 +1,5 @@
 import json
+import ijson
 import sys
 import numpy as np
 from dateutil.parser import *
@@ -9,4 +10,5 @@ if len(sys.argv)>1:
 data = []
 for ind in inds:
     filename = fileloc + str(ind) + '.json'
-    print(filename)
+    f = open(filename)
+    data = json.loads(f)
