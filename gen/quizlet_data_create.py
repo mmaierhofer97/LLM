@@ -35,7 +35,6 @@ for ind in inds:
         it+= 1
         if line[0] == '' and line[1] == 'map_key':
             curr = line[2]
-            print(curr)
         if line[0] == curr and line[1] == 'start_array':
             keys.append(line[2])
             json_arr.append([])
