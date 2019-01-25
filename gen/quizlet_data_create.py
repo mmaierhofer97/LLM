@@ -38,15 +38,21 @@ for ind in inds:
                 for l in line:
                     try:
                         a = (parse(l['timestamp'])).timestamp()/3600
-                        if not (l['front'] in evs or l['back'] in evs):
-                            evs.append(l['a'])
-                        ev = evs.index(l['a'])+1
+                        try:
+                            ev = evs.index(l['front'])+1
+                        except:
+                            try:
+                                ev = evs.index(l['back'])+1
+                            except:
+                                evs.append(l['front'])
+                                ev = evs.index(l['front'])+1
                         events.append([ev*[-1,1][l['correct']],a])
                     except:
                         a = 'date error'
                         print(a)
                         events = []
                         break
+                print(evs)
                 if events and len(evs)>1:
                     events.sort(key=lambda x: x[1])
                     reind = []
