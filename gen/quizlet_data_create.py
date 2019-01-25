@@ -11,6 +11,7 @@ data = []
 for ind in inds:
     filename = fileloc + str(ind) + '.json'
     f = open(filename)
-    for item in ijson.items(f, "item"):
+    print(filename)
+    for item in ijson.items(f, ""):
         print(item)
         break
