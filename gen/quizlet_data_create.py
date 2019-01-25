@@ -53,11 +53,8 @@ for ind in inds:
             d['timestamp'] = float(line[2])
         elif line[0] == curr+'.item' and line[1] == 'end_map':
             json_arr[-1].append(d)
-
-    for item in json_arr:
-        bool = True
-        print(item)
-        for line in item:
+    bool = True
+    for line in json_arr:
             if len(line)>= 10:
 
                 events = []
@@ -115,5 +112,5 @@ for ind in inds:
                     files[bool].write(id + ' '+' '.join(time1)+'\n')
                     files[bool].write(id + ' '+' '.join(ordinal2)+'\n')
                     files[bool].write(id + ' '+' '.join(time2)+'\n')
-        for file in files:
-            file.close()
+for file in files:
+    file.close()
