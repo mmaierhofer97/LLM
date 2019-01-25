@@ -32,14 +32,12 @@ for ind in inds:
     curr = ''
     it = 0
     for line in c:
-        print(line)
         it+= 1
-        if it>20:
-            break
         if line[0] == '' and line[1] == 'start_array':
             keys.append(line[2])
             json.append([])
             curr = line[0]
+            print(curr)
             if len(json) % 1000 == 0:
                 print(len(json))
         elif line[0] == curr+'.item' and line[1] == 'start_map':
