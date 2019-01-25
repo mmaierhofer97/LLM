@@ -21,6 +21,19 @@ testfile = open(writepath+'.test','a')
 files.append(testfile)
 countall = 0
 for ind in inds:
+    files = []
+    writepath = 'data/quizlet/quizlet'
+    trainfile = open(writepath+'.train','w')
+    trainfile.write('')
+    trainfile.close()
+    trainfile = open(writepath+'.train','a')
+    files.append(trainfile)
+    testfile = open(writepath+'.test','w')
+    testfile.write('')
+    testfile.close()
+    testfile = open(writepath+'.test','a')
+    files.append(testfile)
+    countall = 0
     filename = fileloc + str(ind) + '.json'
     f = open(filename)
     print(filename)
@@ -109,5 +122,5 @@ for ind in inds:
                     files[bool].write(id + ' '+' '.join(time1)+'\n')
                     files[bool].write(id + ' '+' '.join(ordinal2)+'\n')
                     files[bool].write(id + ' '+' '.join(time2)+'\n')
-for file in files:
-    file.close()
+    for file in files:
+        file.close()
