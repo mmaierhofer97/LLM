@@ -38,7 +38,6 @@ for ind in inds:
                 for l in line:
                     try:
                         a = l['timestamp']/3600
-                        print(a)
                         try:
                             ev = evs.index(l['front'])+1
                         except:
@@ -47,6 +46,7 @@ for ind in inds:
                             except:
                                 evs.append(l['front'])
                                 ev = evs.index(l['front'])+1
+                        print(int(l['correct'])
                         events.append([ev*[-1,1][l['correct']],a])
                     except:
                         a = 'date error'
