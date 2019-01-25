@@ -37,7 +37,7 @@ for ind in inds:
                 a = 0
                 print(len(line))
                 for l in line:
-                    print(l['front'])
+                    print(l['front'],l['back'])
                     '''try:
                         a = (parse(l['t'])).timestamp()/3600
                         if not l['a'] in evs:
