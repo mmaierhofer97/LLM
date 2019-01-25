@@ -56,13 +56,13 @@ for ind in inds:
 
     for item in json_arr:
         bool = True
-        print('thing', item)
         for line in item:
             if len(line)>= 10:
 
                 events = []
                 evs = []
                 a = 0
+                print(line)
                 for l in line:
                     try:
                         a = l['timestamp']/3600
