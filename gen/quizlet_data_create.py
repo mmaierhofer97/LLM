@@ -47,7 +47,7 @@ for ind in inds:
                                 evs.append(l['front'])
                                 ev = evs.index(l['front'])+1
                         print(int(l['correct']))
-                        events.append([ev*[-1,1][l['correct']],a])
+                        events.append([ev*[-1,1][int(l['correct'])],a])
                     except:
                         a = 'date error'
                         print(a)
