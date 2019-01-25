@@ -19,6 +19,7 @@ testfile.write('')
 testfile.close()
 testfile = open(writepath+'.test','a')
 files.append(testfile)
+countall = 0
 for ind in inds:
     filename = fileloc + str(ind) + '.json'
     f = open(filename)
@@ -26,7 +27,7 @@ for ind in inds:
 
     for item in ijson.items(f, ""):
         bool = True
-        countall = 0
+
         for item2 in item.keys():
             line = item[item2]
 
