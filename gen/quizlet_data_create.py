@@ -24,10 +24,33 @@ for ind in inds:
     filename = fileloc + str(ind) + '.json'
     f = open(filename)
     print(filename)
+    c = ijson.parse(f,)
+    keys = []
+    json = []
+    next_name = False
+    next_date = False
+    curr = ''
+    for line in c:
+        if line[0] == 'item' and line[1] == 'start_array':
+            keys.append(line[2])
+            json.append([])
+            curr = line[2]
+            if len(json) % 1000 == 0:
+                print(len(json))
+        elif line[0] == 'item.item' and line[1] == 'start_map':
+            d = {}
+        elif line[0] == 'item.item.name':
+            d['name'] = line[2]
+        elif line[0] == 'item.item.completedDate':
+            d['completedDate'] = float(line[2])
+        elif line[0] == 'item.item' and line[1] == 'end_map':
+            json[-1].append(d)
 
+    print(len(json))
+    
     for item in ijson.items(f, "item"):
         bool = True
-        print(item)
+        print('thing', item)
         for item2 in item.keys():
             line = item[item2]
 
