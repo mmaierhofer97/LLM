@@ -13,5 +13,6 @@ for ind in inds:
     f = open(filename)
     print(filename)
     for item in ijson.items(f, ""):
-        print(item)
+        for item2 in json.loads(item):
+            print(item2)
         break
