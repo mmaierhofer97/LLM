@@ -39,20 +39,20 @@ for ind in inds:
         if line[0] == '' and line[1] == 'start_array':
             keys.append(line[2])
             json.append([])
-            curr = line[2]
+            curr = line[0]
             if len(json) % 1000 == 0:
                 print(len(json))
-        elif line[0] == 'item' and line[1] == 'start_map':
+        elif line[0] == curr+'.item' and line[1] == 'start_map':
             d = {}
-        elif line[0] == 'item.front':
+        elif line[0] == curr+'.item.front':
             d['front'] = line[2]
-        elif line[0] == 'item.back':
+        elif line[0] == curr+'.item.back':
             d['back'] = (line[2])
-        elif line[0] == 'item.correct':
+        elif line[0] == curr+'.item.correct':
             d['correct'] = (line[2])
-        elif line[0] == 'item.timestamp':
+        elif line[0] == curr+'.item.timestamp':
             d['timestamp'] = float(line[2])
-        elif line[0] == 'item' and line[1] == 'end_map':
+        elif line[0] == curr+'.item' and line[1] == 'end_map':
             json[-1].append(d)
 
     print(len(json))
