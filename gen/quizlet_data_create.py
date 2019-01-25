@@ -11,4 +11,4 @@ data = []
 for ind in inds:
     filename = fileloc + str(ind) + '.json'
     f = open(filename)
-    data = json.loads(f)
+    data = json.load(f)
