@@ -47,20 +47,19 @@ for ind in inds:
                                 evs.append(l['front'])
                                 ev = evs.index(l['front'])+1
                         print(ev*[-1,1][int(l['correct'])],l['correct'])
-                        events.append([ev*[-1,1][int(l['correct'])],a])
+                        events.append([ev,a,[-1,1][int(l['correct'])]])
                     except:
                         a = 'date error'
                         print(a)
                         events = []
                         break
-                print(evs)
                 if events and len(evs)>1:
                     events.sort(key=lambda x: x[1])
                     reind = []
                     for i in range(len(events)):
                         if events[i][0] not in reind:
                              reind.append(events[i][0])
-                        events[i][0] = reind.index(events[i][0])+1
+                        events[i][0] = (reind.index(events[i][0])+1)*events[i][2]
                     countall += 1
                     if countall%1000 == 0:
                         print(countall)
