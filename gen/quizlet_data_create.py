@@ -35,9 +35,10 @@ for ind in inds:
                 events = []
                 evs = []
                 a = 0
+                print(len(line))
                 for l in line:
                     print(l['front'])
-                    try:
+                    '''try:
                         a = (parse(l['t'])).timestamp()/3600
                         if not l['a'] in evs:
                             evs.append(l['a'])
@@ -46,7 +47,7 @@ for ind in inds:
                     except:
                         a = 'date error'
                         events = []
-                        break
+                        break'''
                 if events and len(evs)>1:
                     events.sort(key=lambda x: x[1])
                     reind = []
