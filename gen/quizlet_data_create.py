@@ -54,7 +54,7 @@ for ind in inds:
         elif line[0] == curr+'.item' and line[1] == 'end_map':
             json[-1].append(d)
 
-    print(len(json))
+    print(json)
 
     for item in ijson.items(f, "item"):
         bool = True
