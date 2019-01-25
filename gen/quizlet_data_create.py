@@ -29,15 +29,14 @@ for ind in inds:
         countall = 0
         for item2 in item.keys():
             line = item[item2]
-            print(len(line),line)
-            break
-            c = json.loads(line)
-            if len(c['c'])>= 10:
+
+            if len(line)>= 10:
 
                 events = []
                 evs = []
                 a = 0
-                for l in c['c']:
+                for l in line:
+                    print(l.keys())
                     try:
                         a = (parse(l['t'])).timestamp()/3600
                         if not l['a'] in evs:
