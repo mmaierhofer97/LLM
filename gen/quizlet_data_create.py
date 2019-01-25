@@ -22,7 +22,7 @@ files.append(testfile)
 countall = 0
 for ind in inds:
     files = []
-    writepath = 'data/quizlet/quizlet'
+    writepath = 'data/quizlet/quizlet'+str(ind)
     trainfile = open(writepath+'.train','w')
     trainfile.write('')
     trainfile.close()
