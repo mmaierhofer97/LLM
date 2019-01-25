@@ -36,7 +36,7 @@ for ind in inds:
                 evs = []
                 a = 0
                 for l in line:
-                    print(l.keys())
+                    print(l['front'])
                     try:
                         a = (parse(l['t'])).timestamp()/3600
                         if not l['a'] in evs:
