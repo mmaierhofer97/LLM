@@ -36,7 +36,6 @@ for ind in inds:
                 evs = []
                 a = 0
                 for l in line:
-                    print(l.keys())
                     try:
                         a = (parse(l['timestamp'])).timestamp()/3600
                         if not (l['front'] in evs or l['back'] in evs):
@@ -45,6 +44,7 @@ for ind in inds:
                         events.append([ev*[-1,1][l['correct']],a])
                     except:
                         a = 'date error'
+                        print(a)
                         events = []
                         break
                 if events and len(evs)>1:
