@@ -26,7 +26,7 @@ for ind in inds:
     print(filename)
     c = ijson.parse(f,)
     keys = []
-    json = []
+    json_arr = []
     next_name = False
     next_date = False
     curr = ''
@@ -38,9 +38,9 @@ for ind in inds:
             print(curr)
         if line[0] == curr and line[1] == 'start_array':
             keys.append(line[2])
-            json.append([])
-            if len(json) % 1000 == 0:
-                print(len(json))
+            json_arr.append([])
+            if len(json_arr) % 1000 == 0:
+                print(len(json_arr))
         elif line[0] == curr+'.item' and line[1] == 'start_map':
             d = {}
         elif line[0] == curr+'.item.front':
@@ -52,16 +52,12 @@ for ind in inds:
         elif line[0] == curr+'.item.timestamp':
             d['timestamp'] = float(line[2])
         elif line[0] == curr+'.item' and line[1] == 'end_map':
-            json[-1].append(d)
+            json_arr[-1].append(d)
 
-    print(json)
-
-    for item in ijson.items(f, "item"):
+    for item in json_arr:
         bool = True
         print('thing', item)
-        for item2 in item.keys():
-            line = item[item2]
-
+        for line in item:
             if len(line)>= 10:
 
                 events = []
