@@ -32,7 +32,6 @@ for ind in inds:
     curr = ''
     it = 0
     for line in c:
-        it+= 1
         if line[0] == '' and line[1] == 'map_key':
             curr = line[2]
         if line[0] == curr and line[1] == 'start_array':
@@ -59,7 +58,6 @@ for ind in inds:
                 events = []
                 evs = []
                 a = 0
-                print(line)
                 for l in line:
                     try:
                         a = l['timestamp']/3600
