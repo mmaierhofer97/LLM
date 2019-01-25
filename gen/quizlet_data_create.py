@@ -35,19 +35,18 @@ for ind in inds:
                 events = []
                 evs = []
                 a = 0
-                print(len(line))
                 for l in line:
-                    print(l['front'],l['back'])
-                    '''try:
-                        a = (parse(l['t'])).timestamp()/3600
-                        if not l['a'] in evs:
+                    print(l.keys())
+                    try:
+                        a = (parse(l['timestamp'])).timestamp()/3600
+                        if not (l['front'] in evs or l['back'] in evs):
                             evs.append(l['a'])
                         ev = evs.index(l['a'])+1
-                        events.append([ev,a])
+                        events.append([ev*[-1,1][l['correct']],a])
                     except:
                         a = 'date error'
                         events = []
-                        break'''
+                        break
                 if events and len(evs)>1:
                     events.sort(key=lambda x: x[1])
                     reind = []
@@ -82,6 +81,5 @@ for ind in inds:
                     files[bool].write(id + ' '+' '.join(time1)+'\n')
                     files[bool].write(id + ' '+' '.join(ordinal2)+'\n')
                     files[bool].write(id + ' '+' '.join(time2)+'\n')
-        break
-        #for file in files:
-        #    file.close()
+        for file in files:
+            file.close()
