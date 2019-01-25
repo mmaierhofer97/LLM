@@ -32,6 +32,7 @@ for ind in inds:
     curr = ''
     for line in c:
         print(line)
+        break 
         if line[0] == 'item' and line[1] == 'start_array':
             keys.append(line[2])
             json.append([])
