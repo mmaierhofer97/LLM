@@ -14,8 +14,8 @@ import sys
 import random
 import data_help as DH
 args = {}
-args['max_length'] = 'ALL'
-args['num_samples'] = '4000'
+args['max_length'] = '200'
+args['n_samples'] = '4000'
 args['encoder']='LLM'
 args['device']='GPU'
 args['task']='PRED_CORR'
