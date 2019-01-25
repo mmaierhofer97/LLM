@@ -25,9 +25,9 @@ for ind in inds:
     f = open(filename)
     print(filename)
 
-    for item in ijson.items(f, ""):
+    for item in ijson.items(f, "item"):
         bool = True
-
+        print(item)
         for item2 in item.keys():
             line = item[item2]
 
