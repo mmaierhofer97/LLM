@@ -8,22 +8,13 @@ inds = list(range(6))
 if len(sys.argv)>1:
   inds = np.array(sys.argv[1:]).astype('int')
 files = []
-writepath = 'data/quizlet/quizlet_unsort'
-trainfile = open(writepath+'.train','w')
-trainfile.write('')
-trainfile.close()
-trainfile = open(writepath+'.train','a')
-files.append(trainfile)
-testfile = open(writepath+'.test','w')
-testfile.write('')
-testfile.close()
-testfile = open(writepath+'.test','a')
-files.append(testfile)
+
+
 countall = 0
 evs = []
 for ind in inds:
     files = []
-    writepath = 'data/quizlet/quizlet'+str(ind)
+    writepath = 'data/quizlet/quizlet_unsort'+str(ind)
     trainfile = open(writepath+'.train','w')
     trainfile.write('')
     trainfile.close()

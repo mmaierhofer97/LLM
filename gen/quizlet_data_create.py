@@ -7,18 +7,7 @@ fileloc = 'data/quizlet/proc_quizlet_sequence_50_172067_9118/proc_quizlet_sequen
 inds = list(range(6))
 if len(sys.argv)>1:
   inds = np.array(sys.argv[1:]).astype('int')
-files = []
-writepath = 'data/quizlet/quizlet'
-trainfile = open(writepath+'.train','w')
-trainfile.write('')
-trainfile.close()
-trainfile = open(writepath+'.train','a')
-files.append(trainfile)
-testfile = open(writepath+'.test','w')
-testfile.write('')
-testfile.close()
-testfile = open(writepath+'.test','a')
-files.append(testfile)
+
 countall = 0
 for ind in inds:
     files = []
