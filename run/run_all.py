@@ -30,7 +30,7 @@ for ds in args['datasets']:
     cases = ['github','quizlet']
     for case in cases:
         if case in ds:
-        special_case = case
+            special_case = case
 
     if case!='':
         cwd = os.path.join(os.getcwd(), "run/run_"+case+".py" +argstr)
