@@ -1,7 +1,7 @@
 f = open('data/quizlet/quizlet0.train','r')
 count = 0
 tot = 0
-for st in [‘.train’,’.test’]:
+for st in [''.train',''.test']:
  for k in range(6):
   f = open('data/quizlet/quizlet’+str(k)+st,'r')
   i = 0
