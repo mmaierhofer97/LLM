@@ -259,7 +259,6 @@ with tf.device(ops['device']):
             T_auc_pred = (tf.reduce_sum(T_auc_mask*T_pred,reduction_indices=[2])+1)/2
             T_labs = (tf.reduce_sum(tf.sign(P_y)*T_auc_mask,reduction_indices=[2])+1)/2
             T_auc,_ = tf.metrics.auc(T_labs,T_auc_pred)
-            print('T_auc')
     else:
             y_answer = P_y
             T_cost = tf.reduce_sum(
@@ -341,7 +340,7 @@ with tf.device(ops['device']):
             ind = list(mask[0,:]).index(1)
             #print(np.array(y_answer).shape,np.sum(y_answer[0,:,:]),batch_y[0,ind])
             _, deb_var, summary_weights,auc = T_sess.run(
-                                                    [T_optimizer, debugging_stuff, T_summary_weights, T_auc],
+                                                    [T_optimizer, debugging_stuff, T_summary_weights, [T_auc,T_auc_mask,T_auc_pred]],
                                                     feed_dict={
                                                                 P_x: x_set,
                                                                 P_y: y_answer,
