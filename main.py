@@ -257,7 +257,7 @@ with tf.device(ops['device']):
                 tf.reduce_sum(P_mask))
             T_auc_mask = tf.abs(P_y)
             T_auc = tf.reduce_sum(T_auc_mask*T_pred,reduction_indices=[2])
-            print('/n/n/n/n/n',T_auc,'/n/n/n/n/n/n')
+            print('/n/n/n/n/n',T_auc,T_auc_mask'/n/n/n/n/n/n')
     else:
             y_answer = P_y
             T_cost = tf.reduce_sum(
