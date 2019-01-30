@@ -256,7 +256,9 @@ with tf.device(ops['device']):
             T_accuracy = tf.reduce_sum(tf.reduce_sum(tf.cast(T_correct_pred, tf.float32))) / tf.reduce_sum(
                 tf.reduce_sum(P_mask))
             T_auc_mask = tf.abs(P_y)
-            T_auc = tf.reduce_sum(T_auc_mask*T_pred,reduction_indices=[2])
+            T_auc = (tf.reduce_sum(T_auc_mask*T_pred,reduction_indices=[2])+1)/2
+            T_labs = (tf.reduce_sum(tf.sign(P_y)*T_auc_mask,reduction_indices=[2])+1)/2
+
             print('/n/n/n/n/n',T_auc,T_auc_mask,'/n/n/n/n/n/n')
     else:
             y_answer = P_y
