@@ -258,7 +258,7 @@ with tf.device(ops['device']):
             T_auc_mask = tf.abs(P_y)
             T_auc_pred = (tf.reduce_sum(T_auc_mask*T_pred,reduction_indices=[2])+1)/2
             T_labs = (tf.reduce_sum(tf.sign(P_y)*T_auc_mask,reduction_indices=[2])+1)/2
-            T_auc = tf.metrics.auc(T_labs,T_auc_pred)
+            T_auc,_ = tf.metrics.auc(T_labs,T_auc_pred)
             print('T_auc')
     else:
             y_answer = P_y
