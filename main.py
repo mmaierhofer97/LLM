@@ -340,7 +340,7 @@ with tf.device(ops['device']):
             ind = list(mask[0,:]).index(1)
             #print(np.array(y_answer).shape,np.sum(y_answer[0,:,:]),batch_y[0,ind])
             _, deb_var, summary_weights,auc = T_sess.run(
-                                                    [T_optimizer, debugging_stuff, T_summary_weights, [T_auc,T_auc_mask,T_auc_pred]],
+                                                    [T_optimizer, debugging_stuff, T_summary_weights, T_auc],
                                                     feed_dict={
                                                                 P_x: x_set,
                                                                 P_y: y_answer,
