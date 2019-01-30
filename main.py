@@ -256,10 +256,10 @@ with tf.device(ops['device']):
             T_accuracy = tf.reduce_sum(tf.reduce_sum(tf.cast(T_correct_pred, tf.float32))) / tf.reduce_sum(
                 tf.reduce_sum(P_mask))
             T_auc_mask = tf.abs(P_y)
-            T_auc = (tf.reduce_sum(T_auc_mask*T_pred,reduction_indices=[2])+1)/2
+            T_auc_pred = (tf.reduce_sum(T_auc_mask*T_pred,reduction_indices=[2])+1)/2
             T_labs = (tf.reduce_sum(tf.sign(P_y)*T_auc_mask,reduction_indices=[2])+1)/2
-
-            print('/n/n/n/n/n',T_auc,T_auc_mask,'/n/n/n/n/n/n')
+            T_auc = tf.metrics.auc(T_labs,T_auc_pred)
+            print('T_auc')
     else:
             y_answer = P_y
             T_cost = tf.reduce_sum(
@@ -340,8 +340,8 @@ with tf.device(ops['device']):
                 y_answer = (DH.embed_one_hot(batch_y, 0.0, ops['n_classes'], ops['max_length'],ops['task']))
             ind = list(mask[0,:]).index(1)
             #print(np.array(y_answer).shape,np.sum(y_answer[0,:,:]),batch_y[0,ind])
-            _, deb_var, summary_weights,pred = T_sess.run(
-                                                    [T_optimizer, debugging_stuff, T_summary_weights, T_pred],
+            _, deb_var, summary_weights,auc = T_sess.run(
+                                                    [T_optimizer, debugging_stuff, T_summary_weights, T_auc],
                                                     feed_dict={
                                                                 P_x: x_set,
                                                                 P_y: y_answer,
@@ -350,7 +350,7 @@ with tf.device(ops['device']):
                                                                 P_batch_size: batch_size})
 
             names = ["h","o", "h_prev","o_prev","q","s","sigma","r","rho",'mul','decay']
-            #print(np.sign(pred)*y_answer)
+            print(auc)
             np.set_printoptions(precision=4)
             #print(deb_var[5]*y_answer)
             #print(y_answer)
