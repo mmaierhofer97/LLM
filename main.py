@@ -5,6 +5,7 @@ import tensor_classes_helpers as TCH
 import sys
 from tensorflow.python import debug as tf_debug
 import os
+from sklearn import metrics
 
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 """
@@ -254,6 +255,9 @@ with tf.device(ops['device']):
             T_correct_pred = tf.reduce_sum(tf.cast(tf.greater(tf.sign(T_pred*P_y),tf.zeros_like(P_y)),tf.float32),reduction_indices=[2]) * P_mask
             T_accuracy = tf.reduce_sum(tf.reduce_sum(tf.cast(T_correct_pred, tf.float32))) / tf.reduce_sum(
                 tf.reduce_sum(P_mask))
+            T_auc_mask = tf.abs(P_y)
+            T_auc = tf.reduce_sum(T_auc_mask*T_pred,reduction_indices=[2])
+            print('/n/n/n/n/n',T_auc,'/n/n/n/n/n/n')
     else:
             y_answer = P_y
             T_cost = tf.reduce_sum(
