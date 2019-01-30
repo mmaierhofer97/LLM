@@ -279,7 +279,7 @@ with tf.device(ops['device']):
 
 
     # Initialize the variables
-    init = tf.global_variables_initializer()
+    init = tf.group(tf.global_variables_initializer(), tf.local_variables_initializer())
 
 
 
