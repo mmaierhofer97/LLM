@@ -431,4 +431,6 @@ with tf.device(ops['device']):
         DH.write_history(accuracy_entry, ops['dataset']+ops['encoder']+str(ml)+'_acc.txt', epoch, ops['overwrite'])
         DH.write_history(losses_entry, 'records/loss.txt', epoch, ops['overwrite'])
 DH.write_history([accuracy_entry[0],accuracy_entry[1],accuracy_entry[2]], ops['dataset']+'tmp_'+ops['encoder']+str(ops['n_hidden'])+'.txt', 1, True)
+if ops['task']=='PRED_CORR':
+    DH.write_history([auc_entry[0],auc_entry[1],auc_entry[2]], ops['dataset']+'tmp_auc_'+ops['encoder']+str(ops['n_hidden'])+'.txt', 1, True)
 saver.save(T_sess, ops['dataset']+'_model/'+ops['encoder']+'model')
