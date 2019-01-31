@@ -258,7 +258,7 @@ with tf.device(ops['device']):
             T_auc_mask = tf.abs(P_y)
             T_auc_pred = tf.reshape((tf.reduce_sum(T_auc_mask*T_pred,reduction_indices=[2])+1)/2,[-1])
             T_labs = tf.reshape((tf.reduce_sum(tf.sign(P_y)*T_auc_mask,reduction_indices=[2])+1)/2,[-1])
-            T_auc = tf.metrics.auc(T_labs,T_auc_pred)[1]
+            T_auc = tf.metrics.auc(T_labs,T_auc_pred)
     else:
             y_answer = P_y
             T_cost = tf.reduce_sum(
@@ -339,8 +339,8 @@ with tf.device(ops['device']):
                 y_answer = (DH.embed_one_hot(batch_y, 0.0, ops['n_classes'], ops['max_length'],ops['task']))
             ind = list(mask[0,:]).index(1)
             #print(np.array(y_answer).shape,np.sum(y_answer[0,:,:]),batch_y[0,ind])
-            _, deb_var, summary_weights,auc = T_sess.run(
-                                                    [T_optimizer, debugging_stuff, T_summary_weights, T_auc],
+            _, deb_var, summary_weights = T_sess.run(
+                                                    [T_optimizer, debugging_stuff, T_summary_weights],
                                                     feed_dict={
                                                                 P_x: x_set,
                                                                 P_y: y_answer,
@@ -349,7 +349,6 @@ with tf.device(ops['device']):
                                                                 P_batch_size: batch_size})
 
             names = ["h","o", "h_prev","o_prev","q","s","sigma","r","rho",'mul','decay']
-            print(auc)
             np.set_printoptions(precision=4)
             #print(deb_var[5]*y_answer)
             #print(y_answer)
@@ -396,6 +395,11 @@ with tf.device(ops['device']):
         accuracy_entry, losses_entry = TCH.errors_and_losses(T_sess, P_x, P_y,
                                                             P_len, P_mask, P_batch_size, T_accuracy, T_cost, T_embedding_matrix,
                                                             dataset_names, datasets, ops)
+        if ops['task']=='PRED_CORR':
+            auc_entry = TCH.calculate_auc(T_sess, P_x, P_y,
+                                                            P_len, P_mask, P_batch_size, T_auc, T_embedding_matrix,
+                                                            dataset_names, datasets, ops)
+            print(auc_entry)
         if  epoch == 1 or (best_loss > max([losses_entry[ijk] for ijk in reset_vals])):
             best_loss = max([losses_entry[ijk] for ijk in reset_vals])
             best_results = [accuracy_entry, losses_entry]

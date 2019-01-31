@@ -190,6 +190,43 @@ def errors_and_losses(sess, P_x, P_y, P_len, P_mask, P_batch_size, T_accuracy,  
         accuracy_entry.append(acc_tot/samples)
         losses_entry.append(loss_tot/samples)
     return accuracy_entry, losses_entry
+def calculate_auc(sess, P_x, P_y, P_len, P_mask, P_batch_size, T_auc, T_embedding_matrix, dataset_names, datasets, ops):
+    # passes all needed tensor placeholders to fill with passed datasets
+    # computers errors and losses for train/test/validation sets
+    # Depending on what T_accuracy, T_cost are, different nets can be called
+    auc_entry = []
+    for i in range(len(dataset_names)):
+        dataset = datasets[i]
+        dataset_name = dataset_names[i]
+        batch_indeces_arr = DH.get_minibatches_ids(len(dataset), ops['batch_size'], shuffle=True)
+
+        auc_tot = 0.0
+
+        samples = 0
+        for batch_ids in batch_indeces_arr:
+            x_set, batch_y, batch_maxlen, batch_size, mask = DH.pick_batch(
+                                            dataset = dataset,
+                                            batch_indeces = batch_ids,
+                                            max_length = ops['max_length'],
+                                            task = ops['task'])
+
+            if ops['embedding']:
+                # batch_y = (batch, n_steps_padded)
+                y_answer = np.array(batch_y).astype(np.int32)
+            else:
+                y_answer = DH.embed_one_hot(batch_y, 0.0, ops['n_classes'], ops['max_length'],ops['task'])
+
+            auc_batch= sess.run([T_auc],
+                                                    feed_dict={
+                                                        P_x: x_set,
+                                                        P_y: y_answer,
+                                                        P_len: batch_maxlen,
+                                                        P_mask: mask,
+                                                        P_batch_size: batch_size})
+            auc_tot += auc_batch*len(batch_ids)
+            samples += len(batch_ids)
+        auc_entry.append(acc_tot/samples)
+    return auc_entry
 
 
 ############################
