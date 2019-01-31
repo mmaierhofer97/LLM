@@ -223,10 +223,9 @@ def calculate_auc(sess, P_x, P_y, P_len, P_mask, P_batch_size, T_auc, T_embeddin
                                                         P_len: batch_maxlen,
                                                         P_mask: mask,
                                                         P_batch_size: batch_size})
-            print(auc_batch)
             auc_tot += auc_batch[1]*len(batch_ids)
             samples += len(batch_ids)
-        auc_entry.append(acc_tot/samples)
+        auc_entry.append(auc_tot/samples)
     return auc_entry
 
 
