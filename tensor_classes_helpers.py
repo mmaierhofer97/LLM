@@ -216,7 +216,7 @@ def calculate_auc(sess, P_x, P_y, P_len, P_mask, P_batch_size, T_auc, T_embeddin
             else:
                 y_answer = DH.embed_one_hot(batch_y, 0.0, ops['n_classes'], ops['max_length'],ops['task'])
 
-            auc_batch= sess.run([T_auc],
+            auc_batch= sess.run(T_auc,
                                                     feed_dict={
                                                         P_x: x_set,
                                                         P_y: y_answer,
@@ -224,7 +224,7 @@ def calculate_auc(sess, P_x, P_y, P_len, P_mask, P_batch_size, T_auc, T_embeddin
                                                         P_mask: mask,
                                                         P_batch_size: batch_size})
             print(auc_batch)
-            auc_tot += auc_batch[0]*len(batch_ids)
+            auc_tot += auc_batch[1]*len(batch_ids)
             samples += len(batch_ids)
         auc_entry.append(acc_tot/samples)
     return auc_entry
