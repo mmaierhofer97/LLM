@@ -279,7 +279,7 @@ with tf.device(ops['device']):
             auc_counts = []
             for i in range(ops['n_classes']):
                 auc_list.append(tf.metrics.auc(T_auc_mask[:,:,i],T_pred[:,:,i]))
-                tot = tf.sum(tot,tf.reduce_sum(tf.reduce_sum(T_pred[:,:,i])))
+                tot = tf.add(tot,tf.reduce_sum(tf.reduce_sum(T_pred[:,:,i])))
 
             print(tf.stack(auc_list))
             #T_auc_pred = tf.reshape((tf.reduce_sum(T_auc_mask*T_pred,reduction_indices=[2])+1)/2,[-1])
