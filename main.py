@@ -434,7 +434,7 @@ with tf.device(ops['device']):
             else:
                 print( "Model Resetting, Best Validation Results:\n Accuracy:{}, Losses:{}".format( np.array(accuracy_entry), losses_entry))
         else:
-            print( "Epoch:{}, Accuracy:{}, Losses:{}".format(epoch, np.array(accuracy_entry), losses_entry))
+            print( "Epoch:{}, Accuracy:{}, Losses:{}, AUC:{}".format(epoch, np.array(accuracy_entry), losses_entry,np.array(auc_entry)))
 
 
     if ops['write_history'] and epoch==ops['epochs']:
