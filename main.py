@@ -409,7 +409,6 @@ with tf.device(ops['device']):
         auc_entry = TCH.calculate_auc(T_sess, P_x, P_y,
                                                         P_len, P_mask, P_batch_size, T_auc, T_embedding_matrix,
                                                         dataset_names, datasets, ops)
-        print(auc_entry)
         if  epoch == 1 or (best_loss > max([losses_entry[ijk] for ijk in reset_vals])):
             best_loss = max([losses_entry[ijk] for ijk in reset_vals])
             best_results = [accuracy_entry, losses_entry]
