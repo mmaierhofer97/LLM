@@ -285,11 +285,6 @@ with tf.device(ops['device']):
             for i in range(ops['n_classes']):
                 auc_weighted.append(tf.multiply(auc_list[i],tf.divide(auc_counts[i],auc_tot)))
             T_auc = tf.reduce_sum(tf.stack(auc_weighted),reduction_indices = [0])
-            print(T_auc)
-            #T_auc_pred = tf.reshape((tf.reduce_sum(T_auc_mask*T_pred,reduction_indices=[2])+1)/2,[-1])
-            #T_labs = tf.reshape((tf.reduce_sum(tf.sign(P_y)*T_auc_mask,reduction_indices=[2])+1)/2,[-1])
-            #T_auc = tf.metrics.auc(T_labs,T_auc_pred)
-
     T_optimizer = tf.train.AdamOptimizer(learning_rate=ops['learning_rate']).minimize(T_cost)
 
 
@@ -411,11 +406,10 @@ with tf.device(ops['device']):
         accuracy_entry, losses_entry = TCH.errors_and_losses(T_sess, P_x, P_y,
                                                             P_len, P_mask, P_batch_size, T_accuracy, T_cost, T_embedding_matrix,
                                                             dataset_names, datasets, ops)
-        if ops['task']=='PRED_CORR':
-            auc_entry = TCH.calculate_auc(T_sess, P_x, P_y,
-                                                            P_len, P_mask, P_batch_size, T_auc, T_embedding_matrix,
-                                                            dataset_names, datasets, ops)
-            print(auc_entry)
+        auc_entry = TCH.calculate_auc(T_sess, P_x, P_y,
+                                                        P_len, P_mask, P_batch_size, T_auc, T_embedding_matrix,
+                                                        dataset_names, datasets, ops)
+        print(auc_entry)
         if  epoch == 1 or (best_loss > max([losses_entry[ijk] for ijk in reset_vals])):
             best_loss = max([losses_entry[ijk] for ijk in reset_vals])
             best_results = [accuracy_entry, losses_entry]
@@ -447,6 +441,6 @@ with tf.device(ops['device']):
         DH.write_history(accuracy_entry, ops['dataset']+ops['encoder']+str(ml)+'_acc.txt', epoch, ops['overwrite'])
         DH.write_history(losses_entry, 'records/loss.txt', epoch, ops['overwrite'])
 DH.write_history([accuracy_entry[0],accuracy_entry[1],accuracy_entry[2]], ops['dataset']+'tmp_'+ops['encoder']+str(ops['n_hidden'])+'.txt', 1, True)
-if ops['task']=='PRED_CORR':
-    DH.write_history([auc_entry[0],auc_entry[1],auc_entry[2]], ops['dataset']+'tmp_auc_'+ops['encoder']+str(ops['n_hidden'])+'.txt', 1, True)
+
+DH.write_history([auc_entry[0],auc_entry[1],auc_entry[2]], ops['dataset']+'tmp_auc_'+ops['encoder']+str(ops['n_hidden'])+'.txt', 1, True)
 saver.save(T_sess, ops['dataset']+'_model/'+ops['encoder']+'model')
