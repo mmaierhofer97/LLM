@@ -5,7 +5,7 @@ args['max_length'] = 'ALL'
 args['task']='PRED'
 args['n_hidden'] = '100'
 args['samples']='ALL'
-args['datasets'] = ['data/quizlet/quizlet','data/github/github','data/dota/dota_class','data/dota/dota','data/freecodecamp_students/freecodecamp_students','data/reddit/reddit','data/reddit_comments/reddit_comments']
+args['datasets'] = ['data/github/github','data/dota/dota_class','data/dota/dota','data/freecodecamp_students/freecodecamp_students','data/reddit/reddit','data/reddit_comments/reddit_comments','data/quizlet/quizlet']
 for st in sys.argv[1:]:
     splt = st.index('=')
     key = st[:splt]
