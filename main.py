@@ -279,9 +279,12 @@ with tf.device(ops['device']):
             auc_counts = []
             for i in range(ops['n_classes']):
                 auc_list.append(tf.metrics.auc(T_auc_mask[:,:,i],T_pred[:,:,i]))
-                auc_tot = tf.add(auc_tot,tf.reduce_sum(tf.reduce_sum(T_pred[:,:,i])))
-
-            print(tf.stack(auc_list))
+                auc_counts.append(tf.reduce_sum(tf.reduce_sum(T_pred[:,:,i])))
+                auc_tot = tf.add(auc_tot,auc_counts[-1])
+            auc_weighted = []
+            for i in range(ops['n_classes']):
+                auc_weighted.append(tf.multiply(auc_list[i],tf.divide(auc_counts[i],auc_tot)))
+            print(tf.stack(auc_weighted))
             #T_auc_pred = tf.reshape((tf.reduce_sum(T_auc_mask*T_pred,reduction_indices=[2])+1)/2,[-1])
             #T_labs = tf.reshape((tf.reduce_sum(tf.sign(P_y)*T_auc_mask,reduction_indices=[2])+1)/2,[-1])
             #T_auc = tf.metrics.auc(T_labs,T_auc_pred)
