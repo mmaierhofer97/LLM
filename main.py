@@ -284,7 +284,7 @@ with tf.device(ops['device']):
             auc_weighted = []
             for i in range(ops['n_classes']):
                 auc_weighted.append(tf.multiply(auc_list[i],tf.divide(auc_counts[i],auc_tot)))
-            T_auc = tf.reduce_sum(auc_weighted)
+            T_auc = tf.reduce_sum(tf.stack(auc_weighted),reduction_indices = [0])
             print(T_auc)
             #T_auc_pred = tf.reshape((tf.reduce_sum(T_auc_mask*T_pred,reduction_indices=[2])+1)/2,[-1])
             #T_labs = tf.reshape((tf.reduce_sum(tf.sign(P_y)*T_auc_mask,reduction_indices=[2])+1)/2,[-1])
