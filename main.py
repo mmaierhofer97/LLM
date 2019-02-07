@@ -296,8 +296,8 @@ with tf.device(ops['device']):
                 auc_ind = tf.where(where)
                 new_pred = tf.gather_nd(T_auc_mask[:,:,0],auc_ind)
                 for i in range(ops['n_classes']):
-                    auc_list.append(tf.metrics.auc(T_auc_mask[:,:,i],T_pred[:,:,i]))
-                    auc_counts.append(tf.reduce_sum(tf.reduce_sum(T_pred[:,:,i])))
+                    auc_list.append(tf.metrics.auc(tf.gather_nd(T_auc_mask[:,:,i],auc_ind),tf.gather_nd(T_pred[:,:,i],auc_ind)))
+                    auc_counts.append(tf.reduce_sum(tf.gather_nd(T_pred[:,:,i],auc_ind)))
                     auc_tot = tf.add(auc_tot,auc_counts[-1])
                 auc_weighted = []
                 for i in range(ops['n_classes']):
