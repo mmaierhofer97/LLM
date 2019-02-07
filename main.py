@@ -293,8 +293,7 @@ with tf.device(ops['device']):
                 ind_check = tf.reduce_sum(T_auc_mask, reduction_indices = [2])
                 zero = tf.constant(0, dtype=tf.float32)
                 where = tf.not_equal(ind_check, zero)
-                auc_ind = tf.where(where)
-                print(auc_ind)
+                auc_ind = tf.where(where)[:,1]
                 for i in range(ops['n_classes']):
                     auc_list.append(tf.metrics.auc(T_auc_mask[:,:,i],T_pred[:,:,i]))
                     auc_counts.append(tf.reduce_sum(tf.reduce_sum(T_pred[:,:,i])))
