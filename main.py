@@ -369,15 +369,15 @@ with tf.device(ops['device']):
                 y_answer = (DH.embed_one_hot(batch_y, 0.0, ops['n_classes'], ops['max_length'],ops['task']))
             ind = list(mask[0,:]).index(1)
             #print(np.array(y_answer).shape,np.sum(y_answer[0,:,:]),batch_y[0,ind])
-            _, deb_var, summary_weights,thingy = T_sess.run(
-                                                    [T_optimizer, debugging_stuff, T_summary_weights,new_pred],
+            _, deb_var, summary_weights = T_sess.run(
+                                                    [T_optimizer, debugging_stuff, T_summary_weights],
                                                     feed_dict={
                                                                 P_x: x_set,
                                                                 P_y: y_answer,
                                                                 P_len: batch_maxlen,
                                                                 P_mask: mask,
                                                                 P_batch_size: batch_size})
-            print(thingy)
+
             names = ["h","o", "h_prev","o_prev","q","s","sigma","r","rho",'mul','decay']
             np.set_printoptions(precision=4)
             #print(deb_var[5]*y_answer)
