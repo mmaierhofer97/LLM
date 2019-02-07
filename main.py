@@ -290,9 +290,9 @@ with tf.device(ops['device']):
                 auc_list = []
                 auc_tot = tf.zeros(1)
                 auc_counts = []
-                ind_check = tf.reduce_sum(T_auc_mask, reduction_indices = [0])
+                ind_check = tf.reduce_sum(T_auc_mask, reduction_indices = [2])
                 zero = tf.constant(0, dtype=tf.float32)
-                where = tf.not_equal(T_auc_mask, zero)
+                where = tf.not_equal(ind_check, zero)
                 auc_ind = tf.where(where)
                 print(auc_ind)
                 for i in range(ops['n_classes']):
