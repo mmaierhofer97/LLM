@@ -272,19 +272,36 @@ with tf.device(ops['device']):
             T_correct_pred = tf.cast(tf.equal(tf.argmax(T_pred, 2), tf.argmax(P_y, 2)), tf.float32) * P_mask
             T_accuracy = tf.reduce_sum(tf.reduce_sum(tf.cast(T_correct_pred, tf.float32))) / tf.reduce_sum(
                 tf.reduce_sum(P_mask))
-
-            T_auc_mask = P_y
-            auc_list = []
-            auc_tot = tf.zeros(1)
-            auc_counts = []
-            for i in range(ops['n_classes']):
-                auc_list.append(tf.metrics.auc(T_auc_mask[:,:,i],T_pred[:,:,i]))
-                auc_counts.append(tf.reduce_sum(tf.reduce_sum(T_pred[:,:,i])))
-                auc_tot = tf.add(auc_tot,auc_counts[-1])
-            auc_weighted = []
-            for i in range(ops['n_classes']):
-                auc_weighted.append(tf.multiply(auc_list[i],tf.divide(auc_counts[i],auc_tot)))
-            T_auc = tf.reduce_sum(tf.stack(auc_weighted),reduction_indices = [0])
+            if ops['task'] == 'PRED':
+                T_auc_mask = P_y
+                auc_list = []
+                auc_tot = tf.zeros(1)
+                auc_counts = []
+                for i in range(ops['n_classes']):
+                    auc_list.append(tf.metrics.auc(T_auc_mask[:,:,i],T_pred[:,:,i]))
+                    auc_counts.append(tf.reduce_sum(tf.reduce_sum(T_pred[:,:,i])))
+                    auc_tot = tf.add(auc_tot,auc_counts[-1])
+                auc_weighted = []
+                for i in range(ops['n_classes']):
+                    auc_weighted.append(tf.multiply(auc_list[i],tf.divide(auc_counts[i],auc_tot)))
+                T_auc = tf.reduce_sum(tf.stack(auc_weighted),reduction_indices = [0])
+            else:
+                T_auc_mask = P_y
+                auc_list = []
+                auc_tot = tf.zeros(1)
+                auc_counts = []
+                ind_check = tf.reduce_sum(T_auc_mask, reduction_indices = [0])
+                zero = tf.constant(0, dtype=tf.float32)
+                where = tf.not_equal(ind_check, zero)
+                auc_ind = tf.where(where)
+                print(auc_ind)
+                for i in range(ops['n_classes']):
+                    auc_list.append(tf.metrics.auc(T_auc_mask[:,:,i],T_pred[:,:,i]))
+                    auc_counts.append(tf.reduce_sum(tf.reduce_sum(T_pred[:,:,i])))
+                    auc_tot = tf.add(auc_tot,auc_counts[-1])
+                auc_weighted = []
+                for i in range(ops['n_classes']):
+                    auc_weighted.append(tf.multiply(auc_list[i],tf.divide(auc_counts[i],auc_tot)))
     T_optimizer = tf.train.AdamOptimizer(learning_rate=ops['learning_rate']).minimize(T_cost)
 
 
