@@ -361,10 +361,10 @@ def num_classes(datasets,max_length):
     for dataset in datasets:
         for seq in dataset:
             if len(seq[0])<=max_length:
-                l = max(abs(seq[2]))
+                l = max(np.abs(seq[2]))
                 k = min(seq[2])
             else:
-                l = max(abs(seq[2][:max_length+1]))
+                l = max(np.abs(seq[2][:max_length+1]))
                 k = min(seq[2][:max_length+1])
             m = max(m,l)
             m2 = min(m2,k)
