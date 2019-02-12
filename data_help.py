@@ -360,9 +360,10 @@ def num_classes(datasets,max_length):
     for dataset in datasets:
         for seq in dataset:
             if len(seq[0])<=max_length:
-                m = max(seq[2],m)
+                l = max(seq[2])
             else:
-                m = max(seq[2][:max_length+1],m)
+                l = max(seq[2][:max_length+1],m)
+            m = max(m,l)
 
     return m+1
 
