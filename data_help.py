@@ -357,14 +357,13 @@ def longest_seq(datasets):
 
 def num_classes(datasets,max_length):
     m = 0
-    k
     for dataset in datasets:
         for seq in dataset:
             if len(seq[0])<=max_length:
                 m = max(seq[2],m)
             else:
                 m = max(seq[2][:max_length+1],m)
-            
+
     return m+1
 
 def set_timescales(dataset,timescales):
