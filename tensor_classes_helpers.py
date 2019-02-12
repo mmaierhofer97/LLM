@@ -136,7 +136,7 @@ def cut_up_x(x_set, ops, P_len=None, n_timescales=None, P_batch_size=None, embed
         x_vectorized = tf.nn.embedding_lookup(embedding_matrix, x)
     else:
         x_vectorized = tf.one_hot(x - 1, ops['n_classes'], name='x_vectorized')
-
+    print(x_vectorized)
     # x_vectorized: [n_steps, batch_size, n_classes]
     x_leftover = None
     if P_len != None:

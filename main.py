@@ -66,7 +66,7 @@ ops = {
             'overwrite': False,
             "write_history": True, #whether to write the history of training
             'model_save_name':' True',
-            'model_load_name': 'True',
+            'model_load_name': 'False',
             'store_graph': False,
             'collect_histograms': False,
             'unique_mus_alphas': False, #HPM only
