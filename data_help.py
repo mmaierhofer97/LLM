@@ -357,20 +357,14 @@ def longest_seq(datasets):
 
 def num_classes(datasets,max_length):
     m = 0
-    m2 = 0
     for dataset in datasets:
         for seq in dataset:
             if len(seq[0])<=max_length:
                 l = max(np.abs(seq[2]))
-                k = min(seq[2])
             else:
                 l = max(np.abs(seq[2][:max_length+1]))
-                k = min(seq[2][:max_length+1])
             m = max(m,l)
-            m2 = min(m2,k)
-    if m2<0:
-        print('Neg Events Debug')
-        m=2*m
+
     return m+1
 
 def set_timescales(dataset,timescales):
