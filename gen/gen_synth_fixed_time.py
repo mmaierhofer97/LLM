@@ -18,7 +18,7 @@ for l in lens:
             events = []
             t = 0
             d = 0
-            while len(events)<l:
+            while len(events)<l+1:
                space = random.expovariate(A_timescale)
                t += space
                d += space
@@ -28,7 +28,7 @@ for l in lens:
                else:
                    s = 1
                events.append([s,t])
-            events = events[:l+1]
+            events = events[:l+2]
             time1 = [str(0.0)]
             time2 = []
             ordinal = []
