@@ -1,2 +1,3 @@
-model_checkpoint_path: "LLMALLmodel"
-all_model_checkpoint_paths: "LLMALLmodel"
+model_checkpoint_path: "LSTMmodel"
+all_model_checkpoint_paths: "LSTMALLmodel100"
+all_model_checkpoint_paths: "LSTMmodel"

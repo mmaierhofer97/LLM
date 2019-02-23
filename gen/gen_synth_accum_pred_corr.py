@@ -11,6 +11,7 @@ for l in lens:
         myfile.write('')
         myfile.close()
         myfile = open(filename,'a')
+        scount = 0
         for count in range(1000):
             id=str(count+1).zfill(5)
             A_timescale = random.expovariate(1)
@@ -22,10 +23,13 @@ for l in lens:
             while len(events)<l:
                t += random.expovariate(A_timescale)
                s = random.choice([0,1])
+               scount+=s
                events.append([1*[1,-1][s],t*[1,.1][s]])
             t = 0
             while len(events)<2*l:
                t += random.expovariate(B_timescale)
+               s = random.choice([0,1])
+               scount+=s 
                events.append([2*[1,-1][s],t*[1,.1][s]])
             events.sort(key=lambda x: x[1])
             events = events[:l+1]
@@ -58,3 +62,4 @@ for l in lens:
             myfile.write(id + ' '+' '.join(time2)+'\n')
             #myfile.write('foo2')
         myfile.close()
+        print(scount)

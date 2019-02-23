@@ -1,6 +1,6 @@
 import random
 import numpy as np
-filepath = 'data/synth_accum/accum_pred'
+filepath = 'data/synth_accum/accum'
 lens = [10,30,100,300,1000]
 ends = ['.train','.test']
 for l in lens:
@@ -53,7 +53,7 @@ for l in lens:
 
             myfile.write(id + ' '+' '.join(ordinal)+'\n')
             myfile.write(id + ' '+' '.join(time1)+'\n')
-            myfile.write(id + ' '+' '.join(ordinal2)+'\n')
+            myfile.write(id + ' '+' '.join(class_id)+'\n')
             myfile.write(id + ' '+' '.join(time2)+'\n')
             #myfile.write('foo2')
         myfile.close()

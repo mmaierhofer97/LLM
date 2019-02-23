@@ -7,13 +7,12 @@ import sys
 sys.path.insert(0, '/home/matt/Documents/mozerlab/LLM')
 
 import data_help as DH
-lams = [1]
-filename = 'accum_multiclass'
+lams = [30]
+filename = 'accum'
 for lam in lams:
-    train, test, valid = DH.load_data(filename+str(lam))
+    datasets = DH.load_data(filename+str(lam))
+    train = datasets['train_set']
     r = random.randint(0,(len(train))-1)
-
-
     events = []
     t = 0
     colors = ['red','blue','green','black']

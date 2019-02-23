@@ -17,7 +17,7 @@ for st in sys.argv[1:]:
 for ds in args['datasets']:
     print(ds)
     argstr = ''
-    if 'class' in ds:
+    if 'class' in ds or 'rhythm' in ds:
         args['task'] = 'CLASS'
     elif 'quizlet' in ds:
         args['task'] = 'PRED_CORR'

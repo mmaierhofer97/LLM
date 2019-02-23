@@ -79,7 +79,7 @@ for lam in lams:
     #plt.scatter(times, labels, color=c, alpha=0.85, s=10)
     f, axarr = plt.subplots(1, sharex=True)
 
-    axarr.set_title('Synthetic Accumulator Data\n Number of Events = '+str(len(events)))# \n A='+str(int(A_timescale*100)/100)+', B='+str(int(B_timescale*100)/100))
+    axarr.set_title('Synthetic Accumulator Data')
 #    axarr[1].plot(accumsT,accumsV, color = 'green')
 #    axarr[1].axhline(y = 0, color = 'black' )
     for i in range(len(times)):
