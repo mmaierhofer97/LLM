@@ -6,6 +6,7 @@ import six
 from matplotlib import colors as colors2
 import sys
 from matplotlib.pyplot import cm
+sys.path.insert(0, '/home/matt/Docs/mozerlab/LLM')
 sys.path.insert(0, '/home/matt/Documents/mozerlab/LLM')
 #colors = [color for color in list(six.iteritems(colors2.cnames)) if not  ':' in color]
 
@@ -22,20 +23,20 @@ def colors_spaced(n):
     r = int(r) % 256
     g = int(g) % 256
     b = int(b) % 256
-    ret.append((r/256,g/256,b/256)) 
+    ret.append((r/256,g/256,b/256))
   return ret
   #https://www.quora.com/How-do-I-generate-n-visually-distinct-RGB-colours-in-Python
 import data_help as DH
 lams = [10,30,100,210,230,2100,310,330,3100,410,430]
 filename = 'rhythm'
 for lam in lams:
-    train, test, valid = DH.load_data(filename+str(lam))
+    datasets = DH.load_data(filename+str(lam))
+    train = datasets['train_set']
     r = random.randint(0,(len(train))-1)
-
 
     events = []
     t = 0
-     
+
     for i in range(len(train[r][0])):
         t += train[r][1][i]
         events.append([int(train[r][0][i]-1),t])
@@ -79,10 +80,11 @@ for lam in lams:
     #plt.scatter(times, labels, color=c, alpha=0.85, s=10)
     f, axarr = plt.subplots(1, sharex=True)
 
-    axarr.set_title('Synthetic Accumulator Data\n Number of Events = '+str(len(events)))# \n A='+str(int(A_timescale*100)/100)+', B='+str(int(B_timescale*100)/100))
+    axarr.set_title('Rhythm Data')# \n A='+str(int(A_timescale*100)/100)+', B='+str(int(B_timescale*100)/100))
 #    axarr[1].plot(accumsT,accumsV, color = 'green')
 #    axarr[1].axhline(y = 0, color = 'black' )
     for i in range(len(times)):
         axarr.axvline(x=times[i], color = c[i])
+    axarr.axes.get_yaxis().set_visible(False)
     plt.xlabel('Time')
     plt.savefig('images/'+filename+str(lam)+'.png')

@@ -1,11 +1,11 @@
 import random
 import numpy as np
 filepath = 'data/synth_accum/accum'
-lens = [10,30,100,300,1000]
+lens = [10,30,100]
 ends = ['.train','.test']
 for l in lens:
     for end in ends:
-        lam = 1
+        lam = 1/16 
         filename = filepath+str(l)+end
         myfile = open(filename,'w')
         myfile.write('')

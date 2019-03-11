@@ -9,8 +9,8 @@ from matplotlib.pyplot import cm
 from numpydoc import docscrape
 from tick.hawkes import SimuHawkesExpKernels, HawkesKernelExp
 from tick.plot import plot_point_process
-sys.path.insert(0, '/home/matt/Documents/mozerlab/LLM')
-#colors = [color for color in list(six.iteritems(colors2.cnames)) if not  ':' in color]
+sys.path.insert(0, '/home/matt/Docs/mozerlab/LLM')
+sys.path.insert(0, '/home/matt/Documents/mozerlab/LLM')#colors = [color for color in list(six.iteritems(colors2.cnames)) if not  ':' in color]
 
 def colors_spaced(n):
   ret = []
@@ -71,7 +71,7 @@ for l in lens:
     labels = []
     c = []
     colors = colors_spaced(max([ev[0] for ev in events])+1)
-    colors = ['red','blue','black','yellow','purple','orange','green','gray']
+    colors = ['red','green','blue','black','yellow','purple','orange','gray']
     for ev in events:
         times.append(ev[1])
         labels.append(1)
@@ -88,6 +88,7 @@ for l in lens:
         #axarr[0].axis([0,et,0,1])
     for i in range(ev_types):
         #axarr[i+1].axis([0,et,0,m])
-        axarr[i+1].plot(intense_times,intensities[i]  , color = colors[i])
+        axarr[i+1].plot(intense_times,intensities[i]  , color = colors[(i+3)%4])
+    axarr[0].axes.get_yaxis().set_visible(False)
     plt.xlabel('Time')
     plt.savefig('images/'+'hawkes6'+str(l)+'.png')
