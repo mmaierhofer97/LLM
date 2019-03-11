@@ -6,7 +6,7 @@ lams = ['']
 datasets = ['data/github/github','data/dota/dota','data/dota/dota_class','data/freecodecamp_students/freecodecamp_students','data/reddit/reddit','data/reddit_comments/reddit_comments']
 filenames = []
 for ds in datasets:
-    for num in ['50','100','200','400']:
+    for num in ['100']:#['50','100','200','400']:
         filenames.append(ds+'_100_paired_train_auc'+num+'.txt')
         filenames.append(ds+'_100_paired_test_auc'+num+'.txt')
         filenames.append(ds+'_100_paired_valid_auc'+num+'.txt')
@@ -56,12 +56,12 @@ for filename in filenames:
     errs.append(llm_s*1.96)
     accs.append(lstm_m)
     errs.append(lstm_s*1.96)
-    paccs.append(m)
+    paccs.append(min(1-p,p))
     perrs.append(s*interval)
   except:
     0
-#print(accs)
-#print(errs)
-#print()
-#print(paccs)
-#print(perrs)
+print(accs)
+print(errs)
+print()
+print(paccs)
+print(perrs)
