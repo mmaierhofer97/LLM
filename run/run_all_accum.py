@@ -13,7 +13,7 @@ import sys
 import random
 import data_help as DH
 filepath = "'data/synth_accum/accum"
-filenames = ["0.0625'","0.25'","1'","4'","16'"]
+filenames = ["0.0625","0.25","1","4","16"]
 args = {}
 args['max_length'] = 'ALL'
 args['encoder']='LLM'
