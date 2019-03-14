@@ -1,17 +1,18 @@
 import random
 import numpy as np
 filepath = 'data/synth_accum/accum'
-lens = [10,30,100]
+lens = [100]
 ends = ['.train','.test']
+lams = [1/16,1/4,1,4,16]
 for l in lens:
     for end in ends:
-        lam = 1/16 
-        filename = filepath+str(l)+end
+      for lam in lams:
+        filename = filepath+str(lam)+end
         myfile = open(filename,'w')
         myfile.write('')
         myfile.close()
         myfile = open(filename,'a')
-        for count in range(1000):
+        for count in range(4000):
             id=str(count+1).zfill(5)
             A_timescale = random.expovariate(1)
             B_timescale = random.expovariate(1)
