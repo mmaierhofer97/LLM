@@ -12,7 +12,7 @@ sys.path.insert(0, parent_dir)
 import sys
 import random
 import data_help as DH
-filepath = "'data/synth_accum/accum"
+filepath = "data/synth_accum/accum"
 filenames = ["0.0625","0.25","1","4","16"]
 args = {}
 args['max_length'] = 'ALL'
@@ -27,10 +27,10 @@ for st in sys.argv[1:]:
     val = st[splt+1:]
     args[key]=val
 for i in range(10):
+	os.system('{} {}'.format('python3', 'gen/gen_synth_accum.py'))
 	print(i)
 	for filename in filenames:
 	    args['dataset'] = filepath+filename
-	    os.system('{} {}'.format('python3', 'gen/gen_synth_accum.py'))
 	    args['seed'] = random.randint(1,10**8)
 	    args['encoder'] = 'LLM'
 	    argstr = ''
