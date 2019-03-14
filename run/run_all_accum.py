@@ -29,8 +29,8 @@ for st in sys.argv[1:]:
 for i in range(10):
 	print(i)
 	for filename in filenames:
-		args['dataset'] = filepath+filename
-		os.system('{} {}'.format('python3', 'gen/gen_synth_accum.py'))
+	    args['dataset'] = filepath+filename
+	    os.system('{} {}'.format('python3', 'gen/gen_synth_accum.py'))
 	    args['seed'] = random.randint(1,10**8)
 	    args['encoder'] = 'LLM'
 	    argstr = ''
