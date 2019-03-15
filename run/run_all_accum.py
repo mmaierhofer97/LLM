@@ -27,7 +27,7 @@ for st in sys.argv[1:]:
     val = st[splt+1:]
     args[key]=val
 for i in range(10):
-	os.system('{} {}'.format('python3', 'gen/gen_synth_accum.py'))
+	os.system('{} {}'.format('python3', 'gen/gen_synth_accum_length_vary.py'))
 	print(i)
 	for filename in filenames:
 	    args['dataset'] = filepath+filename
