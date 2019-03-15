@@ -12,8 +12,8 @@ sys.path.insert(0, parent_dir)
 import sys
 import random
 import data_help as DH
-filepath = "data/synth_accum/accum"
-filenames = ["0.0625","0.25","1","4","16"]
+filepath = "data/synth_accum/accum_length_vary"
+filenames = ["0",'1','2','3','4','5']
 args = {}
 args['max_length'] = 'ALL'
 args['encoder']='LLM'
