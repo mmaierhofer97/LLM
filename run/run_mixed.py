@@ -21,12 +21,16 @@ args['model_load_name']='FALSE'
 ds = ['data/freecodecamp_students/freecodecamp_students','data/freecodecamp_students/freecodecamp_students','data/dota/dota','data/dota/dota']
 nh = ['100','200','200','50']
 args['n_hidden'] = '100'
+
 #for st in sys.argv[1:]:
 #    splt = st.index('=')
 #    key = st[:splt]
 #    val = st[splt+1:]
 #    args[key]=val
 for i in range(10):
+    args['samples'] = '1000'
+    args['max_length'] = '50'
+    args['batch_size'] = '8'
     j=0
     print(i)
     args['seed'] = random.randint(1,10**8)
@@ -66,6 +70,9 @@ for i in range(10):
     DH.write_history([a[0],b[0]],args['dataset']+'_'+str(ml)+'_paired_train_auc'+'_mixed'+'.txt', i, False)
     DH.write_history([a[2],b[2]],args['dataset']+'_'+str(ml)+'_paired_valid_auc'+'_mixed'+'.txt', i, False)
 
+    args['samples'] = '4000'
+    args['max_length'] = '100'
+    args['batch_size'] = '64'
     args['seed'] = random.randint(1,10**8)
     args['encoder'] = 'LLM'
     args['n_hidden'] = nh[j]
