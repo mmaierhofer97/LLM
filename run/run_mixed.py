@@ -18,7 +18,7 @@ args['encoder']='LLM'
 args['device']='GPU'
 args['task']='PRED'
 args['model_load_name']='FALSE'
-args['datasets'] = ['data/freecodecamp_students/freecodecamp_students','data/freecodecamp_students/freecodecamp_students','data/dota/dota','data/dota/dota']
+ds = ['data/freecodecamp_students/freecodecamp_students','data/freecodecamp_students/freecodecamp_students','data/dota/dota','data/dota/dota']
 nh = ['100','200','200','50']
 args['n_hidden'] = '100'
 #for st in sys.argv[1:]:
@@ -32,7 +32,7 @@ for i in range(10):
     args['seed'] = random.randint(1,10**8)
     args['encoder'] = 'LLM'
     args['n_hidden'] = nh[j]
-    args['dataset'] = args['datasets'][j]
+    args['dataset'] = ds[j]
     argstr = ''
     for key in args.keys():
         argstr+=' '+str(key)+'='+str(args[key])
@@ -42,7 +42,7 @@ for i in range(10):
     j=j+1
     args['encoder'] = 'LSTM'
     args['n_hidden'] = nh[j]
-    args['dataset'] = args['datasets'][j]
+    args['dataset'] = ds[j]
     argstr = ''
     for key in args.keys():
         argstr+=' '+str(key)+'='+str(args[key])
@@ -69,7 +69,7 @@ for i in range(10):
     args['seed'] = random.randint(1,10**8)
     args['encoder'] = 'LLM'
     args['n_hidden'] = nh[j]
-    args['dataset'] = args['datasets'][j]
+    args['dataset'] = ds[j]
     argstr = ''
     for key in args.keys():
         argstr+=' '+str(key)+'='+str(args[key])
@@ -78,7 +78,7 @@ for i in range(10):
     j=j+1
     args['encoder'] = 'LSTM'
     args['n_hidden'] = nh[j]
-    args['dataset'] = args['datasets'][j]
+    args['dataset'] =ds[j]
     argstr = ''
     for key in args.keys():
         argstr+=' '+str(key)+'='+str(args[key])
