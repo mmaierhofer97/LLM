@@ -37,6 +37,7 @@ for i in range(10):
     for key in args.keys():
         argstr+=' '+str(key)+'='+str(args[key])
     cwd = os.path.join(os.getcwd(), "main.py" +argstr)
+    print(cwd)
     os.system('{} {}'.format('python3', cwd))
     j=j+1
     args['encoder'] = 'LSTM'
