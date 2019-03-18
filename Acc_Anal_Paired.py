@@ -56,7 +56,7 @@ for filename in filenames:
     errs.append(llm_s*1.96)
     accs.append(lstm_m)
     errs.append(lstm_s*1.96)
-    paccs.append(p)
+    paccs.append(min(p,1-p))
     perrs.append(s*interval)
   except:
     0
