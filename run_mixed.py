@@ -21,11 +21,11 @@ args['model_load_name']='FALSE'
 args['datasets'] = ['data/freecodecamp_students/freecodecamp_students','data/freecodecamp_students/freecodecamp_students','data/dota/dota','data/dota/dota']
 nh = ['100','200','200','50']
 args['n_hidden'] = '100'
-for st in sys.argv[1:]:
-    splt = st.index('=')
-    key = st[:splt]
-    val = st[splt+1:]
-    args[key]=val
+#for st in sys.argv[1:]:
+#    splt = st.index('=')
+#    key = st[:splt]
+#    val = st[splt+1:]
+#    args[key]=val
 for i in range(10):
     j=0
     print(i)
