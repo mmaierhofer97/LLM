@@ -3,7 +3,7 @@ import csv
 import sys
 from scipy.stats import t
 lams = ['']
-datasets = ['data/github/github','data/dota/dota','data/dota/dota_class','data/freecodecamp_students/freecodecamp_students','data/reddit/reddit','data/reddit_comments/reddit_comments','data/quizlet/quizlet']
+datasets = ['data/github/github','data/dota/dota','data/dota/dota_class','data/freecodecamp_students/freecodecamp_students','data/reddit/reddit','data/reddit_comments/reddit_comments']
 filenames = []
 for ds in datasets:
     for num in ['100','99']:#['49','99','199','399','50','100','200','400']:
