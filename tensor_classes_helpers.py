@@ -244,6 +244,7 @@ def LSTM_params_init(ops):
 
         lstm_cell = tf.contrib.rnn.BasicLSTMCell(ops['n_hidden'] + 2, forget_bias=1.0)
 
+
     params = {
         'W': W,
         'b': b,
