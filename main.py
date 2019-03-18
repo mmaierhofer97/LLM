@@ -310,12 +310,6 @@ with tf.device(ops['device']):
     # Initialize the variables
     init = tf.group(tf.global_variables_initializer(), tf.local_variables_initializer())
 
-
-
-
-
-    print('\n\n\n\n\n\n',params_lstm['lstm_cell'].count_params()+ (ops['n_hidden'] + 2)*ops['n_classes']+ ops['n_classes'],'\n\n\n\n\n\n\n')
-
     if ops['store_graph']:
         # Model parameters
         logs_path = '/home/matt/Documents/mozerlab/LLM/logs'
