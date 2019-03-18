@@ -19,7 +19,7 @@ args['device']='GPU'
 args['task']='PRED'
 args['model_load_name']='FALSE'
 args['datasets'] = ['data/freecodecamp_students/freecodecamp_students','data/freecodecamp_students/freecodecamp_students','data/dota/dota','data/dota/dota']
-nhs = ['100','200','200','50']
+nh = ['100','200','200','50']
 args['n_hidden'] = '100'
 for st in sys.argv[1:]:
     splt = st.index('=')
@@ -48,8 +48,8 @@ for i in range(10):
     cwd = os.path.join(os.getcwd(), "main.py" +argstr)
     os.system('{} {}'.format('python3', cwd))
     j=j+1
-    LLMfile = open(args['dataset']+'tmp_LLM'+nhs[j-2]+'.txt','rt')
-    LSTMfile = open(args['dataset']+'tmp_LSTM'+nhs[j-1]+'.txt','rt')
+    LLMfile = open(args['dataset']+'tmp_LLM'+nh[j-2]+'.txt','rt')
+    LSTMfile = open(args['dataset']+'tmp_LSTM'+nh[j-1]+'.txt','rt')
     a = [float(i) for i in LLMfile.read()[:-2].split(',')]
     b =  [float(i) for i in LSTMfile.read()[:-2].split(',')]
     ml = str(args['max_length'])
@@ -84,8 +84,8 @@ for i in range(10):
     cwd = os.path.join(os.getcwd(), "main.py" +argstr)
     os.system('{} {}'.format('python3', cwd))
     j=j+1
-    LLMfile = open(args['dataset']+'tmp_LLM'+nhs[j-2]+'.txt','rt')
-    LSTMfile = open(args['dataset']+'tmp_LSTM'+nhs[j-1]+'.txt','rt')
+    LLMfile = open(args['dataset']+'tmp_LLM'+nh[j-2]+'.txt','rt')
+    LSTMfile = open(args['dataset']+'tmp_LSTM'+nh[j-1]+'.txt','rt')
     a = [float(i) for i in LLMfile.read()[:-2].split(',')]
     b =  [float(i) for i in LSTMfile.read()[:-2].split(',')]
     ml = str(args['max_length'])
