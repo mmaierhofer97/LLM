@@ -2,7 +2,7 @@ import random
 import numpy as np
 import sys
 filepath = 'data/synth_rhythm/rhythm'
-lens = [10,30,100]
+lens = [100]
 if len(sys.argv)>1:
     lens = [int(sys.argv[1])]
 ends = ['.train','.test']
