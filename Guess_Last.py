@@ -13,7 +13,7 @@ for ds in datasets:
         if 'github' in ds:
             rows=[]
             for endi in ['00','01','02','03','04','05','06','07','08','09','10']:
-                filename =ds+end
+                filename =ds+endi+end
                 csvfile = open(filename,'rt')
                 data = csv.reader(csvfile, delimiter=' ')
                 for row in data:
