@@ -25,8 +25,8 @@ for ds in datasets:
                  if int(float(rows[4*i][j]))==int(float(rows[4*i+2][j])):
                   cor+=1
         m = (cor/tot)
-        rows = rows.astype(float)
-        for k in range(max(rows[0])):
+        #rows = rows.astype(float)
+        for k in range(max(rows[0].astype(int))):
             cor = 0
             tot = 0
             for i in range(int(len(rows)/4)):
