@@ -2,7 +2,7 @@ import csv
 import numpy as np
 ends = ['.train','.test']
 lams = ['']
-datasets = ['data/reddit/reddit','data/github/github', 'data/dota/dota','data/reddit_comments/reddit_comments','data/freecodecamp_students/freecodecamp_students']
+datasets = ['data/github/github', 'data/dota/dota','data/reddit/reddit','data/reddit_comments/reddit_comments','data/freecodecamp_students/freecodecamp_students']
 length = 100
 for ds in datasets:
     end = '.test'
