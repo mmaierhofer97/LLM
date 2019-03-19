@@ -16,10 +16,10 @@ for ds in datasets:
             data = csv.reader(csvfile, delimiter=' ')
             for row in data:
                 #print(row)
-                rows.append(row[1:100])
+                rows.append(row[1:min(len(row),length)-1])
             rows = np.array(rows)
             for i in range(int(len(rows)/4)):
-                for j in range(min(len(rows[4*i])-1,length)):
+                for j in range(min(len(rows[4*i]))):
                  #print(rows[4*i][-1],int(float(rows[4*i+2][-1]))
                  tot += 1
                  #print(rows[4*i][j],rows[4*i+2][j],rows[4*i+2],j)
