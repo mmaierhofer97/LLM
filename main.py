@@ -8,6 +8,8 @@ import os
 from sklearn import metrics
 
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
+os.environ['TF_ENABLE_AUTO_MIXED_PRECISION'] = '1'
+
 """
 STRUCTURE:
 data_help:
