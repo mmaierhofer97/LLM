@@ -19,7 +19,7 @@ for ds in datasets:
                 rows.append(row[1:min(len(row),length)-1])
             rows = np.array(rows)
             for i in range(int(len(rows)/4)):
-                for j in range(min(len(rows[4*i]))):
+                for j in range(len(rows[4*i])):
                  #print(rows[4*i][-1],int(float(rows[4*i+2][-1]))
                  tot += 1
                  #print(rows[4*i][j],rows[4*i+2][j],rows[4*i+2],j)
