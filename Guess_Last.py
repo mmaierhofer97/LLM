@@ -16,7 +16,7 @@ for ds in datasets:
             data = csv.reader(csvfile, delimiter=' ')
             for row in data:
                 #print(row)
-                rows.append(row[:100])
+                rows.append(row[1:100])
             rows = np.array(rows)
             for i in range(int(len(rows)/4)):
                 for j in range(min(len(rows[4*i]),length)):
