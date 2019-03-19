@@ -6,7 +6,7 @@ for st in ['.train','.test']:
   for seq in f:
    i+=1
    if i%4==3:
-    l = seq[-1]
+    l = seq[-2]
     tot += 1
     if int(l)==1:
       count += 1
