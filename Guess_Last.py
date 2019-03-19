@@ -16,7 +16,7 @@ for ds in datasets:
             data = csv.reader(csvfile, delimiter=' ')
             for row in data:
                 #print(row)
-                rows.append(row)
+                rows.append(row[:100])
             rows = np.array(rows)
             for i in range(int(len(rows)/4)):
                 for j in range(min(len(rows[4*i]),length)):
@@ -29,6 +29,7 @@ for ds in datasets:
         max_int=0
         for i in range(int(len(rows)/4)):
             max_int=max(max_int,max(np.array(rows[4*i]).astype(int)))
+
         for k in range(max_int):
             cor = 0
             tot = 0
