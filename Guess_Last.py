@@ -22,7 +22,7 @@ for ds in datasets:
                 for j in range(min(len(rows[4*i])-1,length)):
                  #print(rows[4*i][-1],int(float(rows[4*i+2][-1]))
                  tot += 1
-                 print(rows[4*i][j],rows[4*i+2][j],rows[4*i+2],j)
+                 #print(rows[4*i][j],rows[4*i+2][j],rows[4*i+2],j)
                  if int(float(rows[4*i][j]))==int(float(rows[4*i+2][j])):
                   cor+=1
         #print(rows)
