@@ -2,7 +2,7 @@ import csv
 import numpy as np
 ends = ['.train','.test']
 lams = ['']
-datasets = ['data/github/github00', 'data/dota/dota','data/freecodecamp_students/freecodecamp_students','data/reddit/reddit','data/reddit_comments/reddit_comments']
+datasets = ['data/github/github00', 'data/dota/dota','data/reddit/reddit','data/reddit_comments/reddit_comments','data/freecodecamp_students/freecodecamp_students']
 length = 100
 for ds in datasets:
     end = '.test'
@@ -26,6 +26,7 @@ for ds in datasets:
                   cor+=1
         #print(rows)
         m = (cor/tot)
+        out = 0
         #print('Deb')
         #rows = rows.astype(float)
         max_int=0
@@ -41,4 +42,6 @@ for ds in datasets:
                     if int(rows[4*i][j+1])==k+1:
                         cor+=1
             m = max(cor/tot,m)
-        print(m)
+            if m == cor/tot:
+                out = k+1
+        print(m,out)
