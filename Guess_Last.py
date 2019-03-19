@@ -38,12 +38,14 @@ for ds in datasets:
         #print(rows)
         m = (cor/tot)
         out = 0
+        print(m,0)
         #print('Deb')
         #rows = rows.astype(float)
         max_int=0
         for i in range(int(len(rows)/4)):
             max_int=max(max_int,max(np.array(rows[4*i]).astype(int)))
         max_int = min(max_int,10)
+        m = 0
         for k in range(max_int):
             cor = 0
             tot = 0
@@ -55,6 +57,8 @@ for ds in datasets:
             m = max(cor/tot,m)
             if m == cor/tot:
                 out = k+1
+        print(m,out)
+        m=0
         cor = 0
         tot = 0
         for i in range(int(len(rows)/4)):
