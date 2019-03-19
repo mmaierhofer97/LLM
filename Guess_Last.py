@@ -24,14 +24,14 @@ for ds in datasets:
                  tot += 1
                  if int(float(rows[4*i][j]))==int(float(rows[4*i+2][j])):
                   cor+=1
-        print(rows)
+        #print(rows)
         m = (cor/tot)
-        print('Deb')
+        #print('Deb')
         #rows = rows.astype(float)
         max_int=0
         for i in range(int(len(rows)/4)):
             max_int=max(max_int,max(np.array(rows[4*i]).astype(int)))
-        print(max_int)
+        #print(max_int)
         for k in range(max_int):
             cor = 0
             tot = 0
