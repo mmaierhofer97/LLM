@@ -24,6 +24,7 @@ for ds in datasets:
                  tot += 1
                  if int(float(rows[4*i][j]))==int(float(rows[4*i+2][j])):
                   cor+=1
+        print(rows)
         m = (cor/tot)
         print('Deb')
         #rows = rows.astype(float)
