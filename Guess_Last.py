@@ -26,7 +26,7 @@ for ds in datasets:
                   cor+=1
         m = (cor/tot)
         #rows = rows.astype(float)
-        for k in range(max(rows[0].astype(int))):
+        for k in range(max(np.array(rows[0]).astype(int))):
             cor = 0
             tot = 0
             for i in range(int(len(rows)/4)):
