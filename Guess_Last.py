@@ -43,7 +43,7 @@ for ds in datasets:
         max_int=0
         for i in range(int(len(rows)/4)):
             max_int=max(max_int,max(np.array(rows[4*i]).astype(int)))
-        #print(max_int)
+        max_int = min(max_int,10)
         for k in range(max_int):
             cor = 0
             tot = 0
