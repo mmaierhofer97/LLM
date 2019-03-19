@@ -3,7 +3,7 @@ import numpy as np
 ends = ['.train','.test']
 lams = ['']
 datasets = ['data/github/github00', 'data/dota/dota','data/freecodecamp_students/freecodecamp_students','data/reddit/reddit','data/reddit_comments/reddit_comments']
-length = 10000
+length = 100
 for ds in datasets:
     end = '.test'
     cor = 0
@@ -26,7 +26,10 @@ for ds in datasets:
                   cor+=1
         m = (cor/tot)
         #rows = rows.astype(float)
-        for k in range(max(np.array(rows[0]).astype(int))):
+        max_int=0
+        for i in range(int(len(rows)/4)):
+            max_int=max(max_int,max(np.array(rows[4*i]).astype(int)))
+        for k in range(max_int):
             cor = 0
             tot = 0
             for i in range(int(len(rows)/4)):
