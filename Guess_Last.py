@@ -2,7 +2,7 @@ import csv
 import numpy as np
 ends = ['.train','.test']
 lams = ['']
-datasets = ['data/reddit/reddit','data/github/github00', 'data/dota/dota','data/reddit_comments/reddit_comments','data/freecodecamp_students/freecodecamp_students']
+datasets = ['data/reddit/reddit','data/github/github', 'data/dota/dota','data/reddit_comments/reddit_comments','data/freecodecamp_students/freecodecamp_students']
 length = 100
 for ds in datasets:
     end = '.test'
@@ -10,21 +10,31 @@ for ds in datasets:
     tot = 0
     print(ds)
     for lam in lams:
-        filename =ds+end
-        with open(filename,'rt') as csvfile:
+        if 'github' in ds:
+            rows=[]
+            for endi in ['00','01','02','03','04','05','06','07','08','09','10']:
+                filename =ds+end
+                csvfile = open(filename,'rt')
+                data = csv.reader(csvfile, delimiter=' ')
+                for row in data:
+                        #print(row)
+                        rows.append(row[1:min(len(row),length)-1])
+        else:
+            filename =ds+end
+            csvfile = open(filename,'rt')
             rows=[]
             data = csv.reader(csvfile, delimiter=' ')
             for row in data:
-                #print(row)
-                rows.append(row[1:min(len(row),length)-1])
-            rows = np.array(rows)
-            for i in range(int(len(rows)/4)):
-                for j in range(len(rows[4*i])):
-                 #print(rows[4*i][-1],int(float(rows[4*i+2][-1]))
-                 tot += 1
-                 #print(rows[4*i][j],rows[4*i+2][j],rows[4*i+2],j)
-                 if int(float(rows[4*i][j]))==int(float(rows[4*i+2][j])):
-                  cor+=1
+                    #print(row)
+                    rows.append(row[1:min(len(row),length)-1])
+        rows = np.array(rows)
+        for i in range(int(len(rows)/4)):
+            for j in range(len(rows[4*i])):
+             #print(rows[4*i][-1],int(float(rows[4*i+2][-1]))
+             tot += 1
+             #print(rows[4*i][j],rows[4*i+2][j],rows[4*i+2],j)
+             if int(float(rows[4*i][j]))==int(float(rows[4*i+2][j])):
+              cor+=1
         #print(rows)
         m = (cor/tot)
         out = 0
