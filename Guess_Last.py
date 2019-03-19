@@ -2,7 +2,7 @@ import csv
 import numpy as np
 ends = ['.train','.test']
 lams = ['']
-datasets = ['data/github/github00', 'data/dota/dota','data/reddit/reddit','data/reddit_comments/reddit_comments','data/freecodecamp_students/freecodecamp_students']
+datasets = ['data/reddit/reddit','data/github/github00', 'data/dota/dota','data/reddit_comments/reddit_comments','data/freecodecamp_students/freecodecamp_students']
 length = 100
 for ds in datasets:
     end = '.test'
@@ -22,6 +22,7 @@ for ds in datasets:
                 for j in range(min(len(rows[4*i]),length)):
                  #print(rows[4*i][-1],int(float(rows[4*i+2][-1]))
                  tot += 1
+                 print(rows[4*i][j],rows[4*i+2][j])
                  if int(float(rows[4*i][j]))==int(float(rows[4*i+2][j])):
                   cor+=1
         #print(rows)
