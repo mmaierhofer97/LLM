@@ -1,6 +1,8 @@
 import csv
 import numpy as np
 ends = ['.train','.test']
+cor = 0
+tot = 0
 for end in ends:
   with open('data/synth_accum/accum_pred100'+end,'rt') as csvfile:
     rows=[]
@@ -9,8 +11,6 @@ for end in ends:
         #print(row)
         rows.append(row)
     rows = np.array(rows)
-    cor = 0
-    tot = 0
     for i in range(int(len(rows)/4)):
         cs = np.zeros(max(rows[4*i].astype(int))+1)
         for j in range(len(rows[4*i])-3):
