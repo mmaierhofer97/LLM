@@ -5,6 +5,7 @@ lens = [100]
 ends = ['.train','.test']
 for l in lens:
     for end in ends:
+        print(end)
         lam = 1
         filename = filepath+str(l)+end
         myfile = open(filename,'w')

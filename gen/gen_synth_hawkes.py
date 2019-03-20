@@ -10,7 +10,7 @@ import random
 import numpy as np
 import sys
 filepath = 'data/synth_hawkes/hawkes'
-lens = [10,30,100,400]
+lens = [10,30,100]
 if len(sys.argv)>1:
     lens = [int(sys.argv[1])]
 ends = ['.train','.test']
