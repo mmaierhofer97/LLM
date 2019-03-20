@@ -18,4 +18,4 @@ for end in ends:
             if int(rows[4*i][j+1])==np.argmax(cs):
                 cor+=1
             cs[int(rows[4*i][j+1])]+=1
-    print(cor/tot)
+print(cor/tot)
