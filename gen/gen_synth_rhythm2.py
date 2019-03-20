@@ -1,7 +1,7 @@
 import random
 import numpy as np
 import sys
-filepath = 'data/synth_rhythm/rhythm3'
+filepath = 'data/synth_rhythm/rhythm2'
 lens = [10,30,100]
 if len(sys.argv)>1:
     lens = [int(sys.argv[1])]
@@ -17,29 +17,28 @@ for l in lens:
         myfile.write('')
         myfile.close()
         myfile = open(filename,'a')
-        for c in classes:
-            for count in range(2000):
+        for c in classes[1:]:
+            for count in range(4000):
                 scales = []
                 for i in range(ev_types):
                     scales.append(2**i)
-
+                shuff = list(range(ev_types))
                 if c == classes[1]:
                     num_diff = random.randint(1,ev_types)
-                    shuff = list(range(ev_types))
                     random.shuffle(shuff)
-                    change = [2,1/2]
+                    change = [1,1]
                     for k in range(num_diff):
                         r = random.randint(0,1)
-                        scales[shuff[k]] = scales[shuff[k]]*change[r]
+                        #scales[shuff[k]] = scales[shuff[k]]*change[r]
 
                 countall += 1
                 id=str(countall+1).zfill(5)
                 events = []
                 t = 0
                 while len(events)<=l+1:
-                    ev = random.randint(1,ev_types)
-                    events.append([ev,t])
-                    t += scales[ev-1]
+                    ev = random.randint(0,ev_types-1)
+                    t += scales[ev]
+                    events.append([shuff[ev]+1,t])
                 events.sort(key=lambda x: x[1])
                 events = events[:l+1]
                 time1 = [str(0.0)]
@@ -63,7 +62,7 @@ for l in lens:
 
                 myfile.write(id + ' '+' '.join(ordinal)+'\n')
                 myfile.write(id + ' '+' '.join(time1)+'\n')
-                myfile.write(id + ' '+' '.join(class_id)+'\n')
+                myfile.write(id + ' '+' '.join(ordinal2)+'\n')
                 myfile.write(id + ' '+' '.join(time2)+'\n')
 
                 #myfile.write('foo2')
