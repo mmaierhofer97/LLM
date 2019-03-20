@@ -79,7 +79,8 @@ ops = {
             'task': "PRED", #CLASS vs PRED
             'device':"/device:GPU:0",
             'samples': 'ALL',
-            'timescales' : 2.0 ** np.arange(-7,7),
+            'timescales' : 4.0 ** np.arange(-7,7),
+            'learn_timescales': True,
             'seed' : None,
             'valid_ratio' : 0.1
           }
@@ -149,7 +150,7 @@ print(len(train_set[0][0]))
 if m > ops['n_classes']:
     print('classes from {} to {}'.format(ops['n_classes'],int(m)))
     ops['n_classes'] = int(m)
-if ops['encoder'] == 'LLM':
+if ops['encoder'] == 'LLM' and ops['learn_timescales']==True:
     ops['timescales'] = DH.set_timescales(train_set,(ops['timescales']))
 if ops['embedding']:
     extract_ids = lambda set: np.concatenate(np.array([set[i][0] for i in range(len(set))]))
