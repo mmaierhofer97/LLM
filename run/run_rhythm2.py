@@ -21,6 +21,7 @@ args['device']='GPU'
 args['task']='CLASS'
 args['model_load_name']='FALSE'
 args['n_hidden'] = '100'
+args['learn_timescales'] = 'False'
 for st in sys.argv[1:]:
     splt = st.index('=')
     key = st[:splt]
