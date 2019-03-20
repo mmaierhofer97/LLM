@@ -13,7 +13,7 @@ import sys
 import random
 import data_help as DH
 filepath = "data/synth_rhythm/rhythm3"
-filenames = ['10','30','100']
+filenames = ['100','30','10']
 args = {}
 args['max_length'] = 'ALL'
 args['encoder']='LLM'

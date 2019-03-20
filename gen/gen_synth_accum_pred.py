@@ -11,7 +11,7 @@ for l in lens:
         myfile.write('')
         myfile.close()
         myfile = open(filename,'a')
-        for count in range(1000):
+        for count in range(4000):
             id=str(count+1).zfill(5)
             A_timescale = random.expovariate(1)
             B_timescale = random.expovariate(1)
@@ -21,12 +21,11 @@ for l in lens:
             t = 0
             while len(events)<l:
                t += random.expovariate(A_timescale)
-               s = random.choice([0,1])
-               events.append([1,t*[1,.1][s]])
+               events.append([1,t])
             t = 0
             while len(events)<2*l:
                t += random.expovariate(B_timescale)
-               events.append([2,t*[.1,1][s]])
+               events.append([2,t])
             events.sort(key=lambda x: x[1])
             events = events[:l+1]
             accum = np.sign(events[0][0]-1.5)

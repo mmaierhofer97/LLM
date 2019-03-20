@@ -12,13 +12,13 @@ sys.path.insert(0, parent_dir)
 import sys
 import random
 import data_help as DH
-filepath = "data/synth_accum/accum_length_vary"
-filenames = ["0",'1','2','3','4','5']
+filepath = "data/synth_accum/accum_pred"
+filenames = ['100']
 args = {}
 args['max_length'] = 'ALL'
 args['encoder']='LLM'
 args['device']='GPU'
-args['task']='CLASS'
+args['task']='PRED'
 args['model_load_name']='FALSE'
 args['n_hidden'] = '100'
 for st in sys.argv[1:]:
@@ -27,7 +27,7 @@ for st in sys.argv[1:]:
     val = st[splt+1:]
     args[key]=val
 for i in range(10):
-	os.system('{} {}'.format('python3', 'gen/gen_synth_accum_length_vary.py'))
+	os.system('{} {}'.format('python3', 'gen/gen_synth_accum_pred.py'))
 	print(i)
 	for filename in filenames:
 	    args['dataset'] = filepath+filename
