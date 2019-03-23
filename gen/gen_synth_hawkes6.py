@@ -27,7 +27,7 @@ for l in lens:
         myfile.write('')
         myfile.close()
         myfile = open(filename,'a')
-        for count in range(1000):
+        for count in range(4000):
             for i in range (ev_types):
                 time_scales.append(4**i)
             countall += 1
