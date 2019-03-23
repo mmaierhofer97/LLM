@@ -19,7 +19,7 @@ m = 0
 for l in lens:
   cor = 0
   tot = 0
-  for i in range(int(9000/l)):
+  for i in range(int(900/l)):
     time_scales = []
     for i in range (ev_types):
         time_scales.append(4**i)
@@ -29,7 +29,7 @@ for l in lens:
 
     k = (np.zeros([ev_types,ev_types]))
     for i in range(ev_types):
-            k[i,i] = 1/time_scales[i]
+            k[i,i-1] = 1/time_scales[i]
     hawkes = SimuHawkesExpKernels(decays = k, baseline =mu,adjacency = alph*np.ones([ev_types,ev_types]), verbose=False, max_jumps = l)
     dt = 0.01
     hawkes.track_intensity(dt)
