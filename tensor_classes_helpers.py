@@ -990,11 +990,11 @@ def LLM_params_init(ops):
 
         b = {
             'feat': bias_init(n_output=ops['n_hidden'],
-                                   name='b_recurrent',
+                                   name='b_feat',
                                    small=True,
                                    forced_zero=forced_zero_flag),
             'gate': bias_init(n_output=ops['n_hidden'],
-                                   name='b_recurrent',
+                                   name='b_gate',
                                    small=True,
                                    forced_zero=forced_zero_flag),
             'out': bias_init(n_output=ops['n_classes'],
@@ -1159,11 +1159,11 @@ def LLM2_params_init(ops):
 
         b = {
             'feat': bias_init(n_output=ops['n_hidden'],
-                                   name='b_recurrent',
+                                   name='b_feat',
                                    small=True,
                                    forced_zero=forced_zero_flag),
             'gate': bias_init(n_output=ops['n_hidden'],
-                                   name='b_recurrent',
+                                   name='b_gate',
                                    small=True,
                                    forced_zero=forced_zero_flag),
             'out': bias_init(n_output=ops['n_classes'],
