@@ -1152,7 +1152,7 @@ def LLM2_params_init(ops):
                                  identity=identity_flag),
 
             'out_feat': weights_init(n_input=ops['n_classes'],
-                                    n_output=ops['n_hidden'],,
+                                    n_output=ops['n_hidden'],
                                 name='W_out_feat',
                                 identity=identity_flag)
              }
