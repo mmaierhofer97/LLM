@@ -150,7 +150,7 @@ print(len(train_set[0][0]))
 if m > ops['n_classes']:
     print('classes from {} to {}'.format(ops['n_classes'],int(m)))
     ops['n_classes'] = int(m)
-if ops['encoder'] == 'LLM' and ops['learn_timescales']==True:
+if ops['encoder'] in ['LLM', 'LLM2'] and ops['learn_timescales']==True:
     ops['timescales'] = DH.set_timescales(train_set,(ops['timescales']))
 if ops['embedding']:
     extract_ids = lambda set: np.concatenate(np.array([set[i][0] for i in range(len(set))]))
@@ -208,6 +208,8 @@ with tf.device(ops['device']):
         params_hpm = TCH.HPM_params_init(ops)
     elif ops['encoder'] == "LLM":
         params_llm = TCH.LLM_params_init(ops)
+    elif ops['encoder'] == "LLM2":
+        params_llm2 = TCH.LLM2_params_init(ops)
     elif ops['encoder'] == "LSTM_RAW":
         params_lstm = TCH.LSTM_raw_params_init(ops)
     elif ops['encoder'] == "GRU":
@@ -223,6 +225,8 @@ with tf.device(ops['device']):
         T_pred, T_summary_weights, debugging_stuff = TCH.HPM(P_x, P_len, P_batch_size, ops, params_hpm, P_batch_size)
     elif ops['encoder'] == 'LLM':
         T_pred, T_summary_weights, debugging_stuff = TCH.LLM(P_x, P_len, P_batch_size, ops, params_llm, P_batch_size)
+    elif ops['encoder'] == 'LLM2':
+        T_pred, T_summary_weights, debugging_stuff = TCH.LLM2(P_x, P_len, P_batch_size, ops, params_llm2, P_batch_size)
     elif ops['encoder'] == "LSTM_RAW":
         T_pred, T_summary_weights, debugging_stuff = TCH.LSTM([P_x, P_len, P_batch_size], ops, params_lstm)
     elif ops['encoder'] == "GRU":

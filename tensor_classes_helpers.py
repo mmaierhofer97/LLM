@@ -1110,3 +1110,172 @@ def LLM(x_set, P_len, P_batch_size, ops, params, batch_size):
 
 
     return prediction_outputed, T_summary_weights, [rval[0], rval[1], rval[2], rval[3], rval[4], prediction_outputed]
+
+############################
+########### LLM2 ############
+############################
+
+def LLM2_params_init(ops):
+    with tf.variable_scope("LLM2"):
+
+        identity_flag = False
+        forced_zero_flag = False
+        timescales = ops['timescales']
+        #timescales = np.append(-1*timescales,timescales)
+        #print(timescales)
+        n_timescales = len(timescales)#+1
+
+        W = {'in_feat': weights_init(n_input=ops['n_classes'],
+                                n_output=ops['n_hidden'],
+                                name='W_in',
+                                identity=identity_flag),
+             'recurrent_feat': weights_init(n_input=ops['n_hidden']*n_timescales,
+                                       n_output=ops['n_hidden'],
+                                       name='W_recurrent',
+                                       small_dev=0.001,
+                                       forced_zero=forced_zero_flag,
+                                       llm_identity=n_timescales),
+             'in_gate': weights_init(n_input=ops['n_classes'],
+                                n_output=ops['n_hidden'],
+                                name='W_in',
+                                identity=identity_flag),
+             'recurrent_gate': weights_init(n_input=ops['n_hidden']*n_timescales,
+                                       n_output=ops['n_hidden'],
+                                       name='W_recurrent',
+                                       small_dev=0.001,
+                                       forced_zero=forced_zero_flag,
+                                       llm_identity=n_timescales),
+
+             'out': weights_init(n_input=ops['n_hidden']*n_timescales,
+                                 n_output=ops['n_classes'],
+                                 name='W_out',
+                                 identity=identity_flag),
+
+            'out_feat': weights_init(n_input=ops['n_classes'],
+                                    n_output=ops['n_hidden'],,
+                                name='W_out_feat',
+                                identity=identity_flag)
+             }
+
+        b = {
+            'feat': bias_init(n_output=ops['n_hidden'],
+                                   name='b_recurrent',
+                                   small=True,
+                                   forced_zero=forced_zero_flag),
+            'gate': bias_init(n_output=ops['n_hidden'],
+                                   name='b_recurrent',
+                                   small=True,
+                                   forced_zero=forced_zero_flag),
+            'out': bias_init(n_output=ops['n_classes'],
+                             name='b_out',
+                             forced_zero=forced_zero_flag)
+        }
+
+
+        gamma = 1.0 / timescales
+        #gamma = np.append(0,gamma)
+        #print(gamma)
+
+
+
+    params = {
+        'W': W,
+        'b': b,
+        'timescales': timescales,
+        'n_timescales': n_timescales,
+        'gamma': gamma,
+    }
+    return params
+
+
+
+
+def LLM2(x_set, P_len, P_batch_size, ops, params, batch_size):
+    batch_size = tf.cast(batch_size, tf.int32)
+
+    W = params['W']
+    b = params['b']
+    n_timescales = params['n_timescales']
+
+    gamma = params['gamma']
+
+    def _H(h_prev, delta_t):
+
+        h_prev_tr = tf.transpose(h_prev, [1,0,2]) #[batch_size, n_hid, n_timescales] -> [n_hid, batch_size, n_timescales}
+
+        result = tf.exp(-gamma * delta_t) * h_prev_tr
+        return tf.transpose(result, [1,0,2], name='H')
+
+    def _had(f, g):
+        # Hadamard Product, Doesn't really need a function
+        return tf.multiply(f, g, name='yhat')
+
+    def _step(accumulated_vars, input_vars):
+        h_, _, _, _, _ = accumulated_vars
+        x, xt, yt = input_vars
+
+        h = _H(h_, xt)
+
+        x_f = tf.matmul(x, W['in_feat'])
+        x_g = tf.matmul(x, W['in_gate'])
+
+
+        f_tmp = tf.matmul(tf.reshape(h,[batch_size,ops['n_hidden']*n_timescales]),W['recurrent_feat'])
+        g_tmp = tf.matmul(tf.reshape(h,[batch_size,ops['n_hidden']*n_timescales]),W['recurrent_gate'])
+        f = tf.tanh(x_f+f_tmp+b['feat'])
+        g = tf.sigmoid(x_g+g_tmp+b['gate'])
+        had = tf.reshape(_had(f, g),[batch_size,ops['n_hidden'],1]) # :(batch_size, n_hidden, n_timescales
+
+        h = h + had
+        o_tmp  = tf.matmul(tf.reshape(_H(h,yt),[batch_size,ops['n_hidden']*n_timescales]),W['out']) + tf.matmul(x,W['out_feat'])
+
+
+        return [h, f, o_tmp, W['recurrent_feat'], had]
+
+
+    x, xt, yt, _ = cut_up_x(x_set, ops) #TODO: arbitrary lengths
+
+
+
+
+
+    # collect all the variables of interest
+    T_summary_weights = W['recurrent_feat']
+    if ops['collect_histograms']:
+        tf.summary.histogram('W_in', W['in'], ['W'])
+        tf.summary.histogram('W_rec', W['recurrent'], ['W'])
+        tf.summary.histogram('W_out', W['out'], ['W'])
+        tf.summary.histogram('b_rec', b['recurrent'], ['b'])
+        tf.summary.histogram('b_out', b['out'], ['b'])
+        tf.summary.histogram('c_init', c_init, ['init'])
+        tf.summary.histogram('mu_init', mu, ['init'])
+        tf.summary.histogram('alpha_init', params['alpha'], ['init'])
+        T_summary_weights = tf.summary.merge([
+                                tf.summary.merge_all('W'),
+                                tf.summary.merge_all('b'),
+                                tf.summary.merge_all('init')
+                                ], name='T_summary_weights')
+
+    rval = tf.scan(_step,
+                    elems=[x, xt, yt],
+                    initializer=[
+                        tf.zeros([batch_size, ops['n_hidden'], n_timescales], tf.float32), #h
+                        tf.zeros([batch_size, ops['n_hidden']], tf.float32) , #c
+                        tf.zeros([batch_size, ops['n_classes']], tf.float32), # yhat
+                        tf.zeros([ops['n_hidden']*n_timescales,ops['n_hidden']]), #debugging placeholder
+                        tf.zeros([batch_size, ops['n_hidden'],1])
+
+                    ]
+                   , name='llm/scan')
+
+
+    hidden_prediction =tf.transpose(rval[2], [1, 0, 2])  # -> [batch_size, n_steps, n_hidden]
+    if ops['task'] == 'PRED_CORR':
+        output_projection = lambda x: tf.nn.tanh(x + b['out'])
+    else:
+        output_projection = lambda x: tf.clip_by_value(tf.nn.softmax(x + b['out']), 1e-8, 1.0)
+
+    prediction_outputed = tf.map_fn(output_projection, hidden_prediction)
+
+
+    return prediction_outputed, T_summary_weights, [rval[0], rval[1], rval[2], rval[3], rval[4], prediction_outputed]
