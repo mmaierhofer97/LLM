@@ -37,14 +37,14 @@ for i in range(10):
         argstr+=' '+str(key)+'='+str(args[key])
     cwd = os.path.join(os.getcwd(), "main.py" +argstr)
     os.system('{} {}'.format('python3', cwd))
-    args['encoder'] = 'LLM'
+    args['encoder'] = 'LSTM'
     argstr = ''
     for key in args.keys():
         argstr+=' '+str(key)+'='+str(args[key])
     cwd = os.path.join(os.getcwd(), "main.py"+argstr)
     os.system('{} {}'.format('python3', cwd))
     LLMfile = open(args['dataset']+'tmp_LLM2'+args['n_hidden']+'.txt','rt')
-    LSTMfile = open(args['dataset']+'tmp_LLM'+args['n_hidden']+'.txt','rt')
+    LSTMfile = open(args['dataset']+'tmp_LSTM'+args['n_hidden']+'.txt','rt')
     a = [float(i) for i in LLMfile.read()[:-2].split(',')]
     b =  [float(i) for i in LSTMfile.read()[:-2].split(',')]
     ml = str(args['max_length'])
@@ -52,7 +52,7 @@ for i in range(10):
     DH.write_history([a[0],b[0]],args['dataset']+'_'+str(ml)+'_paired_both_train'+args['n_hidden']+'.txt', i, False)
     DH.write_history([a[2],b[2]],args['dataset']+'_'+str(ml)+'_paired__both_valid'+args['n_hidden']+'.txt', i, False)
     LLMfile = open(args['dataset']+'tmp_auc_LLM2'+args['n_hidden']+'.txt','rt')
-    LSTMfile = open(args['dataset']+'tmp_auc_LLM'+args['n_hidden']+'.txt','rt')
+    LSTMfile = open(args['dataset']+'tmp_auc_LSTM'+args['n_hidden']+'.txt','rt')
     a = [float(i) for i in LLMfile.read()[:-2].split(',')]
     b =  [float(i) for i in LSTMfile.read()[:-2].split(',')]
     ml = str(args['max_length'])
