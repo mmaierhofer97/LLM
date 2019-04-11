@@ -33,7 +33,7 @@ for ds in args['datasets']:
             special_case = case
 
     if special_case!='':
-        cwd = os.path.join(os.getcwd(), "run/run_"+special_case+".py" +argstr)
+        cwd = os.path.join(os.getcwd(), "run/run_"+special_case+"2.py" +argstr)
         os.system('{} {}'.format('python3', cwd))
 
     else:
