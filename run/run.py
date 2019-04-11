@@ -28,7 +28,7 @@ for st in sys.argv[1:]:
 for i in range(10):
     print(i)
     args['seed'] = random.randint(1,10**8)
-    args['encoder'] = 'LLM2'
+    args['encoder'] = 'LLM'
     argstr = ''
     for key in args.keys():
         argstr+=' '+str(key)+'='+str(args[key])

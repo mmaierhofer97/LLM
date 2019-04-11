@@ -39,5 +39,5 @@ for ds in args['datasets']:
     else:
         argstr += ' dataset='
         argstr+=ds
-        cwd = os.path.join(os.getcwd(), "run/run.py" +argstr)
+        cwd = os.path.join(os.getcwd(), "run/run2.py" +argstr)
         os.system('{} {}'.format('python3', cwd))
