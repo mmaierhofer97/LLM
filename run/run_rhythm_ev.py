@@ -51,13 +51,13 @@ for i in range(10):
 	    b =  [float(i) for i in LSTMfile.read()[:-2].split(',')]
 	    ml = str(args['max_length'])
 	    DH.write_history([a[1],b[1]],args['dataset']+'_'+str(ml)+'_paired_both_test'+args['n_hidden']+'.txt', i, False)
-        DH.write_history([a[0],b[0]],args['dataset']+'_'+str(ml)+'_paired_both_train'+args['n_hidden']+'.txt', i, False)
-        DH.write_history([a[2],b[2]],args['dataset']+'_'+str(ml)+'_paired__both_valid'+args['n_hidden']+'.txt', i, False)
-        LLMfile = open(args['dataset']+'tmp_auc_LLM'+args['n_hidden']+'.txt','rt')
-        LSTMfile = open(args['dataset']+'tmp_auc_LSTM'+args['n_hidden']+'.txt','rt')
-        a = [float(i) for i in LLMfile.read()[:-2].split(',')]
-        b =  [float(i) for i in LSTMfile.read()[:-2].split(',')]
-        ml = str(args['max_length'])
-        DH.write_history([a[1],b[1]],args['dataset']+'_'+str(ml)+'_paired_both_test_auc'+args['n_hidden']+'.txt', i, False)
-        DH.write_history([a[0],b[0]],args['dataset']+'_'+str(ml)+'_paired_both_train_auc'+args['n_hidden']+'.txt', i, False)
-        DH.write_history([a[2],b[2]],args['dataset']+'_'+str(ml)+'_paired_both_valid_auc'+args['n_hidden']+'.txt', i, False)
+	    DH.write_history([a[0],b[0]],args['dataset']+'_'+str(ml)+'_paired_both_train'+args['n_hidden']+'.txt', i, False)
+	    DH.write_history([a[2],b[2]],args['dataset']+'_'+str(ml)+'_paired__both_valid'+args['n_hidden']+'.txt', i, False)
+	    LLMfile = open(args['dataset']+'tmp_auc_LLM'+args['n_hidden']+'.txt','rt')
+	    LSTMfile = open(args['dataset']+'tmp_auc_LSTM'+args['n_hidden']+'.txt','rt')
+	    a = [float(i) for i in LLMfile.read()[:-2].split(',')]
+	    b =  [float(i) for i in LSTMfile.read()[:-2].split(',')]
+	    ml = str(args['max_length'])
+	    DH.write_history([a[1],b[1]],args['dataset']+'_'+str(ml)+'_paired_both_test_auc'+args['n_hidden']+'.txt', i, False)
+	    DH.write_history([a[0],b[0]],args['dataset']+'_'+str(ml)+'_paired_both_train_auc'+args['n_hidden']+'.txt', i, False)
+	    DH.write_history([a[2],b[2]],args['dataset']+'_'+str(ml)+'_paired_both_valid_auc'+args['n_hidden']+'.txt', i, False)
