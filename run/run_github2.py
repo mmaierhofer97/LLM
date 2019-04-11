@@ -26,7 +26,7 @@ for st in sys.argv[1:]:
     key = st[:splt]
     val = st[splt+1:]
     args[key]=val
-for i in range(10):
+for i in range(5):
     print(i)
     r = str(random.randint(0,99)).zfill(2)
     args['seed'] = random.randint(1,10**8)

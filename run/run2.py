@@ -25,7 +25,7 @@ for st in sys.argv[1:]:
     key = st[:splt]
     val = st[splt+1:]
     args[key]=val
-for i in range(10):
+for i in range(5):
     print(i)
     args['seed'] = random.randint(1,10**8)
     args['encoder'] = 'LLM2'
