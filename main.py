@@ -79,8 +79,7 @@ ops = {
             'task': "PRED", #CLASS vs PRED
             'device':"/device:GPU:0",
             'samples': 'ALL',
-            'timescales' : 4.0 ** np.arange(-7,7),
-            'learn_timescales': True,
+            a
             'seed' : None,
             'valid_ratio' : 0.1
           }

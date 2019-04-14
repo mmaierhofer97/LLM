@@ -59,7 +59,7 @@ def load_data(dir, sort_by_len=True, valid_ratio=0.1, samples = 'ALL', seed=None
     random.seed(seed)
     train_set = read_file_time_sequences(dir + '.train',task)
     test_set = read_file_time_sequences(dir + '.test',task)
-
+    print('DS Size',len(train_set),len(test_set))
     ''' Code showing shuffle creating duplicates
     s = 0
     for i in range(len(train_set)):
@@ -369,7 +369,6 @@ def num_classes(datasets,max_length):
             m = max(m,l)
             m2 = min(m2,k)
     if m2<0:
-        print('Neg Events Debug')
         m=2*m
     return m+1
 
