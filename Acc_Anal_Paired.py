@@ -6,7 +6,7 @@ lams = ['']
 datasets = ['data/github/github','data/dota/dota','data/dota/dota_class','data/reddit/reddit','data/reddit_comments/reddit_comments']
 filenames = []
 for ds in datasets:
-    for num in ['100','99']:#['49','99','199','399','50','100','200','400']:
+    for num in ['100']:#['49','99','199','399','50','100','200','400']:
         filenames.append(ds+'_100_paired_train'+num+'.txt')
         filenames.append(ds+'_100_paired_test'+num+'.txt')
         #filenames.append(ds+'_100_paired_valid'+num+'.txt')
@@ -19,6 +19,7 @@ accs = []
 errs = []
 paccs = []
 perrs = []
+lrows = []
 for filename in filenames:
   try:
     print(filename)
@@ -35,6 +36,8 @@ for filename in filenames:
     rows=rows.astype(float)
     llm = rows[:,0]
     lstm = rows[:,1]
+    lrows.append(llm)
+    lrows.append(lstm)
     m=np.average(llm-lstm)
     s=np.sqrt(sum(np.square((llm-lstm)-m))/(len(llm)-1))
     se = s/np.sqrt(len(llm))
@@ -65,3 +68,5 @@ print(errs)
 print()
 print(paccs)
 print(perrs)
+print()
+print(lrows)
