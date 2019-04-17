@@ -22,8 +22,8 @@ for ds in ops['datasets']:
         train_set = datasets['train_set']
         test_set = datasets['test_set']
         valid_set = datasets['valid_set']
-        ops['max_length']='ALL'
-        if ops['max_length'] == "ALL":
+        ops['max_length']=100
+        if ops['max_length'] == "ALL" or 'class' in ds:
             ops['max_length'] = DH.longest_seq([train_set,valid_set,test_set]) #Can't concatenate classification data
 
 
