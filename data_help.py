@@ -59,7 +59,7 @@ def load_data(dir, sort_by_len=True, valid_ratio=0.1, samples = 'ALL', seed=None
     random.seed(seed)
     train_set = read_file_time_sequences(dir + '.train',task)
     test_set = read_file_time_sequences(dir + '.test',task)
-    print('DS Size',len(train_set),len(test_set))
+    print('DS Size',len(train_set)+len(test_set))
     ''' Code showing shuffle creating duplicates
     s = 0
     for i in range(len(train_set)):
