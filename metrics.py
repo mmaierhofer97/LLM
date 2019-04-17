@@ -10,9 +10,6 @@ ops = {'datasets' : [], 'samples':'ALL','timescales' : 2.0 ** np.arange(-7,7),'l
 for st in sys.argv[1:]:
     ops['datasets'].append(st)
 for ds in ops['datasets']:
-    ops['max_length']='ALL'
-    if ops['max_length'] == "ALL":
-        ops['max_length'] = DH.longest_seq([train_set,valid_set,test_set]) #Can't concatenate classification data
     ends = ['']
     if ds == 'data/github/github':
         ends = [str(x).zfill(2) for x in range(100)]
@@ -21,6 +18,10 @@ for ds in ops['datasets']:
     M = -1
     L = 10**10
     for end in ends:
+        ops['max_length']='ALL'
+        if ops['max_length'] == "ALL":
+            ops['max_length'] = DH.longest_seq([train_set,valid_set,test_set]) #Can't concatenate classification data
+        
         datasets = DH.load_data(ds+end, sort_by_len=False, samples = ops['samples'])
         train_set = datasets['train_set']
         test_set = datasets['test_set']
