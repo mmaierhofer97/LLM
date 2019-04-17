@@ -361,7 +361,7 @@ def num_classes(datasets,max_length):
     for dataset in datasets:
         for seq in dataset:
             if len(seq[0])<=max_length:
-                l = max(max(np.abs(seq[2])),ax(np.abs(seq[2])))
+                l = max(max(np.abs(seq[2])),max(np.abs(seq[2])))
                 k = min(seq[2])
             else:
                 l = max(max(np.abs(seq[2][:max_length+1])),max(np.abs(seq[0][:max_length+1])))
