@@ -13,6 +13,8 @@ for ds in ops['datasets']:
     ends = ['']
     if ds == 'data/github/github':
         ends = [str(x).zfill(2) for x in range(100)]
+    if ds == 'data/quizlet/quizlet':
+        ends = [str(x).zfill(1) for x in range(7)]
     print(ds)
     m = 0
     M = -1
