@@ -11,7 +11,7 @@ for st in sys.argv[1:]:
     ops['datasets'].append(st)
 for ds in ops['datasets']:
     ends = ['']
-    if ds = 'data/github/github':
+    if ds == 'data/github/github':
         ends = [str(x).zfill(2) for x in range(100)]
     print(ds)
     m = 0
@@ -29,4 +29,4 @@ for ds in ops['datasets']:
         L = min(ops['timescales'][1],L)
         M = max(ops['timescales'][-2],M)
     print('Max num classes {}'.format(m))
-    print('L = {}, M = {}'.format(L,M)
+    print('L = {}, M = {}'.format(L,M))
