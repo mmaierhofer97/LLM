@@ -6,10 +6,13 @@ import sys
 from tensorflow.python import debug as tf_debug
 import os
 from sklearn import metrics
-ops = {'datasets' : [], 'samples':10000,'timescales' : 2.0 ** np.arange(-7,7),'learn_timescales': True, 'max_length':100}
+ops = {'datasets' : [], 'samples':'ALL','timescales' : 2.0 ** np.arange(-7,7),'learn_timescales': True}
 for st in sys.argv[1:]:
     ops['datasets'].append(st)
 for ds in ops['datasets']:
+    ops['max_length']='ALL'
+    if ops['max_length'] == "ALL":
+        ops['max_length'] = DH.longest_seq([train_set,valid_set,test_set]) #Can't concatenate classification data
     ends = ['']
     if ds == 'data/github/github':
         ends = [str(x).zfill(2) for x in range(100)]
